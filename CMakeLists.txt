@@ -12,7 +12,7 @@ add_executable(LearnOpenGL)
 file(GLOB_RECURSE Cpps src/private/*.cpp)
 target_sources(LearnOpenGL PRIVATE ${Cpps})
 
-target_include_directories(LearnOpenGL PRIVATE src/include)
+target_include_directories(LearnOpenGL PRIVATE src/public)
 
 include(FetchContent)
 
