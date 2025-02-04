@@ -3,8 +3,17 @@
 #include <cstdint>
 #include <vector>
 #include <glad/glad.h>
+
+class Shader;
+
 class ShaderProgram
 {
+private:
+    uint32_t id;
+
 public:
-    static uint32_t Create(std::vector<uint32_t> shaders);
+    uint32_t GetID() { return id; }
+
+public:
+    static std::shared_ptr<ShaderProgram> Create(std::vector<std::shared_ptr<Shader>> shaders);
 };

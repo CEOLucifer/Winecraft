@@ -1,23 +1,27 @@
 #include "ShaderProgram.h"
+#include "Shader.h"
 #include <iostream>
+#include <memory>
 
-uint32_t ShaderProgram::Create(std::vector<uint32_t> shaders)
+using namespace std;
+
+shared_ptr<ShaderProgram> ShaderProgram::Create(vector<shared_ptr<Shader>> shaders)
 {
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
+    shared_ptr<ShaderProgram> shaderProgram(new ShaderProgram);
+    shaderProgram->id = glCreateProgram();
     for (auto each : shaders)
     {
-        glAttachShader(shaderProgram, each);
+        glAttachShader(shaderProgram->id, each->GetID());
     }
-    glLinkProgram(shaderProgram);
+    glLinkProgram(shaderProgram->id);
     // 检查着色器程序是否链接成功
     {
         int success;
         char infoLog[512];
-        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+        glGetProgramiv(shaderProgram->id, GL_LINK_STATUS, &success);
         if (!success)
         {
-            glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+            glGetProgramInfoLog(shaderProgram->id, 512, NULL, infoLog);
             std::cout << "ERROR::SHADER::shaderProgram::LINK_FAILED\n"
                       << infoLog << std::endl;
         }

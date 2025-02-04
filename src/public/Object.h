@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ShaderProgram.h"
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -10,16 +11,16 @@ class Object
 private:
     std::vector<float> vertices;
     std::vector<uint32_t> indices;
-    uint32_t vao;
-    uint32_t vbo;
-    uint32_t ebo;
+    uint32_t vao = 0;
+    uint32_t vbo = 0;
+    uint32_t ebo = 0;
     int polygonMode = GL_FILL;
-    int shaderProgram;
+    std::shared_ptr<ShaderProgram> shaderProgram = 0;
 
 public:
     void Draw();
 
-    void SetShaderProgram(int value) { shaderProgram = value; }
+    void SetShaderProgram(std::shared_ptr<ShaderProgram> value) { shaderProgram = value; }
 
     void SetPolygonMode(int value) { polygonMode = value; }
 
@@ -31,5 +32,5 @@ private:
 public:
     static std::shared_ptr<Object> Create(std::vector<float>&& vertices,
                                           std::vector<uint32_t>&& indices,
-                                          uint32_t shaderProgram);
+                                          std::shared_ptr<ShaderProgram> shaderProgram);
 };

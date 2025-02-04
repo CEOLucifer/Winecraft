@@ -19,30 +19,6 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 }
 
-const char* vertexShaderSource =
-    "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-    "}\0";
-
-const char* fragmentShaderSource =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-    "}\0";
-
-const char* fragmentShaderSource_2 =
-    "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "void main()\n"
-    "{\n"
-    "    FragColor = vec4(1.0f, 1f, 0.0f, 1.0f);\n"
-    "}\0";
-
 void Run()
 {
     glfwInit();
@@ -70,24 +46,21 @@ void Run()
     // 事件监听
     glfwSetFramebufferSizeCallback(window, onFrameBufferResize);
 
+    // 查询顶点着色器的顶点属性上限
+    int nrAttributes;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+    std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes
+              << std::endl;
+
     // 创建顶点着色器
-    unsigned int vertexShader =
-        Shader::Create(GL_VERTEX_SHADER, vertexShaderSource);
+    auto vertexShader =
+        Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/vert1.vert");
     // 创建片段着色器
-    unsigned int fragmentShader =
-        Shader::Create(GL_FRAGMENT_SHADER, fragmentShaderSource);
+    auto fragmentShader =
+        Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag1.frag");
 
     // 创建着色器程序
-    unsigned int shaderProgram =
-        ShaderProgram::Create({vertexShader, fragmentShader});
-
-
-    // 创建片段着色器
-    unsigned int fragmentShader_2 =
-        Shader::Create(GL_FRAGMENT_SHADER, fragmentShaderSource_2);
-    unsigned int shaderProgram_2 =
-        ShaderProgram::Create({vertexShader, fragmentShader_2});
-
+    auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
 
     // 删除着色器
     // glDeleteShader(vertexShader);
@@ -97,28 +70,15 @@ void Run()
 
     auto obj1 = Object::Create(
         {
-            0, 0, 0,        // 右上角
-            -0.5f, 0, 0.0f, // 右下角
-            0, 0.5f, 0.0f,  //
-
+            // 位置                         
+            0.5f, -0.5f, 0.0f, 
+            -0.5f, -0.5f, 0.0f, 
+            0.0f, 0.5f, 0.0f, 
         },
         {
             0, 1, 2, //
         },
         shaderProgram);
-
-    auto obj2 = Object::Create(
-        {
-            0, 0, 0,       // 右上角
-            0.5f, 0, 0.0f, // 右下角
-            0, 0.5f, 0.0f, //
-
-        },
-        {
-            0, 1, 2, //
-        },
-        shaderProgram_2);
-
 
     // 渲染循环
     while (!glfwWindowShouldClose(window))
@@ -132,9 +92,13 @@ void Run()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // ...
-        obj1->Draw();
-        obj2->Draw();
+        // float timeValue = glfwGetTime();
+        // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+        // int vertexColorLocation =
+        //     glGetUniformLocation(shaderProgram, "ourColor");
+        // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
+        obj1->Draw();
 
         glfwSwapBuffers(window);
     }
