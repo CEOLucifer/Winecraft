@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ShaderProgram.h"
+#include "Texture.h"
 #include <cstdint>
 #include <memory>
 #include <vector>
@@ -16,11 +17,15 @@ private:
     uint32_t ebo = 0;
     int polygonMode = GL_FILL;
     std::shared_ptr<ShaderProgram> shaderProgram = 0;
+    std::vector<std::shared_ptr<Texture>> texs;
 
 public:
     void Draw();
 
-    void SetShaderProgram(std::shared_ptr<ShaderProgram> value) { shaderProgram = value; }
+    void SetShaderProgram(std::shared_ptr<ShaderProgram> value)
+    {
+        shaderProgram = value;
+    }
 
     void SetPolygonMode(int value) { polygonMode = value; }
 
@@ -30,7 +35,7 @@ private:
     static uint32_t ebo_next_id;
 
 public:
-    static std::shared_ptr<Object> Create(std::vector<float>&& vertices,
-                                          std::vector<uint32_t>&& indices,
-                                          std::shared_ptr<ShaderProgram> shaderProgram);
+    static std::shared_ptr<Object>
+    Create(std::vector<float>&& vertices, std::vector<uint32_t>&& indices,
+           std::shared_ptr<ShaderProgram> shaderProgram, std::vector<std::shared_ptr<Texture>> texs);
 };

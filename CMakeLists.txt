@@ -27,3 +27,7 @@ target_link_libraries(LearnOpenGL PRIVATE glfw)
 # glad
 target_include_directories(LearnOpenGL PRIVATE dep/glad/include)
 target_sources(LearnOpenGL PRIVATE dep/glad/src/glad.c)
+
+# stb
+target_include_directories(LearnOpenGL PRIVATE dep/stb/include)
+target_sources(LearnOpenGL PRIVATE dep/stb/src/stb_image.cpp)

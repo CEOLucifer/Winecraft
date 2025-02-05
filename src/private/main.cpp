@@ -5,6 +5,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "ShaderProgram.h"
+#include "Texture.h"
+#include <stb/stb_image.h>
 
 using namespace std;
 
@@ -61,24 +63,35 @@ void Run()
 
     // 创建着色器程序
     auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
-
+    shaderProgram->setInt("texture1", 0); // 或者使用着色器类设置
+    shaderProgram->setInt("texture2", 1); // 或者使用着色器类设置
     // 删除着色器
     // glDeleteShader(vertexShader);
     // glDeleteShader(fragmentShader);
 
 
 
+
+    // 纹理
+    auto tex0 = Texture::Create("res/container.jpg", GL_RGB);
+    auto tex1 = Texture::Create("res/awesomeface.png", GL_RGBA);
+
+
+
+
     auto obj1 = Object::Create(
         {
-            // 位置                         
-            0.5f, -0.5f, 0.0f, 
-            -0.5f, -0.5f, 0.0f, 
-            0.0f, 0.5f, 0.0f, 
+            //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+            0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // 右上
+            0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 右下
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下
+            -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // 左上
         },
         {
-            0, 1, 2, //
+            0, 1, 3, //
+            1, 2, 3, //
         },
-        shaderProgram);
+        shaderProgram, {tex0, tex1});
 
     // 渲染循环
     while (!glfwWindowShouldClose(window))
@@ -90,13 +103,6 @@ void Run()
         // 渲染
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-
-        // ...
-        // float timeValue = glfwGetTime();
-        // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-        // int vertexColorLocation =
-        //     glGetUniformLocation(shaderProgram, "ourColor");
-        // glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 
         obj1->Draw();
 

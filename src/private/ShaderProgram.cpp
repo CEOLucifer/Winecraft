@@ -5,7 +5,8 @@
 
 using namespace std;
 
-shared_ptr<ShaderProgram> ShaderProgram::Create(vector<shared_ptr<Shader>> shaders)
+shared_ptr<ShaderProgram>
+ShaderProgram::Create(vector<shared_ptr<Shader>> shaders)
 {
     shared_ptr<ShaderProgram> shaderProgram(new ShaderProgram);
     shaderProgram->id = glCreateProgram();
@@ -27,4 +28,22 @@ shared_ptr<ShaderProgram> ShaderProgram::Create(vector<shared_ptr<Shader>> shade
         }
     }
     return shaderProgram;
+}
+
+void ShaderProgram::setFloat(const std::string& name, float value) const
+{
+    glUseProgram(id);
+    glUniform1f(glGetUniformLocation(id, name.c_str()), value);
+}
+
+void ShaderProgram::setInt(const std::string& name, int value) const
+{
+    glUseProgram(id);
+    glUniform1i(glGetUniformLocation(id, name.c_str()), value);
+}
+
+void ShaderProgram::setBool(const std::string& name, bool value) const
+{
+    glUseProgram(id);
+    glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);
 }
