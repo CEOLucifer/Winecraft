@@ -44,6 +44,7 @@ void Run()
     }
 
     glViewport(0, 0, 800, 600);
+    glEnable(GL_DEPTH_TEST);
 
     // 事件监听
     glfwSetFramebufferSizeCallback(window, onFrameBufferResize);
@@ -64,7 +65,7 @@ void Run()
     // 创建着色器程序
     auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
     shaderProgram->setInt("texture1", 0); // 或者使用着色器类设置
-    shaderProgram->setInt("texture2", 1); // 或者使用着色器类设置
+    shaderProgram->setInt("texture2", 1);
     // 删除着色器
     // glDeleteShader(vertexShader);
     // glDeleteShader(fragmentShader);
@@ -77,21 +78,54 @@ void Run()
     auto tex1 = Texture::Create("res/awesomeface.png", GL_RGBA);
 
 
+    std::vector<float> vertices = {
+        //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+        0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // 右上
+        0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 右下
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下
+        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // 左上
+    };
 
+    vector<uint32_t> indices = {
+        0, 1, 3, //
+        1, 2, 3, //
+    };
 
-    auto obj1 = Object::Create(
-        {
-            //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-            0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // 右上
-            0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 右下
-            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下
-            -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // 左上
-        },
-        {
-            0, 1, 3, //
-            1, 2, 3, //
-        },
-        shaderProgram, {tex0, tex1});
+    vector<float> vertices1 = {
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f,  0.5f,  -0.5f, 1.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+
+        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f, 0.5f,  0.5f,  0.0f, 1.0f, -0.5f, -0.5f, 0.5f,  0.0f, 0.0f,
+
+        -0.5f, 0.5f,  0.5f,  1.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  0.5f,  1.0f, 0.0f,
+
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+        0.5f,  -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f,  -0.5f, 0.5f,  0.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0.5f,  -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f,  -0.5f, 0.5f,  1.0f, 0.0f, 0.5f,  -0.5f, 0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f,  0.0f, 0.0f, -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+
+        -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f, 0.5f,  0.5f,  -0.5f, 1.0f, 1.0f,
+        0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
+
+    auto obj1 = Object::Create();
+    obj1->SetVertices(std::move(vertices));
+    obj1->SetIndices(std::move(indices));
+    obj1->SetTexs({tex0, tex1});
+    obj1->SetShaderProgram(shaderProgram);
+
+    // obj1->rotation = {-45, 0, 0};
+
+    Camera camera;
+    camera.position = {0, 0, 3};
 
     // 渲染循环
     while (!glfwWindowShouldClose(window))
@@ -100,11 +134,13 @@ void Run()
         processInput(window);
         // 检查并调用事件
         glfwPollEvents();
+        obj1->rotation = {glfwGetTime() * 10, 0, 0};
+
         // 渲染
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        obj1->Draw();
+        obj1->Draw(camera);
 
         glfwSwapBuffers(window);
     }

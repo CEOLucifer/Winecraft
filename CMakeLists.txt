@@ -31,3 +31,11 @@ target_sources(LearnOpenGL PRIVATE dep/glad/src/glad.c)
 # stb
 target_include_directories(LearnOpenGL PRIVATE dep/stb/include)
 target_sources(LearnOpenGL PRIVATE dep/stb/src/stb_image.cpp)
+
+# glm
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm
+)
+FetchContent_MakeAvailable(glm)
+target_link_libraries(LearnOpenGL PRIVATE glm)

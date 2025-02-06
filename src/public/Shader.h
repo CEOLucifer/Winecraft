@@ -12,6 +12,8 @@ private:
     uint32_t id;
 
 public:
+    ~Shader() { glDeleteShader(id); }
+
     uint32_t GetID() { return id; }
 
 public:

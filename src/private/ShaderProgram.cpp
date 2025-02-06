@@ -1,5 +1,6 @@
 #include "ShaderProgram.h"
 #include "Shader.h"
+#include "glm/gtc/type_ptr.hpp"
 #include <iostream>
 #include <memory>
 
@@ -46,4 +47,11 @@ void ShaderProgram::setBool(const std::string& name, bool value) const
 {
     glUseProgram(id);
     glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);
+}
+
+void ShaderProgram::SetMat4(const std::string& name, const glm::mat4& value)
+{
+    glUseProgram(id);
+    glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE,
+                       glm::value_ptr(value));
 }
