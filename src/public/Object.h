@@ -22,7 +22,7 @@ private:
     int polygonMode = GL_FILL;
     std::shared_ptr<ShaderProgram> shaderProgram = 0;
     std::vector<std::shared_ptr<Texture>> texs;
-    DrawMode drawMode = Indices;
+    DrawMode drawMode = Normal;
 
 
 

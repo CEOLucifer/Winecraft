@@ -7,7 +7,7 @@
 using namespace std;
 
 shared_ptr<ShaderProgram>
-ShaderProgram::Create(vector<shared_ptr<Shader>> shaders)
+ShaderProgram::Create(const vector<shared_ptr<Shader>>& shaders)
 {
     shared_ptr<ShaderProgram> shaderProgram(new ShaderProgram);
     shaderProgram->id = glCreateProgram();

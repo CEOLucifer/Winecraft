@@ -44,6 +44,7 @@ void Run()
     }
 
     glViewport(0, 0, 800, 600);
+    // 启用深度检测。此时交换链有深度字段。
     glEnable(GL_DEPTH_TEST);
 
     // 事件监听
@@ -61,10 +62,9 @@ void Run()
     // 创建片段着色器
     auto fragmentShader =
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag1.frag");
-
     // 创建着色器程序
     auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
-    shaderProgram->setInt("texture1", 0); // 或者使用着色器类设置
+    shaderProgram->setInt("texture1", 0); 
     shaderProgram->setInt("texture2", 1);
     // 删除着色器
     // glDeleteShader(vertexShader);
@@ -78,13 +78,13 @@ void Run()
     auto tex1 = Texture::Create("res/awesomeface.png", GL_RGBA);
 
 
-    std::vector<float> vertices = {
-        //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
-        0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // 右上
-        0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 右下
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下
-        -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // 左上
-    };
+    // std::vector<float> vertices = {
+    //     //     ---- 位置 ----       ---- 颜色 ----     - 纹理坐标 -
+    //     0.5f,  0.5f,  0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // 右上
+    //     0.5f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // 右下
+    //     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // 左下
+    //     -0.5f, 0.5f,  0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f  // 左上
+    // };
 
     vector<uint32_t> indices = {
         0, 1, 3, //
@@ -117,12 +117,12 @@ void Run()
         -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
 
     auto obj1 = Object::Create();
-    obj1->SetVertices(std::move(vertices));
-    obj1->SetIndices(std::move(indices));
+    obj1->SetVertices(std::move(vertices1));
+    // obj1->SetIndices(std::move(indices));
     obj1->SetTexs({tex0, tex1});
     obj1->SetShaderProgram(shaderProgram);
-
     // obj1->rotation = {-45, 0, 0};
+    // obj1->SetPolygonMode(GL_LINE);
 
     Camera camera;
     camera.position = {0, 0, 3};
@@ -134,7 +134,7 @@ void Run()
         processInput(window);
         // 检查并调用事件
         glfwPollEvents();
-        obj1->rotation = {glfwGetTime() * 10, 0, 0};
+        obj1->rotation = {glfwGetTime() * 10, glfwGetTime() * 5, 0};
 
         // 渲染
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

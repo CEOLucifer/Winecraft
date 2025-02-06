@@ -26,5 +26,5 @@ public:
 
 public:
     static std::shared_ptr<ShaderProgram>
-    Create(std::vector<std::shared_ptr<Shader>> shaders);
+    Create(const std::vector<std::shared_ptr<Shader>>& shaders);
 };
