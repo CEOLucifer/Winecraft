@@ -7,6 +7,7 @@
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include <stb/stb_image.h>
+#include <vector>
 
 using namespace std;
 
@@ -64,7 +65,7 @@ void Run()
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag1.frag");
     // 创建着色器程序
     auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
-    shaderProgram->setInt("texture1", 0); 
+    shaderProgram->setInt("texture1", 0);
     shaderProgram->setInt("texture2", 1);
     // 删除着色器
     // glDeleteShader(vertexShader);
@@ -116,16 +117,30 @@ void Run()
         0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f, 0.5f,  0.5f,  0.0f, 0.0f, -0.5f, 0.5f,  -0.5f, 0.0f, 1.0f};
 
-    auto obj1 = Object::Create();
-    obj1->SetVertices(std::move(vertices1));
-    // obj1->SetIndices(std::move(indices));
-    obj1->SetTexs({tex0, tex1});
-    obj1->SetShaderProgram(shaderProgram);
-    // obj1->rotation = {-45, 0, 0};
-    // obj1->SetPolygonMode(GL_LINE);
+    auto mesh = Mesh::Create();
+    mesh->SetVertices(std::move(vertices1));
+
+
+    vector<glm::vec3> cubePositions = {
+        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+
+    vector<shared_ptr<Object>> objs;
+    for (int i = 0; i < cubePositions.size(); ++i)
+    {
+        auto obj = Object::Create();
+        obj->SetMesh(mesh);
+        obj->position = cubePositions[i];
+        obj->SetTexs({tex0, tex1});
+        obj->SetShaderProgram(shaderProgram);
+        objs.push_back(obj);
+    }
 
     Camera camera;
-    camera.position = {0, 0, 3};
+    camera.position = {0, 0, 10};
 
     // 渲染循环
     while (!glfwWindowShouldClose(window))
@@ -134,13 +149,18 @@ void Run()
         processInput(window);
         // 检查并调用事件
         glfwPollEvents();
-        obj1->rotation = {glfwGetTime() * 10, glfwGetTime() * 5, 0};
+
 
         // 渲染
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        obj1->Draw(camera);
+        // obj1->Draw(camera);
+        for (auto each : objs)
+        {
+            each->rotation = {glfwGetTime() * 10, glfwGetTime() * 5, 0};
+            each->Draw(camera);
+        }
 
         glfwSwapBuffers(window);
     }
