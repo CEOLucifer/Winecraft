@@ -29,25 +29,28 @@ void Object::Draw(Camera& camera)
     // 初始化模型矩阵为单位矩阵
     glm::mat4 model = glm::mat4(1.0f);
 
-    // 应用缩放
-    model = glm::scale(model, scale);
-
-    // 直接在一个矩阵上应用所有旋转
-    model = glm::rotate(model, glm::radians(rotation.x),
-                        glm::vec3(1.0f, 0.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(rotation.y),
-                        glm::vec3(0.0f, 1.0f, 0.0f));
-    model = glm::rotate(model, glm::radians(rotation.z),
-                        glm::vec3(0.0f, 0.0f, 1.0f));
-
     // 应用平移
     model = glm::translate(model, position);
 
+    // 直接在一个矩阵上应用所有旋转
+    model = glm::rotate(model, glm::radians(rotation.y),
+                        glm::vec3(0.0f, 1.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.x),
+                        glm::vec3(1.0f, 0.0f, 0.0f));
+    model = glm::rotate(model, glm::radians(rotation.z),
+                        glm::vec3(0.0f, 0.0f, 1.0f));
+
+    // 应用缩放
+    model = glm::scale(model, scale);
+
+
+
+
 
     // 观察矩阵
-    glm::mat4 view = glm::mat4(1.0f);
-    // 注意，我们将矩阵向我们要进行移动场景的反方向移动。
-    view = glm::translate(view, -camera.position);
+    glm::mat4 view = {1};
+    view = camera.GetViewMat();
+    // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
     // 投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);

@@ -6,7 +6,9 @@
 #include <iostream>
 #include "ShaderProgram.h"
 #include "Texture.h"
+#include "glm/fwd.hpp"
 #include <stb/stb_image.h>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -14,12 +16,6 @@ using namespace std;
 void onFrameBufferResize(GLFWwindow* window, int w, int h)
 {
     glViewport(0, 0, 800, 600);
-}
-
-void processInput(GLFWwindow* window)
-{
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
 }
 
 void Run()
@@ -141,12 +137,39 @@ void Run()
 
     Camera camera;
     camera.position = {0, 0, 10};
+    float cameraSpeed = 3;
+
+    float deltaTime = 0.0f; // 当前帧与上一帧的时间差
+    float lastFrame = 0.0f; // 上一帧的时间
 
     // 渲染循环
     while (!glfwWindowShouldClose(window))
     {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
         // 输入
-        processInput(window);
+        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+            glfwSetWindowShouldClose(window, true);
+
+        glm::vec3 posDelta = {};
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            posDelta = cameraSpeed * camera.GetForward();
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            posDelta = -cameraSpeed * camera.GetForward();
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            posDelta = -camera.GetRight() * cameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            posDelta = camera.GetRight() * cameraSpeed;
+        posDelta *= deltaTime;
+
+        // cout << format("{} {} {}", posDelta.x, posDelta.y, posDelta.z) << endl;
+
+        camera.position += posDelta;
+
+        objs[0]->position.z -= 0.5 * deltaTime;
+
         // 检查并调用事件
         glfwPollEvents();
 
