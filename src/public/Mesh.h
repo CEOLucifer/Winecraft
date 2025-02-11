@@ -31,4 +31,8 @@ private:
 
 public:
     static std::shared_ptr<Mesh> Create();
+
+    static std::shared_ptr<Mesh> CreateCube();
+
+    static std::shared_ptr<Mesh> CreatePlane();
 };
