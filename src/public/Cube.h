@@ -16,6 +16,6 @@ public:
     void Update(float deltaTime) override
     {
         renderer->rotation.y += deltaTime * 10;
-        renderer->rotation.x += deltaTime * 10;
+        // renderer->rotation.x += deltaTime * 10;
     }
 };

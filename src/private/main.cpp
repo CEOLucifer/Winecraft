@@ -61,14 +61,21 @@ void Run()
 
     // 创建顶点着色器
     auto vertexShader =
-        Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/vert1.vert");
+        Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/vert0.vert");
     // 创建片段着色器
     auto fragmentShader =
+        Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag0.frag");
+    auto fragmentShader_1 =
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag1.frag");
     // 创建着色器程序
     auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
+    auto shaderProgram_1 =
+        ShaderProgram::Create({vertexShader, fragmentShader_1});
     shaderProgram->setInt("texture1", 0);
     shaderProgram->setInt("texture2", 1);
+    shaderProgram_1->SetVec3("objectColor", {1.0f, 0.5f, 0.31f});
+    shaderProgram_1->SetVec3("lightColor", {1.0f, 1.0f, 1.0f});
+    shaderProgram_1->SetVec3("lightPos", {5, 5, 0});
 
 
 
@@ -76,7 +83,7 @@ void Run()
     auto tex0 = Texture::Create("res/container.jpg", GL_RGB);
     auto tex1 = Texture::Create("res/awesomeface.png", GL_RGBA);
 
-    auto mesh = Mesh::CreateCube();
+    auto meshCube = Mesh::CreateCube();
 
     vector<glm::vec3> cubePositions = {
         glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
@@ -88,11 +95,18 @@ void Run()
     for (int i = 0; i < cubePositions.size(); ++i)
     {
         auto cube = Updatable::Create<Cube>();
-        cube->renderer->SetMesh(mesh);
+        cube->renderer->SetMesh(meshCube);
         cube->renderer->position = cubePositions[i];
-        cube->renderer->SetTexs({tex0});
-        cube->renderer->SetShaderProgram(shaderProgram);
+        // cube->renderer->SetTexs({tex0});
+        cube->renderer->SetShaderProgram(shaderProgram_1);
     }
+
+    // auto light = Renderer::Create();
+    // light->SetMesh(meshCube);
+    // light->SetShaderProgram(shaderProgram_1);
+
+
+
 
     Camera camera;
     camera.position = {0, 0, 10};
@@ -123,9 +137,6 @@ void Run()
             posDelta = camera.GetRight() * cameraSpeed;
         posDelta *= deltaTime;
 
-        // cout << format("{} {} {}", posDelta.x, posDelta.y, posDelta.z) <<
-        // endl;
-
         camera.position += posDelta;
 
         UpdateSystem::Instance()->Update(deltaTime);
@@ -137,6 +148,7 @@ void Run()
         // 渲染
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        shaderProgram_1->SetVec3("viewPos", camera.position);
 
         RenderSystem::Instance()->Render(camera);
 
