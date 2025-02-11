@@ -8,6 +8,7 @@ class Texture
 {
 private:
     uint32_t id;
+    
 
 public:
     ~Texture() { glDeleteTextures(1, &id); }

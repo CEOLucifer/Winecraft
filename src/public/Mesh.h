@@ -1,13 +1,15 @@
 #pragma once
 
 #include "DrawMode.h"
+#include "Vertex.h"
 #include <cstdint>
 #include <vector>
 
+/// @brief 网格
 class Mesh
 {
 private:
-    std::vector<float> vertices;
+    std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
     uint32_t vao = 0;
     uint32_t vbo = 0;
@@ -15,10 +17,10 @@ private:
     DrawMode drawMode = Normal;
 
 public:
-    void SetVertices(std::vector<float>&& value);
+    void SetVertices(std::vector<Vertex>&& value);
     void SetIndices(std::vector<uint32_t>&& value);
-    std::vector<float>& GetVertices() { return vertices; }
-    std::vector<uint32_t>& GetIndices() { return indices; }
+    const std::vector<Vertex>& GetVertices() { return vertices; }
+    const std::vector<uint32_t>& GetIndices() { return indices; }
     uint32_t GetVao() { return vao; };
     DrawMode GetDrawMode() { return drawMode; }
 

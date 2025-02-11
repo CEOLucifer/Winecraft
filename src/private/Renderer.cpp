@@ -1,4 +1,4 @@
-#include "Object.h"
+#include "Renderer.h"
 #include "DrawMode.h"
 #include "ShaderProgram.h"
 #include "glm/ext/matrix_transform.hpp"
@@ -8,7 +8,7 @@
 
 
 
-void Object::Draw(Camera& camera)
+void Renderer::Draw(Camera& camera)
 {
     if (!mesh)
         return;
@@ -20,6 +20,7 @@ void Object::Draw(Camera& camera)
     for (int i = 0; i < texs.size(); ++i)
     {
         // opengl状态里至少有16个纹理。通过下面api设置纹理。
+        // 纹理会映射到shader的uniform sampler2D变量中。
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, texs[i]->GetID());
     }
@@ -75,9 +76,9 @@ void Object::Draw(Camera& camera)
     }
 }
 
-std::shared_ptr<Object> Object::Create()
+std::shared_ptr<Renderer> Renderer::Create()
 {
-    std::shared_ptr<Object> obj(new Object);
+    std::shared_ptr<Renderer> obj(new Renderer);
 
     return obj;
 };

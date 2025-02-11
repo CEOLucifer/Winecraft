@@ -10,12 +10,17 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-class Object : public Transform
+/// @brief 渲染器
+/// 
+class Renderer : public Transform
 {
 private:
+    /// @brief 网格 
     std::shared_ptr<Mesh> mesh;
     int polygonMode = GL_FILL;
+    /// @brief shader程序
     std::shared_ptr<ShaderProgram> shaderProgram = 0;
+    /// @brief 纹理 
     std::vector<std::shared_ptr<Texture>> texs;
 
 public:
@@ -36,5 +41,5 @@ public:
     }
 
 public:
-    static std::shared_ptr<Object> Create();
+    static std::shared_ptr<Renderer> Create();
 };

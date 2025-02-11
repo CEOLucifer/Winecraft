@@ -3,6 +3,7 @@
 #include "Transform.h"
 #include <glm/glm.hpp>
 
+/// @brief 摄像机
 class Camera : public Transform
 {
 private:
