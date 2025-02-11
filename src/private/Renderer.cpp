@@ -1,10 +1,11 @@
-#include "Renderer.h"
+#include "Render/Renderer.h"
 #include "DrawMode.h"
 #include "ShaderProgram.h"
 #include "glm/ext/matrix_transform.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Render/RenderSystem.h"
 
 
 
@@ -79,6 +80,6 @@ void Renderer::Draw(Camera& camera)
 std::shared_ptr<Renderer> Renderer::Create()
 {
     std::shared_ptr<Renderer> obj(new Renderer);
-
+    RenderSystem::Instance()->Add(obj);
     return obj;
 };

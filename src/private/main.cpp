@@ -1,4 +1,3 @@
-#include "Renderer.h"
 #include "Shader.h"
 #include <exception>
 #include <glad/glad.h>
@@ -6,11 +5,14 @@
 #include <iostream>
 #include "ShaderProgram.h"
 #include "Texture.h"
-#include "Vertex.h"
+#include "Update/Updatable.h"
 #include "glm/fwd.hpp"
 #include <stb/stb_image.h>
 #include <string>
 #include <vector>
+#include "Update/UpdateSystem.h"
+#include "Render/RenderSystem.h"
+#include "Cube.h"
 
 using namespace std;
 
@@ -54,6 +56,9 @@ void Run()
     std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes
               << std::endl;
 
+    UpdateSystem::LoadInstance();
+    RenderSystem::LoadInstance();
+
     // 创建顶点着色器
     auto vertexShader =
         Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/vert1.vert");
@@ -80,15 +85,13 @@ void Run()
         glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
         glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
-    vector<shared_ptr<Renderer>> objs;
     for (int i = 0; i < cubePositions.size(); ++i)
     {
-        auto obj = Renderer::Create();
-        obj->SetMesh(mesh);
-        obj->position = cubePositions[i];
-        obj->SetTexs({tex0});
-        obj->SetShaderProgram(shaderProgram);
-        objs.push_back(obj);
+        auto cube = Updatable::Create<Cube>();
+        cube->renderer->SetMesh(mesh);
+        cube->renderer->position = cubePositions[i];
+        cube->renderer->SetTexs({tex0});
+        cube->renderer->SetShaderProgram(shaderProgram);
     }
 
     Camera camera;
@@ -125,7 +128,7 @@ void Run()
 
         camera.position += posDelta;
 
-        objs[0]->position.z -= 0.5 * deltaTime;
+        UpdateSystem::Instance()->Update(deltaTime);
 
         // 检查并调用事件
         glfwPollEvents();
@@ -135,15 +138,13 @@ void Run()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // obj1->Draw(camera);
-        for (auto each : objs)
-        {
-            each->rotation = {glfwGetTime() * 10, glfwGetTime() * 5, 0};
-            each->Draw(camera);
-        }
+        RenderSystem::Instance()->Render(camera);
 
         glfwSwapBuffers(window);
     }
+
+    RenderSystem::UnloadInstance();
+    UpdateSystem::UnloadInstance();
 
     glfwTerminate();
 }
