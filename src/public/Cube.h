@@ -1,17 +1,17 @@
 #pragma once
 
 
+#include "Node/Node.h"
 #include "Render/Renderer.h"
-#include "Update/Updatable.h"
 
 
-class Cube : public Updatable
+class Cube : public Node
 {
 public:
     std::shared_ptr<Renderer> renderer;
 
 public:
-    void Init() { renderer = Renderer::Create(); }
+    void Init() override { renderer = Renderer::Create(); }
 
     void Update(float deltaTime) override
     {

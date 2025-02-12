@@ -12,6 +12,8 @@ void NodeSystem::Update(float deltaTime)
     updateNode(root, deltaTime);
 }
 
+void NodeSystem::OnLoad() { root = std::make_shared<ParentNode>(); }
+
 void NodeSystem::updateNode(shared_ptr<Node> node, float deltaTime)
 {
     if (!node)

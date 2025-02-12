@@ -2,19 +2,41 @@
 
 #include "Singleton.h"
 #include <Render/Renderer.h>
+#include <memory>
 #include <vector>
+
+class Camera;
+class GLFWwindow;
 
 class RenderSystem : public Singleton<RenderSystem>
 {
+    friend class Camera;
+
 private:
     std::vector<std::shared_ptr<Renderer>> renderVec;
+    std::shared_ptr<Camera> camera;
+    GLFWwindow* window = nullptr;
 
 public:
-    void Render(Camera& camera)
+    void OnLoad() override;
+
+    void OnUnload() override;
+
+    void onFrameBufferResize(GLFWwindow* window, int w, int h)
     {
+        glViewport(0, 0, w, h);
+    }
+
+    GLFWwindow* GetWindow() { return window; }
+
+    void Render()
+    {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         for (auto renderer : renderVec)
         {
-            renderer->Draw(camera);
+            renderer->Draw(*camera.get());
         }
     }
 

@@ -1,10 +1,13 @@
 #pragma once
 
+#include "Render/RenderSystem.h"
 #include "Transform.h"
 #include <glm/glm.hpp>
+#include <memory>
+#include "Node/Node.h"
 
 /// @brief 摄像机
-class Camera : public Transform
+class Camera : public Node, public Transform
 {
 private:
     float width = 800;
@@ -20,4 +23,10 @@ public:
     float GetNear() { return near; }
     float GetFar() { return far; }
     float GetFov() { return fov; }
+
+    void Init() override
+    {
+        RenderSystem::Instance()->camera =
+            std::dynamic_pointer_cast<Camera>(weak.lock());
+    }
 };

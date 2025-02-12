@@ -1,3 +1,5 @@
+#include "CameraController.h"
+#include "Node/NodeSystem.h"
 #include "Shader.h"
 #include <exception>
 #include <glad/glad.h>
@@ -5,59 +7,25 @@
 #include <iostream>
 #include "ShaderProgram.h"
 #include "Texture.h"
-#include "Update/Updatable.h"
 #include "glm/fwd.hpp"
 #include <stb/stb_image.h>
 #include <string>
 #include <vector>
-#include "Update/UpdateSystem.h"
 #include "Render/RenderSystem.h"
 #include "Cube.h"
+#include "Camera.h"
+#include "InputSystem.h"
 
 using namespace std;
 
-void onFrameBufferResize(GLFWwindow* window, int w, int h)
-{
-    glViewport(0, 0, w, h);
-}
+
 
 void Run()
 {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return;
-    }
-    glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return;
-    }
-
-    glViewport(0, 0, 800, 600);
-    // 启用深度检测。此时交换链有深度字段。
-    glEnable(GL_DEPTH_TEST);
-
-    // 事件监听
-    glfwSetFramebufferSizeCallback(window, onFrameBufferResize);
-
-    // 查询顶点着色器的顶点属性上限
-    int nrAttributes;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-    std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes
-              << std::endl;
-
-    UpdateSystem::LoadInstance();
+    NodeSystem::LoadInstance();
     RenderSystem::LoadInstance();
+    GLFWwindow* window = RenderSystem::Instance()->GetWindow();
+    Input::SetWindow(window);
 
     // 创建顶点着色器
     auto vertexShader =
@@ -94,7 +62,7 @@ void Run()
 
     for (int i = 0; i < cubePositions.size(); ++i)
     {
-        auto cube = Updatable::Create<Cube>();
+        auto cube = Node::Create<Cube>();
         cube->renderer->SetMesh(meshCube);
         cube->renderer->position = cubePositions[i];
         // cube->renderer->SetTexs({tex0});
@@ -108,9 +76,10 @@ void Run()
 
 
 
-    Camera camera;
-    camera.position = {0, 0, 10};
-    float cameraSpeed = 3;
+    auto camera = Node::Create<Camera>();
+    camera->position = {0, 0, 10};
+    auto cameraController = Node::Create<CameraController>();
+    cameraController->camera = camera;
 
     float deltaTime = 0.0f; // 当前帧与上一帧的时间差
     float lastFrame = 0.0f; // 上一帧的时间
@@ -122,43 +91,21 @@ void Run()
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
-        // 输入
-        if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-            glfwSetWindowShouldClose(window, true);
-
-        glm::vec3 posDelta = {};
-        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            posDelta = cameraSpeed * camera.GetForward();
-        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-            posDelta = -cameraSpeed * camera.GetForward();
-        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-            posDelta = -camera.GetRight() * cameraSpeed;
-        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-            posDelta = camera.GetRight() * cameraSpeed;
-        posDelta *= deltaTime;
-
-        camera.position += posDelta;
-
-        UpdateSystem::Instance()->Update(deltaTime);
+        NodeSystem::Instance()->Update(deltaTime);
 
         // 检查并调用事件
         glfwPollEvents();
 
-
         // 渲染
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        shaderProgram_1->SetVec3("viewPos", camera.position);
+        shaderProgram_1->SetVec3("viewPos", camera->position);
 
-        RenderSystem::Instance()->Render(camera);
+        RenderSystem::Instance()->Render();
 
         glfwSwapBuffers(window);
     }
 
     RenderSystem::UnloadInstance();
-    UpdateSystem::UnloadInstance();
-
-    glfwTerminate();
+    NodeSystem::UnloadInstance();
 }
 
 int main()

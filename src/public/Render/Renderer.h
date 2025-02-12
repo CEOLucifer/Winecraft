@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Camera.h"
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Texture.h"
@@ -9,6 +8,8 @@
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+
+class Camera;
 
 /// @brief 渲染器
 /// 
