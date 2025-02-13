@@ -1,19 +1,7 @@
 #pragma once
 
-#include <memory>
 #include "Node.h"
-#include <vector>
+#include "Parentable.h"
 
-class ParentNode : public Node
-{
-    friend class Node;
-
-private:
-    std::vector<std::shared_ptr<Node>> childNodes;
-
-public:
-    const std::vector<std::shared_ptr<Node>>& GetChildNodes()
-    {
-        return childNodes;
-    }
-};
+class ParentNode : public Node, public Parentable
+{};

@@ -1,5 +1,7 @@
 #include "CameraController.h"
+#include "Mesh.h"
 #include "Node/NodeSystem.h"
+#include "Node/Parentable.h"
 #include "Shader.h"
 #include <exception>
 #include <glad/glad.h>
@@ -8,6 +10,7 @@
 #include "ShaderProgram.h"
 #include "Texture.h"
 #include "glm/fwd.hpp"
+#include <memory>
 #include <stb/stb_image.h>
 #include <string>
 #include <vector>

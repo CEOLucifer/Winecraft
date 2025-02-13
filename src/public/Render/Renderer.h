@@ -1,30 +1,32 @@
 #pragma once
 
-#include "Mesh.h"
-#include "ShaderProgram.h"
-#include "Texture.h"
-#include "Transform.h"
+#include "Node/Node3D.h"
 #include <memory>
 #include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
 class Camera;
+class Mesh;
+class ShaderProgram;
+class Texture;
 
 /// @brief 渲染器
-/// 
-class Renderer : public Transform
+///
+class Renderer : public Node3D
 {
 private:
-    /// @brief 网格 
+    /// @brief 网格
     std::shared_ptr<Mesh> mesh;
     int polygonMode = GL_FILL;
     /// @brief shader程序
     std::shared_ptr<ShaderProgram> shaderProgram = 0;
-    /// @brief 纹理 
+    /// @brief 纹理
     std::vector<std::shared_ptr<Texture>> texs;
 
 public:
+    void Init() override;
+
     void Draw(Camera& camera);
 
     void SetMesh(std::shared_ptr<Mesh> value) { mesh = value; }
@@ -40,7 +42,4 @@ public:
     {
         texs = std::move(value);
     }
-
-public:
-    static std::shared_ptr<Renderer> Create();
 };

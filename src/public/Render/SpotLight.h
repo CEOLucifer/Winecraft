@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Node/Node.h"
-#include "Transform.h"
+#include "Node/Node3D.h"
 
-class SpotLight : public Node, public Transform
+class SpotLight : public Node3D
 {
 public:
     glm::vec3 Color;
+
+public:
+    void Init() override;
 };

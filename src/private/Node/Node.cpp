@@ -1,4 +1,3 @@
-#include "Node/Node.h"
 #include "Node/ParentNode.h"
 
 void Node::Destroy() {}
@@ -7,16 +6,18 @@ void Node::SetParent(std::shared_ptr<ParentNode> value)
 {
     if (parent)
     {
-        parent->childNodes.erase(std::remove(parent->childNodes.begin(),
-                                             parent->childNodes.end(),
+        auto& childNodes = parent->childNodes;
+        childNodes.erase(std::remove(childNodes.begin(),
+                                             childNodes.end(),
                                              weak.lock()),
-                                 parent->childNodes.end());
+                                 childNodes.end());
     }
 
     parent = value;
 
     if (parent)
     {
-        parent->childNodes.push_back(weak.lock());
+        auto& childNodes = parent->childNodes;
+        childNodes.push_back(weak.lock());
     }
 }

@@ -1,13 +1,12 @@
 #pragma once
 
 #include "Render/RenderSystem.h"
-#include "Transform.h"
 #include <glm/glm.hpp>
 #include <memory>
-#include "Node/Node.h"
+#include "Node/Node3D.h"
 
 /// @brief 摄像机
-class Camera : public Node, public Transform
+class Camera : public Node3D
 {
 private:
     float width = 800;

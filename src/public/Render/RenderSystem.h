@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Singleton.h"
+#include "SpotLight.h"
 #include <Render/Renderer.h>
 #include <memory>
 #include <vector>
@@ -16,6 +17,7 @@ private:
     std::vector<std::shared_ptr<Renderer>> renderVec;
     std::shared_ptr<Camera> camera;
     GLFWwindow* window = nullptr;
+    std::shared_ptr<SpotLight> spotLight;
 
 public:
     void OnLoad() override;
@@ -28,6 +30,8 @@ public:
     }
 
     GLFWwindow* GetWindow() { return window; }
+
+    void SetSpotLight(std::shared_ptr<SpotLight> value) { spotLight = value; }
 
     void Render()
     {
