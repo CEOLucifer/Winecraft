@@ -18,7 +18,7 @@ void NodeSystem::updateNode(shared_ptr<Node> node, float deltaTime)
 {
     if (!node)
         return;
-    node->Update(deltaTime);
+    node->OnUpdate(deltaTime);
 
     if (auto parentNode = dynamic_pointer_cast<ParentNode>(node))
     {

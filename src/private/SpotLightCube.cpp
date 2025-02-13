@@ -2,7 +2,7 @@
 #include "Render/Renderer.h"
 #include "Render/SpotLight.h"
 
-void SpotLightCube::Init()
+void SpotLightCube::OnInit()
 {
     spotLight = Node::Create<SpotLight>();
     renderer = Node::Create<Renderer>();

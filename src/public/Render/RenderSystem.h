@@ -33,6 +33,8 @@ public:
 
     void SetSpotLight(std::shared_ptr<SpotLight> value) { spotLight = value; }
 
+    std::shared_ptr<SpotLight> GetSpotLight() { return spotLight; }
+
     void Render()
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

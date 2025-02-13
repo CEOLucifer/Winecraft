@@ -12,7 +12,7 @@ public:
     std::shared_ptr<Renderer> renderer;
 
 public:
-    void Init() override;
+    void OnInit() override;
 
-    void Update(float deltaTime) override;
+    void OnUpdate(float deltaTime) override;
 };

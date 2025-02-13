@@ -45,8 +45,6 @@ void Run()
     shaderProgram->setInt("texture1", 0);
     shaderProgram->setInt("texture2", 1);
     shaderProgram_1->SetVec3("objectColor", {1.0f, 0.5f, 0.31f});
-    shaderProgram_1->SetVec3("lightColor", {1.0f, 1.0f, 1.0f});
-    shaderProgram_1->SetVec3("lightPos", {5, 5, 0});
 
 
 
@@ -75,6 +73,7 @@ void Run()
     // auto light = Renderer::Create();
     // light->SetMesh(meshCube);
     // light->SetShaderProgram(shaderProgram_1);
+    auto spotLight = Node::Create<SpotLight>();
 
 
 
@@ -100,8 +99,6 @@ void Run()
         glfwPollEvents();
 
         // 渲染
-        shaderProgram_1->SetVec3("viewPos", camera->position);
-
         RenderSystem::Instance()->Render();
 
         glfwSwapBuffers(window);

@@ -13,5 +13,5 @@ public:
     std::shared_ptr<Renderer> renderer;
 
 public:
-    void Init() override;
+    void OnInit() override;
 };

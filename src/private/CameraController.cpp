@@ -5,7 +5,7 @@
 #include "InputSystem.h"
 
 
-void CameraController::Update(float deltaTime)
+void CameraController::OnUpdate(float deltaTime)
 {
     glm::vec3 posDelta = {};
     if (Input::GetKey(GLFW_KEY_W, GLFW_PRESS))

@@ -25,7 +25,7 @@ private:
     std::vector<std::shared_ptr<Texture>> texs;
 
 public:
-    void Init() override;
+    void OnInit() override;
 
     void Draw(Camera& camera);
 

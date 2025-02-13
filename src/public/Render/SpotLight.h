@@ -8,5 +8,5 @@ public:
     glm::vec3 Color;
 
 public:
-    void Init() override;
+    void OnInit() override;
 };

@@ -2,15 +2,19 @@
 
 void Node::Destroy() {}
 
-void Node::SetParent(std::shared_ptr<ParentNode> value)
+void Node::SetParentNode(std::shared_ptr<ParentNode> value)
+{
+    SetParentable(value);
+}
+
+void Node::SetParentable(std::shared_ptr<Parentable> value)
 {
     if (parent)
     {
         auto& childNodes = parent->childNodes;
-        childNodes.erase(std::remove(childNodes.begin(),
-                                             childNodes.end(),
-                                             weak.lock()),
-                                 childNodes.end());
+        childNodes.erase(
+            std::remove(childNodes.begin(), childNodes.end(), weak.lock()),
+            childNodes.end());
     }
 
     parent = value;

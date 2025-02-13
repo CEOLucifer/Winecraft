@@ -9,7 +9,7 @@
 #include "Mesh.h"
 #include "Texture.h"
 
-void Renderer::Init() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
+void Renderer::OnInit() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
 
 void Renderer::Draw(Camera& camera)
 {
@@ -27,6 +27,14 @@ void Renderer::Draw(Camera& camera)
         glActiveTexture(GL_TEXTURE0 + i);
         glBindTexture(GL_TEXTURE_2D, texs[i]->GetID());
     }
+
+    // 摄像机
+    shaderProgram->SetVec3("viewPos", camera.position);
+    // 点光源
+    auto spotLight = RenderSystem::Instance()->GetSpotLight();
+    shaderProgram->SetVec3("lightColor", spotLight->Color);
+    shaderProgram->SetVec3("lightPos", spotLight->position);
+
 
     // 变换
     // 世界矩阵

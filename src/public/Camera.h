@@ -23,7 +23,7 @@ public:
     float GetFar() { return far; }
     float GetFov() { return fov; }
 
-    void Init() override
+    void OnInit() override
     {
         RenderSystem::Instance()->camera =
             std::dynamic_pointer_cast<Camera>(weak.lock());
