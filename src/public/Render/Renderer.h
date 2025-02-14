@@ -36,6 +36,8 @@ public:
         shaderProgram = value;
     }
 
+    std::shared_ptr<ShaderProgram> GetShaderProgram() { return shaderProgram; }
+
     void SetPolygonMode(int value) { polygonMode = value; }
 
     void SetTexs(std::vector<std::shared_ptr<Texture>>&& value)

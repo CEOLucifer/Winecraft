@@ -49,16 +49,21 @@ void Run()
         ShaderProgram::Create({vertexShader, fragmentShader_light});
     shaderProgram->setInt("texture1", 0);
     shaderProgram->setInt("texture2", 1);
-    shaderProgram_1->SetVec3("material.ambient", {1.0f, 0.5f, 0.31f});
+    // shaderProgram_1->SetVec3("material.ambient", {0.2f, 0.2f, 0.2f});
+    shaderProgram_1->setInt("material.diffuse", 0);
+    shaderProgram_1->setInt("material.specular", 1);
     shaderProgram_1->SetVec3("material.diffuse", {1.0f, 0.5f, 0.31f});
-    shaderProgram_1->SetVec3("material.specular", {0.5f, 0.5f, 0.5f});
+    shaderProgram_1->SetVec3("material.specular", {1.0f, 1.0f, 1.0f});
     shaderProgram_1->setFloat("material.shininess", 32.0f);
+    shaderProgram_1->SetVec3("light.ambient", {1, 1, 1});
 
 
 
     // 纹理
     auto tex0 = Texture::Create("res/container.jpg", GL_RGB);
     auto tex1 = Texture::Create("res/awesomeface.png", GL_RGBA);
+    auto tex2 = Texture::Create("res/container2.png", GL_RGBA);
+    auto tex3 = Texture::Create("res/container2_specular.png", GL_RGBA);
 
     auto meshCube = Mesh::CreateCube();
 
@@ -74,8 +79,8 @@ void Run()
         auto cube = Node::Create<Cube>();
         cube->renderer->SetMesh(meshCube);
         cube->renderer->position = cubePositions[i];
-        // cube->renderer->SetTexs({tex0});
         cube->renderer->SetShaderProgram(shaderProgram_1);
+        cube->renderer->SetTexs({tex2, tex3});
     }
 
     // auto light = Renderer::Create();
@@ -86,10 +91,11 @@ void Run()
     spotLightCube->renderer->SetMesh(meshCube);
     spotLightCube->renderer->SetShaderProgram(shaderProgram_light);
     spotLightCube->renderer->position = {10, 0, 0};
+    spotLightCube->spotLight->Color = {1, 1, 1};
 
 
     auto camera = Node::Create<Camera>();
-    camera->position = {0, 0, 10};
+    camera->position = {5, 0, 10};
     auto cameraController = Node::Create<CameraController>();
     cameraController->camera = camera;
 

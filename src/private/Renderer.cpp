@@ -32,8 +32,8 @@ void Renderer::Draw(Camera& camera)
     shaderProgram->SetVec3("viewPos", camera.position);
     // 点光源
     auto spotLight = RenderSystem::Instance()->GetSpotLight();
-    shaderProgram->SetVec3("lightColor", spotLight->Color);
-    shaderProgram->SetVec3("lightPos", spotLight->position);
+    shaderProgram->SetVec3("light.position", spotLight->position);
+    shaderProgram->SetVec3("light.color", spotLight->Color);
 
 
     // 变换

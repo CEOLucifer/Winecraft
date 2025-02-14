@@ -14,4 +14,6 @@ public:
 
 public:
     void OnInit() override;
+
+    void OnUpdate(float deltaTime) override;
 };

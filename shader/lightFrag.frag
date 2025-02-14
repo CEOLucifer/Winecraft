@@ -2,4 +2,6 @@
 
 out vec4 FragColor;
 
-void main() { FragColor = vec4(1); }
+uniform vec3 lightColor;
+
+void main() { FragColor = vec4(lightColor, 1); }
