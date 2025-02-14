@@ -8,6 +8,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "ShaderProgram.h"
+#include "SpotLightCube.h"
 #include "Texture.h"
 #include "glm/fwd.hpp"
 #include <memory>
@@ -38,13 +39,20 @@ void Run()
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag0.frag");
     auto fragmentShader_1 =
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag1.frag");
+    auto fragmentShader_light =
+        Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/lightFrag.frag");
     // 创建着色器程序
     auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
     auto shaderProgram_1 =
         ShaderProgram::Create({vertexShader, fragmentShader_1});
+    auto shaderProgram_light =
+        ShaderProgram::Create({vertexShader, fragmentShader_light});
     shaderProgram->setInt("texture1", 0);
     shaderProgram->setInt("texture2", 1);
-    shaderProgram_1->SetVec3("objectColor", {1.0f, 0.5f, 0.31f});
+    shaderProgram_1->SetVec3("material.ambient", {1.0f, 0.5f, 0.31f});
+    shaderProgram_1->SetVec3("material.diffuse", {1.0f, 0.5f, 0.31f});
+    shaderProgram_1->SetVec3("material.specular", {0.5f, 0.5f, 0.5f});
+    shaderProgram_1->setFloat("material.shininess", 32.0f);
 
 
 
@@ -73,9 +81,11 @@ void Run()
     // auto light = Renderer::Create();
     // light->SetMesh(meshCube);
     // light->SetShaderProgram(shaderProgram_1);
-    auto spotLight = Node::Create<SpotLight>();
-
-
+    // auto spotLight = Node::Create<SpotLight>();
+    auto spotLightCube = Node::Create<SpotLightCube>();
+    spotLightCube->renderer->SetMesh(meshCube);
+    spotLightCube->renderer->SetShaderProgram(shaderProgram_light);
+    spotLightCube->renderer->position = {10, 0, 0};
 
 
     auto camera = Node::Create<Camera>();

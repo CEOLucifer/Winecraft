@@ -5,5 +5,7 @@
 void SpotLightCube::OnInit()
 {
     spotLight = Node::Create<SpotLight>();
+    spotLight->position = {10, 0, 0};
+
     renderer = Node::Create<Renderer>();
 }
