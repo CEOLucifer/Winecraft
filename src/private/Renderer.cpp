@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Texture.h"
+#include "ShaderProgram.h"
 
 void Renderer::OnInit() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
 

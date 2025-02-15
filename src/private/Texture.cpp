@@ -7,11 +7,11 @@
 
 using namespace std;
 
-shared_ptr<Texture> Texture::Create(string path, int format)
+void TextureFactory::onCreate(std::shared_ptr<Texture> res, std::string path)
 {
-    shared_ptr<Texture> This(new Texture);
-    glGenTextures(1, &This->id);
-    glBindTexture(GL_TEXTURE_2D, This->id);
+    cout << format("loading texture, path:{}", path) << endl;
+    glGenTextures(1, &res->id);
+    glBindTexture(GL_TEXTURE_2D, res->id);
     // set the texture wrapping parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
                     GL_REPEAT); // set texture wrapping to GL_REPEAT
@@ -28,14 +28,22 @@ shared_ptr<Texture> Texture::Create(string path, int format)
         stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
     if (data)
     {
+        // 检查纹理格式
+        GLenum format;
+        if (nrChannels == 1)
+            format = GL_RED;
+        else if (nrChannels == 3)
+            format = GL_RGB;
+        else if (nrChannels == 4)
+            format = GL_RGBA;
+
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
                      GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else
     {
-        cout << "Failed to load texture" << endl;
+        cout << format("Failed to load texture, path:{}", path) << endl;
     }
     stbi_image_free(data);
-    return This;
 }

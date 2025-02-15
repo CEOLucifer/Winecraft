@@ -7,11 +7,11 @@
 
 using namespace std;
 
-uint32_t Mesh::vao_next_id = 1;
-uint32_t Mesh::vbo_next_id = 1;
-uint32_t Mesh::ebo_next_id = 1;
+uint32_t MeshFactory::vao_next_id = 1;
+uint32_t MeshFactory::vbo_next_id = 1;
+uint32_t MeshFactory::ebo_next_id = 1;
 
-shared_ptr<Mesh> Mesh::Create()
+shared_ptr<Mesh> MeshFactory::Create()
 {
     shared_ptr<Mesh> This(new Mesh);
 
@@ -65,9 +65,9 @@ void Mesh::SetIndices(std::vector<uint32_t>&& value)
     drawMode = Indices;
 }
 
-std::shared_ptr<Mesh> Mesh::CreateCube()
+std::shared_ptr<Mesh> MeshFactory::CreateCube()
 {
-    auto This = Mesh::Create();
+    auto This = Create();
     vector<Vertex> vertices = {
         // 前面
         {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
@@ -117,9 +117,9 @@ std::shared_ptr<Mesh> Mesh::CreateCube()
     return This;
 }
 
-std::shared_ptr<Mesh> Mesh::CreatePlane()
+std::shared_ptr<Mesh> MeshFactory::CreatePlane()
 {
-    auto This = Mesh::Create();
+    auto This = Create();
     vector<Vertex> vertices = {
         //     ---- 位置 ----       ---- 法线 ----     - 纹理坐标 -
         {{0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},   // 右上
@@ -135,4 +135,8 @@ std::shared_ptr<Mesh> Mesh::CreatePlane()
     This->SetVertices(std::move(vertices));
     This->SetIndices(std::move(indices));
     return This;
+}
+
+void MeshFactory::onCreate(std::shared_ptr<Mesh> res, std::string path){
+
 }

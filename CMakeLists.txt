@@ -39,3 +39,10 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 target_link_libraries(LearnOpenGL PRIVATE glm)
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp
+)
+FetchContent_MakeAvailable(assimp)
+target_link_libraries(LearnOpenGL PRIVATE assimp)

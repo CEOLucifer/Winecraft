@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Node/NodeSystem.h"
 #include "Node/Parentable.h"
+#include "Resource/ResourceSystem.h"
 #include "Shader.h"
 #include <exception>
 #include <glad/glad.h>
@@ -19,6 +20,7 @@
 #include "Cube.h"
 #include "Camera.h"
 #include "InputSystem.h"
+#include "Render/Model.h"
 
 using namespace std;
 
@@ -30,6 +32,7 @@ void Run()
     RenderSystem::LoadInstance();
     GLFWwindow* window = RenderSystem::Instance()->GetWindow();
     Input::SetWindow(window);
+    ResourceSystem::LoadInstance();
 
     // 创建顶点着色器
     auto vertexShader =
@@ -60,12 +63,18 @@ void Run()
 
 
     // 纹理
-    auto tex0 = Texture::Create("res/container.jpg", GL_RGB);
-    auto tex1 = Texture::Create("res/awesomeface.png", GL_RGBA);
-    auto tex2 = Texture::Create("res/container2.png", GL_RGBA);
-    auto tex3 = Texture::Create("res/container2_specular.png", GL_RGBA);
+    TextureFactory texFac;
+    auto tex0 = texFac.Create("res/container.jpg");
+    auto tex1 = texFac.Create("res/awesomeface.png");
+    auto tex2 = texFac.Create("res/container2.png");
+    auto tex3 = texFac.Create("res/container2_specular.png");
 
-    auto meshCube = Mesh::CreateCube();
+    MeshFactory meshFac;
+    auto meshCube = meshFac.CreateCube();
+
+    // 模型
+    // auto backpackModel = Model::Create("res/backpack/backpack.obj");
+
 
     vector<glm::vec3> cubePositions = {
         glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
@@ -120,6 +129,7 @@ void Run()
         glfwSwapBuffers(window);
     }
 
+    ResourceSystem::UnloadInstance();
     RenderSystem::UnloadInstance();
     NodeSystem::UnloadInstance();
 }

@@ -1,20 +1,28 @@
 #pragma once
 
-#include "ShaderProgram.h"
+#include "Resource/Resource.h"
+#include "Resource/ResourceFactory.h"
 #include <cstdint>
 #include <memory>
+#include <glad/glad.h>
+#include <string>
 
-class Texture
+class Texture : public Resource
 {
+    friend class TextureFactory;
+
 private:
     uint32_t id;
-    
+    std::string type;
 
 public:
     ~Texture() { glDeleteTextures(1, &id); }
 
     uint32_t GetID() { return id; }
+};
 
+class TextureFactory : public ResourceFactory<Texture>
+{
 public:
-    static std::shared_ptr<Texture> Create(std::string path, int mode);
+    void onCreate(std::shared_ptr<Texture> res, std::string path) override;
 };
