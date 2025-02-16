@@ -1,9 +1,11 @@
 #include "CameraController.h"
-#include "glm/glm.hpp"
 #include "Camera.h"
 #include "GLFW/glfw3.h"
 #include "InputSystem.h"
+#include "Debug/Debug.h"
+#include <algorithm>
 
+using namespace std;
 
 void CameraController::OnUpdate(float deltaTime)
 {
@@ -19,4 +21,9 @@ void CameraController::OnUpdate(float deltaTime)
     posDelta *= deltaTime;
 
     camera->position += posDelta;
+
+
+    glm::vec2 cursorDelta = Input::GetCursorDelta() * cursorSpeed * deltaTime;
+    camera->rotation.x = clamp(camera->rotation.x + cursorDelta.y, -90.0f, 90.0f);
+    camera->rotation.y = camera->rotation.y - cursorDelta.x;
 }

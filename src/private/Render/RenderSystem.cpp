@@ -9,7 +9,7 @@ void RenderSystem::OnLoad()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
+    
     window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
     if (window == NULL)
     {
@@ -19,6 +19,7 @@ void RenderSystem::OnLoad()
     }
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -58,4 +59,6 @@ void RenderSystem::Render()
     {
         renderer->Draw(*camera.get());
     }
+
+    glfwSwapBuffers(window);
 }

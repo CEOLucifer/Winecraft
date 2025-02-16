@@ -77,7 +77,7 @@ void Run()
 
     // 模型
     ModelFactory modelFac;
-    auto backpackModel = modelFac.Create("res/cylinder.obj");
+    // auto backpackModel = modelFac.Create("res/cylinder.obj");
     // auto backpackModel = modelFac.Create("res/backpack/backpack.obj");
 
 
@@ -129,11 +129,10 @@ void Run()
 
         // 检查并调用事件
         glfwPollEvents();
+        Input::SetLastCursorPos(Input::GetCursorPos());
 
         // 渲染
         RenderSystem::Instance()->Render();
-
-        glfwSwapBuffers(window);
     }
 
     ResourceSystem::UnloadInstance();
