@@ -51,11 +51,12 @@ void Renderer::Draw(Camera& camera)
     auto spotLight = RenderSystem::Instance()->GetSpotLight();
     // 定向光
     auto directionalLight = RenderSystem::Instance()->GetDirectionalLight();
-    shaderProgram->SetVec3("light.position", spotLight->position);
-    shaderProgram->SetVec3("light.color", spotLight->Color);
-    shaderProgram->SetVec3("light.direction", directionalLight->direction);
-    shaderProgram->SetVec3("light.directionalColor", directionalLight->color);
-    shaderProgram->SetFloat("light.directionalIntensity",
+    shaderProgram->SetVec3("spotLight.position", spotLight->position);
+    shaderProgram->SetVec3("spotLight.color", spotLight->Color);
+    shaderProgram->SetVec3("spotLight.ambient", spotLight->Ambient);
+    shaderProgram->SetVec3("directionLight.dir", directionalLight->direction);
+    shaderProgram->SetVec3("directionLight.color", directionalLight->color);
+    shaderProgram->SetFloat("directionLight.intensity",
                             directionalLight->intensity);
 
     shaderProgram->SetFloat("material.shininess", material->shininess);

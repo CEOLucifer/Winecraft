@@ -59,7 +59,6 @@ void Run()
     // 设置uniform纹理位置。这一步和Renderer Draw函数中glActiveTexture对应。
     shaderProgram_1->SetInt("material.diffuse", 0);
     shaderProgram_1->SetInt("material.specular", 1);
-    shaderProgram_1->SetVec3("light.ambient", {1, 1, 1});
 
 
 

@@ -18,15 +18,32 @@ in vec2 TexCoords;
 
 struct Light
 {
-    vec3 direction;             // 定向光
-    vec3 directionalColor;      // 定向光颜色
-    float directionalIntensity; // 定向光强度
     vec3 position;
     vec3 ambient;
     vec3 color;
 };
 
 uniform Light light;
+
+// 定向光
+struct DirectionLight
+{
+    vec3 dir;        // 方向
+    vec3 color;      // 颜色
+    float intensity; // 强度
+};
+
+uniform DirectionLight directionLight;
+
+// 点光源
+struct SpotLight
+{
+    vec3 postion;
+    vec3 color;
+    vec3 ambient;
+};
+
+uniform SpotLight spotLight;
 
 void main()
 {
@@ -51,24 +68,25 @@ void main()
     // vec3 result = ambient + diffuse + specular;
     // FragColor = vec4(result, 1.0);
 
-    vec3 dirLightDir = normalize(-light.direction);
+    vec3 dirLightDir = normalize(-directionLight.dir);
 
     // 环境光
-    vec3 ambient = light.directionalIntensity * vec3(texture(material.diffuse, TexCoords));
+    vec3 ambient =
+        directionLight.intensity * vec3(texture(material.diffuse, TexCoords));
 
     // 漫反射
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(dirLightDir - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse =
-        light.directionalColor * diff * vec3(texture(material.diffuse, TexCoords));
+    vec3 diffuse = directionLight.color * diff *
+                   vec3(texture(material.diffuse, TexCoords));
 
     // 镜面光
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-dirLightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular =
-        light.directionalColor * spec * vec3(texture(material.specular, TexCoords));
+    vec3 specular = directionLight.color * spec *
+                    vec3(texture(material.specular, TexCoords));
 
     vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);
