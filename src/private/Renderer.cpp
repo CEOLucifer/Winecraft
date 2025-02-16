@@ -9,33 +9,56 @@
 #include "Mesh.h"
 #include "Texture.h"
 #include "ShaderProgram.h"
+#include "Render/Material.h"
 
 void Renderer::OnInit() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
 
 void Renderer::Draw(Camera& camera)
 {
-    if (!mesh)
+    if (!mesh || !material || !material->shaderProgram)
         return;
 
     glBindVertexArray(mesh->GetVao());
-    glUseProgram(shaderProgram->GetID());
+    glUseProgram(material->shaderProgram->GetID());
 
-    // 绑定纹理。
-    for (int i = 0; i < texs.size(); ++i)
+    // 旧版：绑定纹理。
+    // for (int i = 0; i < material->texs.size(); ++i)
+    // {
+    //     // opengl状态里至少有16个纹理。通过下面api设置纹理。
+    //     // 纹理会映射到shader的uniform sampler2D变量中。
+    //     glActiveTexture(GL_TEXTURE0 + i);
+    //     glBindTexture(GL_TEXTURE_2D, texs[i]->GetID());
+    // }
+
+    // 绑定纹理
+    // ！！！目前frag shader中只有两个纹理：diffuse 和 specular。
+    if (material->diffuseTex)
     {
-        // opengl状态里至少有16个纹理。通过下面api设置纹理。
-        // 纹理会映射到shader的uniform sampler2D变量中。
-        glActiveTexture(GL_TEXTURE0 + i);
-        glBindTexture(GL_TEXTURE_2D, texs[i]->GetID());
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, material->diffuseTex->GetID());
+    }
+    if (material->specularTex)
+    {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, material->specularTex->GetID());
     }
 
+
+    auto shaderProgram = material->shaderProgram;
     // 摄像机
     shaderProgram->SetVec3("viewPos", camera.position);
     // 点光源
     auto spotLight = RenderSystem::Instance()->GetSpotLight();
+    // 定向光
+    auto directionalLight = RenderSystem::Instance()->GetDirectionalLight();
     shaderProgram->SetVec3("light.position", spotLight->position);
     shaderProgram->SetVec3("light.color", spotLight->Color);
+    shaderProgram->SetVec3("light.direction", directionalLight->direction);
+    shaderProgram->SetVec3("light.directionalColor", directionalLight->color);
+    shaderProgram->SetFloat("light.directionalIntensity",
+                            directionalLight->intensity);
 
+    shaderProgram->SetFloat("material.shininess", material->shininess);
 
     // 变换
     // 世界矩阵

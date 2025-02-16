@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DirectionalLight.h"
 #include "Singleton.h"
 #include "SpotLight.h"
 #include <memory>
@@ -20,9 +21,10 @@ private:
     /// @brief 摄像机
     std::shared_ptr<Camera> camera;
     GLFWwindow* window = nullptr;
-    /// @brief 点光源 
-    /// 
+    /// @brief 点光源
     std::shared_ptr<SpotLight> spotLight;
+    /// @brief 定向光
+    std::shared_ptr<DirectionalLight> directionalLight;
 
 public:
     void OnLoad() override;
@@ -38,7 +40,19 @@ public:
 
     void SetSpotLight(std::shared_ptr<SpotLight> value) { spotLight = value; }
 
+
+
     std::shared_ptr<SpotLight> GetSpotLight() { return spotLight; }
+
+    void SetDirectionalLight(std::shared_ptr<DirectionalLight> value)
+    {
+        directionalLight = value;
+    }
+
+    std::shared_ptr<DirectionalLight> GetDirectionalLight()
+    {
+        return directionalLight;
+    }
 
     void Render();
 

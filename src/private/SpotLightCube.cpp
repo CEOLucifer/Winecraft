@@ -2,6 +2,7 @@
 #include "Render/Renderer.h"
 #include "Render/SpotLight.h"
 #include "ShaderProgram.h"
+#include "Render/Material.h"
 
 void SpotLightCube::OnInit()
 {
@@ -13,5 +14,6 @@ void SpotLightCube::OnInit()
 
 void SpotLightCube::OnUpdate(float deltaTime)
 {
-    renderer->GetShaderProgram()->SetVec3("lightColor", spotLight->Color);
+    renderer->GetMaterial()->shaderProgram->SetVec3("lightColor",
+                                                    spotLight->Color);
 }

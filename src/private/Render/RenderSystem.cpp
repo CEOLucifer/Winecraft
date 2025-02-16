@@ -19,7 +19,7 @@ void RenderSystem::OnLoad()
     }
     glfwMakeContextCurrent(window);
     glfwSetWindowUserPointer(window, this);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {

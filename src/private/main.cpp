@@ -2,6 +2,7 @@
 #include "Mesh.h"
 #include "Node/NodeSystem.h"
 #include "Node/Parentable.h"
+#include "Render/Material.h"
 #include "Resource/ResourceSystem.h"
 #include "Shader.h"
 #include <exception>
@@ -49,16 +50,15 @@ void Run()
     auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
     auto shaderProgram_1 =
         ShaderProgram::Create({vertexShader, fragmentShader_1});
-    auto shaderProgram_light =
+    auto shaderProgram_lightCube =
         ShaderProgram::Create({vertexShader, fragmentShader_light});
     shaderProgram->SetInt("texture1", 0);
     shaderProgram->SetInt("texture2", 1);
     // shaderProgram_1->SetVec3("material.ambient", {0.2f, 0.2f, 0.2f});
+
+    // 设置uniform纹理位置。这一步和Renderer Draw函数中glActiveTexture对应。
     shaderProgram_1->SetInt("material.diffuse", 0);
     shaderProgram_1->SetInt("material.specular", 1);
-    shaderProgram_1->SetVec3("material.diffuse", {1.0f, 0.5f, 0.31f});
-    shaderProgram_1->SetVec3("material.specular", {1.0f, 1.0f, 1.0f});
-    shaderProgram_1->SetFloat("material.shininess", 32.0f);
     shaderProgram_1->SetVec3("light.ambient", {1, 1, 1});
 
 
@@ -80,6 +80,16 @@ void Run()
     // auto backpackModel = modelFac.Create("res/cylinder.obj");
     // auto backpackModel = modelFac.Create("res/backpack/backpack.obj");
 
+    // 材质
+    MaterialFactory matFac;
+    auto material = matFac.CreateRaw();
+    material->diffuseTex = tex2;
+    material->specularTex = tex3;
+    material->shaderProgram = shaderProgram_1;
+
+    auto lightCubeMaterial = matFac.CreateRaw();
+    lightCubeMaterial->shaderProgram = shaderProgram_lightCube;
+
 
     vector<glm::vec3> cubePositions = {
         glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
@@ -88,28 +98,27 @@ void Run()
         glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
         glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
+    // 生成箱子立方体
     for (int i = 0; i < cubePositions.size(); ++i)
     {
         auto cube = Node::Create<Cube>();
         cube->renderer->SetMesh(meshCube);
         // cube->renderer->SetMesh(backpackModel->GetMeshes()[0]);
-        cube->renderer->SetShaderProgram(shaderProgram_1);
-        cube->renderer->SetTexs({tex2, tex3});
+        cube->renderer->SetMaterial(material);
         cube->renderer->position = cubePositions[i];
         // cube->renderer->scale = {0.02, 0.02, 0.02};
     }
 
-    // auto light = Renderer::Create();
-    // light->SetMesh(meshCube);
-    // light->SetShaderProgram(shaderProgram_1);
-    // auto spotLight = Node::Create<SpotLight>();
+    // 光源
     auto spotLightCube = Node::Create<SpotLightCube>();
     spotLightCube->renderer->SetMesh(meshCube);
-    spotLightCube->renderer->SetShaderProgram(shaderProgram_light);
+    spotLightCube->renderer->SetMaterial(lightCubeMaterial);
     spotLightCube->renderer->position = {10, 0, 0};
     spotLightCube->spotLight->Color = {1, 1, 1};
 
+    auto directionalLight = Node::Create<DirectionalLight>();
 
+    // 摄像机
     auto camera = Node::Create<Camera>();
     camera->position = {5, 0, 10};
     auto cameraController = Node::Create<CameraController>();

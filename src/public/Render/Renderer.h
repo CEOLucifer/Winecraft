@@ -2,14 +2,12 @@
 
 #include "Node/Node3D.h"
 #include <memory>
-#include <vector>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
 class Camera;
 class Mesh;
-class ShaderProgram;
-class Texture;
+class Material;
 
 /// @brief 渲染器
 ///
@@ -19,10 +17,7 @@ private:
     /// @brief 网格
     std::shared_ptr<Mesh> mesh;
     int polygonMode = GL_FILL;
-    /// @brief shader程序
-    std::shared_ptr<ShaderProgram> shaderProgram = 0;
-    /// @brief 纹理
-    std::vector<std::shared_ptr<Texture>> texs;
+    std::shared_ptr<Material> material;
 
 public:
     void OnInit() override;
@@ -31,17 +26,9 @@ public:
 
     void SetMesh(std::shared_ptr<Mesh> value) { mesh = value; }
 
-    void SetShaderProgram(std::shared_ptr<ShaderProgram> value)
-    {
-        shaderProgram = value;
-    }
-
-    std::shared_ptr<ShaderProgram> GetShaderProgram() { return shaderProgram; }
-
     void SetPolygonMode(int value) { polygonMode = value; }
 
-    void SetTexs(std::vector<std::shared_ptr<Texture>>&& value)
-    {
-        texs = std::move(value);
-    }
+    void SetMaterial(std::shared_ptr<Material> value) { material = value; }
+
+    std::shared_ptr<Material> GetMaterial() { return material; }
 };
