@@ -4,6 +4,8 @@
 
 class GLFWwindow;
 
+/// @brief 输入系统。
+/// 
 class Input
 {
 private:

@@ -21,6 +21,7 @@
 #include "Camera.h"
 #include "InputSystem.h"
 #include "Render/Model.h"
+#include "Render/Renderer.h"
 
 using namespace std;
 
@@ -50,14 +51,14 @@ void Run()
         ShaderProgram::Create({vertexShader, fragmentShader_1});
     auto shaderProgram_light =
         ShaderProgram::Create({vertexShader, fragmentShader_light});
-    shaderProgram->setInt("texture1", 0);
-    shaderProgram->setInt("texture2", 1);
+    shaderProgram->SetInt("texture1", 0);
+    shaderProgram->SetInt("texture2", 1);
     // shaderProgram_1->SetVec3("material.ambient", {0.2f, 0.2f, 0.2f});
-    shaderProgram_1->setInt("material.diffuse", 0);
-    shaderProgram_1->setInt("material.specular", 1);
+    shaderProgram_1->SetInt("material.diffuse", 0);
+    shaderProgram_1->SetInt("material.specular", 1);
     shaderProgram_1->SetVec3("material.diffuse", {1.0f, 0.5f, 0.31f});
     shaderProgram_1->SetVec3("material.specular", {1.0f, 1.0f, 1.0f});
-    shaderProgram_1->setFloat("material.shininess", 32.0f);
+    shaderProgram_1->SetFloat("material.shininess", 32.0f);
     shaderProgram_1->SetVec3("light.ambient", {1, 1, 1});
 
 
@@ -68,6 +69,8 @@ void Run()
     auto tex1 = texFac.Create("res/awesomeface.png");
     auto tex2 = texFac.Create("res/container2.png");
     auto tex3 = texFac.Create("res/container2_specular.png");
+    // auto tex4 = texFac.Create("res/backpack/diffuse.jpg");
+    // auto tex5 = texFac.Create("res/backpack/specular.jpg");
 
     MeshFactory meshFac;
     auto meshCube = meshFac.CreateCube();
@@ -75,6 +78,7 @@ void Run()
     // 模型
     ModelFactory modelFac;
     auto backpackModel = modelFac.Create("res/cylinder.obj");
+    // auto backpackModel = modelFac.Create("res/backpack/backpack.obj");
 
 
     vector<glm::vec3> cubePositions = {
@@ -87,12 +91,12 @@ void Run()
     for (int i = 0; i < cubePositions.size(); ++i)
     {
         auto cube = Node::Create<Cube>();
-        // cube->renderer->SetMesh(meshCube);
-        cube->renderer->SetMesh(backpackModel->GetMeshes()[0]);
-        cube->renderer->position = cubePositions[i];
+        cube->renderer->SetMesh(meshCube);
+        // cube->renderer->SetMesh(backpackModel->GetMeshes()[0]);
         cube->renderer->SetShaderProgram(shaderProgram_1);
         cube->renderer->SetTexs({tex2, tex3});
-        cube->renderer->scale = {0.02, 0.02, 0.02};
+        cube->renderer->position = cubePositions[i];
+        // cube->renderer->scale = {0.02, 0.02, 0.02};
     }
 
     // auto light = Renderer::Create();

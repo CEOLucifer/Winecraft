@@ -14,12 +14,18 @@ class Mesh : Resource
     friend class MeshFactory;
 
 private:
+    /// @brief 顶点 
+    /// 
     std::vector<Vertex> vertices;
+    /// @brief 顶点索引 
+    /// 
     std::vector<uint32_t> indices;
     uint32_t vao = 0;
     uint32_t vbo = 0;
     uint32_t ebo = 0;
     DrawMode drawMode = Normal;
+    /// @brief 默认的纹理 
+    /// 
     std::vector<std::shared_ptr<Texture>> defaultTexs;
 
 public:

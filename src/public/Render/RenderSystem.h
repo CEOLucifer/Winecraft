@@ -2,10 +2,11 @@
 
 #include "Singleton.h"
 #include "SpotLight.h"
-#include <Render/Renderer.h>
 #include <memory>
 #include <vector>
+#include <glad/glad.h>
 
+class Renderer;
 class Camera;
 class GLFWwindow;
 
@@ -14,9 +15,13 @@ class RenderSystem : public Singleton<RenderSystem>
     friend class Camera;
 
 private:
+    /// @brief 存储所有渲染器
     std::vector<std::shared_ptr<Renderer>> renderVec;
+    /// @brief 摄像机
     std::shared_ptr<Camera> camera;
     GLFWwindow* window = nullptr;
+    /// @brief 点光源 
+    /// 
     std::shared_ptr<SpotLight> spotLight;
 
 public:
@@ -35,16 +40,7 @@ public:
 
     std::shared_ptr<SpotLight> GetSpotLight() { return spotLight; }
 
-    void Render()
-    {
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        for (auto renderer : renderVec)
-        {
-            renderer->Draw(*camera.get());
-        }
-    }
+    void Render();
 
     void Add(std::shared_ptr<Renderer> renderer)
     {

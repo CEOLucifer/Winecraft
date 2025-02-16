@@ -1,6 +1,7 @@
 #include "Render/RenderSystem.h"
 #include "GLFW/glfw3.h"
 #include <iostream>
+#include "Render/Renderer.h"
 
 void RenderSystem::OnLoad()
 {
@@ -46,3 +47,15 @@ void RenderSystem::OnLoad()
 }
 
 void RenderSystem::OnUnload() { glfwTerminate(); }
+
+void RenderSystem::Render()
+{
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // 调用每个渲染器的Draw函数
+    for (auto renderer : renderVec)
+    {
+        renderer->Draw(*camera.get());
+    }
+}

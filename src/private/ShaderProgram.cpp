@@ -31,19 +31,19 @@ ShaderProgram::Create(const vector<shared_ptr<Shader>>& shaders)
     return shaderProgram;
 }
 
-void ShaderProgram::setFloat(const std::string& name, float value) const
+void ShaderProgram::SetFloat(const std::string& name, float value) const
 {
     glUseProgram(id);
     glUniform1f(glGetUniformLocation(id, name.c_str()), value);
 }
 
-void ShaderProgram::setInt(const std::string& name, int value) const
+void ShaderProgram::SetInt(const std::string& name, int value) const
 {
     glUseProgram(id);
     glUniform1i(glGetUniformLocation(id, name.c_str()), value);
 }
 
-void ShaderProgram::setBool(const std::string& name, bool value) const
+void ShaderProgram::SetBool(const std::string& name, bool value) const
 {
     glUseProgram(id);
     glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);

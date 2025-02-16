@@ -80,10 +80,18 @@ shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     // 处理索引
-    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+    int cnt = 0;
+    for (uint32_t i = 0; i < mesh->mNumFaces; i++)
     {
         aiFace face = mesh->mFaces[i];
-        for (unsigned int j = 0; j < face.mNumIndices; j++)
+        cnt += face.mNumIndices;
+    }
+    indices.reserve(cnt);
+
+    for (uint32_t i = 0; i < mesh->mNumFaces; i++)
+    {
+        aiFace face = mesh->mFaces[i];
+        for (uint32_t j = 0; j < face.mNumIndices; j++)
             indices.push_back(face.mIndices[j]);
     }
 
@@ -105,7 +113,7 @@ shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
     auto myMesh = meshFac.CreateRaw();
     myMesh->SetVertices(std::move(vertices));
     myMesh->SetIndices(std::move(indices));
-    // myMesh->SetDefaultTexs(std::move(textures));
+    myMesh->SetDefaultTexs(std::move(textures));
 
     return myMesh;
 }

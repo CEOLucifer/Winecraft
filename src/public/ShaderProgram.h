@@ -7,6 +7,8 @@
 
 class Shader;
 
+/// @brief shader程序。是shader的链接产品。
+/// 
 class ShaderProgram
 {
 private:
@@ -19,9 +21,9 @@ public:
 
     // uniform工具函数
 
-    void setBool(const std::string& name, bool value) const;
-    void setInt(const std::string& name, int value) const;
-    void setFloat(const std::string& name, float value) const;
+    void SetBool(const std::string& name, bool value) const;
+    void SetInt(const std::string& name, int value) const;
+    void SetFloat(const std::string& name, float value) const;
     void SetMat4(const std::string& name, const glm::mat4& value);
     void SetVec4(const std::string& name, const glm::vec4& value);
     void SetVec3(const std::string& name, const glm::vec3& value);
