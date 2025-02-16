@@ -11,7 +11,7 @@ uint32_t MeshFactory::vao_next_id = 1;
 uint32_t MeshFactory::vbo_next_id = 1;
 uint32_t MeshFactory::ebo_next_id = 1;
 
-shared_ptr<Mesh> MeshFactory::Create()
+shared_ptr<Mesh> MeshFactory::CreateRaw()
 {
     shared_ptr<Mesh> This(new Mesh);
 
@@ -67,7 +67,7 @@ void Mesh::SetIndices(std::vector<uint32_t>&& value)
 
 std::shared_ptr<Mesh> MeshFactory::CreateCube()
 {
-    auto This = Create();
+    auto This = CreateRaw();
     vector<Vertex> vertices = {
         // 前面
         {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
@@ -119,7 +119,7 @@ std::shared_ptr<Mesh> MeshFactory::CreateCube()
 
 std::shared_ptr<Mesh> MeshFactory::CreatePlane()
 {
-    auto This = Create();
+    auto This = CreateRaw();
     vector<Vertex> vertices = {
         //     ---- 位置 ----       ---- 法线 ----     - 纹理坐标 -
         {{0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},   // 右上
@@ -137,6 +137,4 @@ std::shared_ptr<Mesh> MeshFactory::CreatePlane()
     return This;
 }
 
-void MeshFactory::onCreate(std::shared_ptr<Mesh> res, std::string path){
-
-}
+void MeshFactory::onCreate(std::shared_ptr<Mesh> res, std::string path) {}

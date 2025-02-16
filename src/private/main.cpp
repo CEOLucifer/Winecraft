@@ -73,7 +73,8 @@ void Run()
     auto meshCube = meshFac.CreateCube();
 
     // 模型
-    // auto backpackModel = Model::Create("res/backpack/backpack.obj");
+    ModelFactory modelFac;
+    auto backpackModel = modelFac.Create("res/cylinder.obj");
 
 
     vector<glm::vec3> cubePositions = {
@@ -86,10 +87,12 @@ void Run()
     for (int i = 0; i < cubePositions.size(); ++i)
     {
         auto cube = Node::Create<Cube>();
-        cube->renderer->SetMesh(meshCube);
+        // cube->renderer->SetMesh(meshCube);
+        cube->renderer->SetMesh(backpackModel->GetMeshes()[0]);
         cube->renderer->position = cubePositions[i];
         cube->renderer->SetShaderProgram(shaderProgram_1);
         cube->renderer->SetTexs({tex2, tex3});
+        cube->renderer->scale = {0.02, 0.02, 0.02};
     }
 
     // auto light = Renderer::Create();

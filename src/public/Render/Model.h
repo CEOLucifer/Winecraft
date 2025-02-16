@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Mesh.h"
+#include "Resource/Resource.h"
+#include "Resource/ResourceFactory.h"
 #include "Texture.h"
 #include <memory>
 #include <vector>
@@ -11,13 +13,16 @@ class aiScene;
 class aiMesh;
 class aiMaterial;
 
-class Model
+class Model : public Resource
 {
+    friend class ModelFactory;
+
 private:
     std::vector<std::shared_ptr<Mesh>> meshes;
     std::string directory;
 
-
+public:
+    const std::vector<std::shared_ptr<Mesh>>& GetMeshes() { return meshes; }
 
 private:
     /*  函数   */
@@ -30,7 +35,10 @@ private:
     std::vector<std::shared_ptr<Texture>>
     loadMaterialTextures(aiMaterial* mat, aiTextureType type,
                          std::string typeName);
+};
 
-public:
-    static std::shared_ptr<Model> Create(std::string path);
+class ModelFactory : public ResourceFactory<Model>
+{
+protected:
+    void onCreate(std::shared_ptr<Model> res, std::string path) override;
 };

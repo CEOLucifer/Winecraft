@@ -48,6 +48,7 @@ shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
     vector<unsigned int> indices;
     vector<shared_ptr<Texture>> textures;
 
+    vertices.reserve(mesh->mNumVertices);
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
         Vertex vertex;
@@ -77,6 +78,7 @@ shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
 
         vertices.push_back(vertex);
     }
+
     // 处理索引
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
     {
@@ -92,6 +94,7 @@ shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
         vector<shared_ptr<Texture>> diffuseMaps = loadMaterialTextures(
             material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+
         vector<shared_ptr<Texture>> specularMaps = loadMaterialTextures(
             material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(),
@@ -99,19 +102,12 @@ shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
     }
 
     MeshFactory meshFac;
-    auto myMesh = meshFac.Create();
+    auto myMesh = meshFac.CreateRaw();
     myMesh->SetVertices(std::move(vertices));
     myMesh->SetIndices(std::move(indices));
     // myMesh->SetDefaultTexs(std::move(textures));
 
     return myMesh;
-}
-
-std::shared_ptr<Model> Model::Create(std::string path)
-{
-    shared_ptr<Model> This(new Model);
-    This->loadModel(path);
-    return This;
 }
 
 vector<shared_ptr<Texture>> Model::loadMaterialTextures(aiMaterial* mat,
@@ -132,4 +128,9 @@ vector<shared_ptr<Texture>> Model::loadMaterialTextures(aiMaterial* mat,
         textures.push_back(texture);
     }
     return textures;
+}
+
+void ModelFactory::onCreate(std::shared_ptr<Model> res, std::string path)
+{
+    res->loadModel(path);
 }

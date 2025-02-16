@@ -44,7 +44,7 @@ private:
 
 
 public:
-    std::shared_ptr<Mesh> Create();
+    std::shared_ptr<Mesh> CreateRaw();
 
     std::shared_ptr<Mesh> CreateCube();
 
