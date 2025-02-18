@@ -1,35 +1,10 @@
-#include "ShaderProgram.h"
+#include "Render/Shader/ShaderProgram.h"
 #include "Shader.h"
 #include "glm/gtc/type_ptr.hpp"
 #include <iostream>
 #include <memory>
 
 using namespace std;
-
-shared_ptr<ShaderProgram>
-ShaderProgram::Create(const vector<shared_ptr<Shader>>& shaders)
-{
-    shared_ptr<ShaderProgram> shaderProgram(new ShaderProgram);
-    shaderProgram->id = glCreateProgram();
-    for (auto each : shaders)
-    {
-        glAttachShader(shaderProgram->id, each->GetID());
-    }
-    glLinkProgram(shaderProgram->id);
-    // 检查着色器程序是否链接成功
-    {
-        int success;
-        char infoLog[512];
-        glGetProgramiv(shaderProgram->id, GL_LINK_STATUS, &success);
-        if (!success)
-        {
-            glGetProgramInfoLog(shaderProgram->id, 512, NULL, infoLog);
-            std::cout << "ERROR::SHADER::shaderProgram::LINK_FAILED\n"
-                      << infoLog << std::endl;
-        }
-    }
-    return shaderProgram;
-}
 
 void ShaderProgram::SetFloat(const std::string& name, float value) const
 {
@@ -68,4 +43,26 @@ void ShaderProgram::SetVec3(const std::string& name, const glm::vec3& value)
     glUseProgram(id);
     glUniform3fv(glGetUniformLocation(id, name.c_str()), 1,
                  glm::value_ptr(value));
+}
+
+void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders)
+{
+    id = glCreateProgram();
+    for (auto each : shaders)
+    {
+        glAttachShader(id, each->GetID());
+    }
+    glLinkProgram(id);
+    // 检查着色器程序是否链接成功
+    {
+        int success;
+        char infoLog[512];
+        glGetProgramiv(id, GL_LINK_STATUS, &success);
+        if (!success)
+        {
+            glGetProgramInfoLog(id, 512, NULL, infoLog);
+            std::cout << "ERROR::SHADER::shaderProgram::LINK_FAILED\n"
+                      << infoLog << std::endl;
+        }
+    }
 }

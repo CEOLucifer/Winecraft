@@ -1,7 +1,7 @@
 #include "SpotLightCube.h"
 #include "Render/Renderer.h"
 #include "Render/SpotLight.h"
-#include "ShaderProgram.h"
+#include "Render/Shader/ShaderProgram.h"
 #include "Render/Material.h"
 
 void SpotLightCube::OnInit()

@@ -9,7 +9,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "ShaderProgram.h"
+#include "Render/Shader/UniversalShaderProgram.h"
 #include "SpotLightCube.h"
 #include "Texture.h"
 #include "glm/fwd.hpp"
@@ -47,11 +47,13 @@ void Run()
     auto fragmentShader_light =
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/lightFrag.frag");
     // 创建着色器程序
-    auto shaderProgram = ShaderProgram::Create({vertexShader, fragmentShader});
-    auto shaderProgram_1 =
-        ShaderProgram::Create({vertexShader, fragmentShader_1});
+    auto shaderProgram = ShaderProgram::Create<UniversalShaderProgram>(
+        {vertexShader, fragmentShader});
+    auto shaderProgram_1 = ShaderProgram::Create<UniversalShaderProgram>(
+        {vertexShader, fragmentShader_1});
     auto shaderProgram_lightCube =
-        ShaderProgram::Create({vertexShader, fragmentShader_light});
+        ShaderProgram::Create<UniversalShaderProgram>(
+            {vertexShader, fragmentShader_light});
     shaderProgram->SetInt("texture1", 0);
     shaderProgram->SetInt("texture2", 1);
     // shaderProgram_1->SetVec3("material.ambient", {0.2f, 0.2f, 0.2f});
