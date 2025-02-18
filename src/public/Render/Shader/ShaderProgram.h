@@ -6,7 +6,6 @@
 #include <vector>
 #include <glad/glad.h>
 #include "Shader.h"
-#include <iostream>
 
 class Renderer;
 class Camera;
@@ -36,9 +35,14 @@ public:
     ///
     /// @param renderer
     /// @param camera
-    virtual void OnUpdateUniform(std::shared_ptr<Renderer> renderer,
+    virtual void OnRender(std::shared_ptr<Renderer> renderer,
                                  Camera& camera)
     {}
+
+protected:
+    /// @brief 由子类重写。用于设置纹理位置。 
+    /// 
+    virtual void onSetTextureLocation() {};
 
 private:
     void init(const std::vector<std::shared_ptr<Shader>>& shaders);
@@ -48,8 +52,9 @@ public:
     static std::shared_ptr<T>
     Create(const std::vector<std::shared_ptr<Shader>>& shaders)
     {
-        std::shared_ptr<T> shaderProgram(new T);
+        std::shared_ptr<ShaderProgram> shaderProgram(new T);
         shaderProgram->init(shaders);
-        return shaderProgram;
+        shaderProgram->onSetTextureLocation();
+        return std::dynamic_pointer_cast<T>(shaderProgram);
     }
 };

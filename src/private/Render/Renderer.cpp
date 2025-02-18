@@ -39,7 +39,6 @@ void Renderer::Draw(Camera& camera)
     // 观察矩阵
     glm::mat4 view = {1};
     view = camera.GetViewMat();
-    // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
     // 投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);
@@ -47,16 +46,22 @@ void Renderer::Draw(Camera& camera)
         glm::perspective(glm::radians(camera.GetFov()), camera.GetAspect(),
                          camera.GetNear(), camera.GetFar());
 
-    // 更新shader uniform
+    // shader
     glUseProgram(material->shaderProgram->GetID());
     auto shaderProgram = material->shaderProgram;
-    shaderProgram->OnUpdateUniform(CastTo<Renderer>(), camera);
+    shaderProgram->OnRender(CastTo<Renderer>(), camera);
     shaderProgram->SetMat4("model", model);
     shaderProgram->SetMat4("view", view);
     shaderProgram->SetMat4("projection", projection);
 
+    glStencilOp(StencilOp.stencilFail, StencilOp.depthFail,
+                StencilOp.depthPass);
+    glStencilFunc(StencilFunc.func, StencilFunc.ref, StencilFunc.mask);
+    glStencilMask(StencilMask);
+
     glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 
+    // 调用绘制命令
     if (mesh->GetDrawMode() == Normal)
     {
         glDrawArrays(GL_TRIANGLES, 0, mesh->GetVertices().size());

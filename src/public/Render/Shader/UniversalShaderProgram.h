@@ -4,5 +4,8 @@
 class UniversalShaderProgram : public ShaderProgram
 {
 public:
-    void OnUpdateUniform(std::shared_ptr<Renderer> renderer, Camera& camera) override;
+    void OnRender(std::shared_ptr<Renderer> renderer, Camera& camera) override;
+
+protected:
+    void onSetTextureLocation() override;
 };

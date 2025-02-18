@@ -1,15 +1,16 @@
 #include "Texture.h"
 #include <memory>
 #include <glad/glad.h>
-#include <iostream>
 #include <stb/stb_image.h>
 #include <string>
+#include "Debug/Debug.h"
 
 using namespace std;
 
 void TextureFactory::onCreate(std::shared_ptr<Texture> res, std::string path)
 {
-    cout << format("loading texture, path:{}", path) << endl;
+    Debug::Log(format("loading texture, path:{}", path));
+
     glGenTextures(1, &res->id);
     glBindTexture(GL_TEXTURE_2D, res->id);
     // set the texture wrapping parameters
@@ -43,7 +44,7 @@ void TextureFactory::onCreate(std::shared_ptr<Texture> res, std::string path)
     }
     else
     {
-        cout << format("Failed to load texture, path:{}", path) << endl;
+        Debug::Log(format("Failed to load texture, path:{}", path));
     }
     stbi_image_free(data);
 }

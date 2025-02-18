@@ -4,6 +4,8 @@
 #include <memory>
 #include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "StencilFunc.h"
+#include "StencilOp.h"
 
 class Camera;
 class Mesh;
@@ -13,10 +15,16 @@ class Material;
 ///
 class Renderer : public Node3D
 {
+public:
+    StencilOp StencilOp;
+    StencilFunc StencilFunc;
+    int StencilMask = 0x00;
+
 private:
     /// @brief 网格
     std::shared_ptr<Mesh> mesh;
     int polygonMode = GL_FILL;
+    /// @brief 材质
     std::shared_ptr<Material> material;
 
 public:

@@ -5,7 +5,14 @@
 #include "Texture.h"
 #include "Camera.h"
 
-void UniversalShaderProgram::OnUpdateUniform(std::shared_ptr<Renderer> renderer,
+void UniversalShaderProgram::onSetTextureLocation()
+{
+    // 设置uniform纹理位置。这一步和Renderer Draw函数中glActiveTexture对应。
+    SetInt("material.diffuse", 0);
+    SetInt("material.specular", 1);
+}
+
+void UniversalShaderProgram::OnRender(std::shared_ptr<Renderer> renderer,
                                              Camera& camera)
 {
     // 旧版：绑定纹理。
