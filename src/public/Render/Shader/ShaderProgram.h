@@ -31,14 +31,6 @@ public:
     void SetVec4(const std::string& name, const glm::vec4& value);
     void SetVec3(const std::string& name, const glm::vec3& value);
 
-    /// @brief 由子类重写。
-    ///
-    /// @param renderer
-    /// @param camera
-    virtual void OnRender(std::shared_ptr<Renderer> renderer,
-                                 Camera& camera)
-    {}
-
 protected:
     /// @brief 由子类重写。用于设置纹理位置。 
     /// 

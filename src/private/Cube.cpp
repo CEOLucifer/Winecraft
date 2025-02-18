@@ -1,10 +1,17 @@
 #include "Cube.h"
 #include "Render/Renderer.h"
 
-void Cube::OnInit() { renderer = Node::Create<Renderer>(); }
+void Cube::OnInit()
+{
+    Renderer::OnInit();
+    StencilFunc.func = GL_ALWAYS;
+    StencilFunc.ref = 1;
+    StencilMask = 0xFF;
+    EnableDepthTest = true;
+}
 
 void Cube::OnUpdate(float deltaTime)
 {
-    renderer->rotation.y += deltaTime * 10;
+    // rotation.y += deltaTime * 10;
     // renderer->rotation.x += deltaTime * 10;
 }

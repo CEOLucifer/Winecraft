@@ -5,13 +5,14 @@
 /// @tparam T 子类
 template <typename T> class Singleton
 {
+private:
+    static T* instance;
+
 public:
     virtual void OnLoad() {}
 
     virtual void OnUnload() {}
 
-private:
-    static T* instance;
 
 public:
     static T* LoadInstance()

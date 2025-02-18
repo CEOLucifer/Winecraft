@@ -6,21 +6,26 @@
 
 class Texture;
 class ShaderProgram;
+class Camera;
 
 /// @brief 材质
 ///
 class Material : public Resource
 {
 public:
-    std::shared_ptr<Texture> diffuseTex;
-    std::shared_ptr<Texture> specularTex;
     /// @brief shader程序
     std::shared_ptr<ShaderProgram> shaderProgram;
-    float shininess = 32.0;
+
+public:
+    virtual void OnUpdateShaderProgram(Camera& camera) {}
 };
 
 class MaterialFactory : public ResourceFactory<Material>
 {
 public:
-    static std::shared_ptr<Material> CreateRaw();
+    template <typename T> static std::shared_ptr<T> CreateRaw()
+    {
+        std::shared_ptr<T> This(new T);
+        return This;
+    }
 };

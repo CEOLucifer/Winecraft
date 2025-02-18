@@ -1,15 +1,16 @@
 #include "App.h"
+#include "Border.h"
 #include "CameraController.h"
 #include "Mesh.h"
 #include "Node/NodeSystem.h"
 #include "Node/Parentable.h"
 #include "Render/Material.h"
-#include "Render/Shader/DepthSP.h"
 #include "Resource/ResourceSystem.h"
 #include "Shader.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Render/Shader/UniversalShaderProgram.h"
+#include "Render/Shader/ShaderProgram.h"
 #include "SpotLightCube.h"
 #include "Texture.h"
 #include "glm/fwd.hpp"
@@ -23,6 +24,8 @@
 #include "InputSystem.h"
 #include "Render/Model.h"
 #include "Render/Renderer.h"
+#include "Render/RealMaterial.h"
+#include "Render/SingleColorMaterial.h"
 
 using namespace std;
 
@@ -50,7 +53,7 @@ void App::Run()
         ShaderProgram::Create<UniversalShaderProgram>({vs, fs_Universal});
     auto sp_SingleColor =
         ShaderProgram::Create<UniversalShaderProgram>({vs, fs_SingleColor});
-    auto sp_Depth = ShaderProgram::Create<DepthSP>({vs, fs_Depth});
+    auto sp_Depth = ShaderProgram::Create<ShaderProgram>({vs, fs_Depth});
 
 
     // 纹理
@@ -72,36 +75,43 @@ void App::Run()
 
     // 材质
     MaterialFactory matFac;
-    auto mat = matFac.CreateRaw();
+    auto mat = matFac.CreateRaw<RealMaterial>();
     mat->diffuseTex = tex_Container;
     mat->specularTex = tex_ContainerSpecular;
     mat->shaderProgram = sp_Universal;
 
-    auto mat_LightCube = matFac.CreateRaw();
+    auto mat_LightCube = matFac.CreateRaw<SingleColorMaterial>();
     mat_LightCube->shaderProgram = sp_SingleColor;
 
-    auto mat_SingleColor = matFac.CreateRaw();
+    auto mat_SingleColor = matFac.CreateRaw<SingleColorMaterial>();
     mat_SingleColor->shaderProgram = sp_SingleColor;
 
 
-
-    vector<glm::vec3> cubePositions = {
-        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
-
     // 生成箱子立方体
+    // vector<glm::vec3> cubePositions = {
+    //     glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+    //     glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+    //     glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+    //     glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+    //     glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+
+    vector<glm::vec3> cubePositions = {glm::vec3(0.0f, 0.0f, 0.0f)};
+
     for (int i = 0; i < cubePositions.size(); ++i)
     {
         auto cube = Node::Create<Cube>();
-        cube->renderer->SetMesh(meshCube);
-        // cube->renderer->SetMesh(backpackModel->GetMeshes()[0]);
-        cube->renderer->SetMaterial(mat);
-        cube->renderer->position = cubePositions[i];
-        // cube->renderer->scale = {0.02, 0.02, 0.02};
+        cube->position = cubePositions[i];
+        cube->SetMesh(meshCube);
+        cube->SetMaterial(mat);
+
+        // 生成边框
+        auto border = Node::Create<Border>();
+        border->position = cubePositions[i];
+        border->scale = {1.1, 1.1, 1.1};
+        border->SetMesh(meshCube);
+        border->SetMaterial(mat_SingleColor);
     }
+
 
     // 光源
     auto spotLightCube = Node::Create<SpotLightCube>();
@@ -121,7 +131,7 @@ void App::Run()
     float deltaTime = 0.0f; // 当前帧与上一帧的时间差
     float lastFrame = 0.0f; // 上一帧的时间
 
-    // 渲染循环
+    // 主循环
     while (!glfwWindowShouldClose(window))
     {
         float currentFrame = glfwGetTime();

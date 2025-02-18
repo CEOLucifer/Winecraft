@@ -19,6 +19,7 @@ public:
     StencilOp StencilOp;
     StencilFunc StencilFunc;
     int StencilMask = 0x00;
+    bool EnableDepthTest = true;
 
 private:
     /// @brief 网格

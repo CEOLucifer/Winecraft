@@ -1,13 +1,12 @@
 #include "Render/Renderer.h"
 #include "DrawMode.h"
+#include "Mesh.h"
 #include "glm/ext/matrix_transform.hpp"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Render/RenderSystem.h"
 #include "Camera.h"
-#include "Mesh.h"
-#include "Texture.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "Render/Material.h"
 
@@ -46,19 +45,36 @@ void Renderer::Draw(Camera& camera)
         glm::perspective(glm::radians(camera.GetFov()), camera.GetAspect(),
                          camera.GetNear(), camera.GetFar());
 
-    // shader
+    // 材质
+    material->OnUpdateShaderProgram(camera);
+
+    // 将变换信息传给shader
     glUseProgram(material->shaderProgram->GetID());
     auto shaderProgram = material->shaderProgram;
-    shaderProgram->OnRender(CastTo<Renderer>(), camera);
     shaderProgram->SetMat4("model", model);
     shaderProgram->SetMat4("view", view);
     shaderProgram->SetMat4("projection", projection);
 
+    // 模板测试
     glStencilOp(StencilOp.stencilFail, StencilOp.depthFail,
                 StencilOp.depthPass);
     glStencilFunc(StencilFunc.func, StencilFunc.ref, StencilFunc.mask);
-    glStencilMask(StencilMask);
+    glStencilMask(StencilMask); // 将写入的模板缓冲值
 
+    // 深度测试
+    if (EnableDepthTest)
+    {
+        // 启用深度检测。此时交换链有深度字段。
+        glEnable(GL_DEPTH_TEST);
+        // 深度检测比较函数。默认是GL_LESS
+        // glDepthFunc(GL_LESS);
+    }
+    else
+    {
+        glDisable(GL_DEPTH_TEST);
+    }
+
+    // 多边形模式
     glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 
     // 调用绘制命令

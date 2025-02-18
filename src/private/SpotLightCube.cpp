@@ -14,6 +14,6 @@ void SpotLightCube::OnInit()
 
 void SpotLightCube::OnUpdate(float deltaTime)
 {
-    renderer->GetMaterial()->shaderProgram->SetVec3("lightColor",
+    renderer->GetMaterial()->shaderProgram->SetVec3("color",
                                                     spotLight->Color);
 }
