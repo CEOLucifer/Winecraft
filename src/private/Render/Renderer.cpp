@@ -85,6 +85,18 @@ void Renderer::Draw(Camera& camera)
         glDisable(GL_BLEND);
     }
 
+    // 面剔除
+    if (FaceCull.Enable)
+    {
+        glEnable(GL_CULL_FACE);
+        glCullFace(FaceCull.CullFace);
+        glFrontFace(FaceCull.FrontFace);
+    }
+    else
+    {
+        glDisable(GL_CULL_FACE);
+    }
+
     // 多边形模式
     glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 

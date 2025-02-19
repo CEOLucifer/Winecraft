@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 #include "BlendFunc.h"
+#include "FaceCull.h"
 #include "Node/Node3D.h"
 #include <memory>
 #include <glm/glm.hpp>
@@ -28,6 +29,8 @@ public:
 
     bool EnableBlend = false;
     BlendFunc BlendFunc;
+
+    FaceCull FaceCull;
 
 private:
     /// @brief 网格
