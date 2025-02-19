@@ -1,8 +1,9 @@
 #pragma once
 
+#include <glad/glad.h>
+#include "BlendFunc.h"
 #include "Node/Node3D.h"
 #include <memory>
-#include <glad/glad.h>
 #include <glm/glm.hpp>
 #include "StencilFunc.h"
 #include "StencilOp.h"
@@ -16,10 +17,17 @@ class Material;
 class Renderer : public Node3D
 {
 public:
+    // 模板测试相关
+
     StencilOp StencilOp;
     StencilFunc StencilFunc;
     int StencilMask = 0x00;
     bool EnableDepthTest = true;
+
+    // 混合相关
+
+    bool EnableBlend = false;
+    BlendFunc BlendFunc;
 
 private:
     /// @brief 网格
@@ -27,6 +35,8 @@ private:
     int polygonMode = GL_FILL;
     /// @brief 材质
     std::shared_ptr<Material> material;
+
+    int order = 0;
 
 public:
     void OnInit() override;
@@ -40,4 +50,8 @@ public:
     void SetMaterial(std::shared_ptr<Material> value) { material = value; }
 
     std::shared_ptr<Material> GetMaterial() { return material; }
+
+    void SetOrder(int value);
+
+    int GetOrder() { return order; }
 };

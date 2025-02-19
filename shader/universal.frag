@@ -71,9 +71,11 @@ vec3 GetDirectionalLight()
 
 vec3 GetSpotLightColor()
 {
+    // 衰减系数
     float distance = length(spotLight.position - FragPos);
-    float attenuation = 1.0 / (spotLight.constant + spotLight.linear * distance +
-                               spotLight.quadratic * (distance * distance));
+    float attenuation =
+        1.0 / (spotLight.constant + spotLight.linear * distance +
+               spotLight.quadratic * (distance * distance));
 
     // 环境光
     vec3 ambient =
@@ -102,5 +104,7 @@ void main()
     vec3 result = vec3(0, 0, 0);
     result += GetDirectionalLight();
     result += GetSpotLightColor();
-    FragColor = vec4(result, 1.0);
+    FragColor =
+        vec4(result,
+             texture(material.diffuse, TexCoords).a); // 不透明度取diffuse纹理的
 }

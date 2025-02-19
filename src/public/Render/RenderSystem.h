@@ -59,6 +59,7 @@ public:
     void Add(std::shared_ptr<Renderer> renderer)
     {
         renderVec.push_back(renderer);
+        SortAll();
     }
 
     void Remove(std::shared_ptr<Renderer> renderer)
@@ -72,4 +73,7 @@ public:
             }
         }
     }
+
+    /// @brief 对所有Renderer的渲染顺序排序 
+    void SortAll();
 };

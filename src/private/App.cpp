@@ -37,6 +37,35 @@ void App::Run()
     Input::SetWindow(window);
     ResourceSystem::LoadInstance();
 
+    StartUser();
+
+    float deltaTime = 0.0f; // 当前帧与上一帧的时间差
+    float lastFrame = 0.0f; // 上一帧的时间
+
+    // 主循环
+    while (!glfwWindowShouldClose(window))
+    {
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        NodeSystem::Instance()->Update(deltaTime);
+
+        // 检查并调用事件
+        glfwPollEvents();
+        Input::SetLastCursorPos(Input::GetCursorPos());
+
+        // 渲染
+        RenderSystem::Instance()->Render();
+    }
+
+    ResourceSystem::UnloadInstance();
+    RenderSystem::UnloadInstance();
+    NodeSystem::UnloadInstance();
+}
+
+void App::StartUser()
+{
     // 创建顶点着色器
     auto vs = Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/vert0.vert");
     // 创建片段着色器
@@ -62,11 +91,13 @@ void App::Run()
     auto tex1 = texFac.Create("res/awesomeface.png");
     auto tex_Container = texFac.Create("res/container2.png");
     auto tex_ContainerSpecular = texFac.Create("res/container2_specular.png");
-    // auto tex4 = texFac.Create("res/backpack/diffuse.jpg");
-    // auto tex5 = texFac.Create("res/backpack/specular.jpg");
+    auto tex_Grass = texFac.Create("res/grass.png");
+    auto tex_Window = texFac.Create("res/blending_transparent_window.png");
 
+    // 网格
     MeshFactory meshFac;
     auto meshCube = meshFac.CreateCube();
+    auto meshPlane = meshFac.CreatePlane();
 
     // 模型
     ModelFactory modelFac;
@@ -75,10 +106,10 @@ void App::Run()
 
     // 材质
     MaterialFactory matFac;
-    auto mat_Real = matFac.CreateRaw<RealMaterial>();
-    mat_Real->diffuseTex = tex_Container;
-    mat_Real->specularTex = tex_ContainerSpecular;
-    mat_Real->shaderProgram = sp_Universal;
+    auto mat_Container = matFac.CreateRaw<RealMaterial>();
+    mat_Container->diffuseTex = tex_Container;
+    mat_Container->specularTex = tex_ContainerSpecular;
+    mat_Container->shaderProgram = sp_Universal;
 
     auto mat_LightCube = matFac.CreateRaw<SingleColorMaterial>();
     mat_LightCube->shaderProgram = sp_SingleColor;
@@ -88,32 +119,46 @@ void App::Run()
     mat_Border->shaderProgram = sp_SingleColor;
     mat_Border->Color = {1.0, 1.0, 0};
 
+    auto mat_Grass = matFac.CreateRaw<RealMaterial>();
+    mat_Grass->diffuseTex = tex_Grass;
+    mat_Grass->shaderProgram = sp_Universal;
+
+    auto mat_Window = matFac.CreateRaw<RealMaterial>();
+    mat_Window->diffuseTex = tex_Window;
+    mat_Window->shaderProgram = sp_Universal;
 
 
-    // 生成箱子立方体
-    // vector<glm::vec3> cubePositions = {
-    //     glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-    //     glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-    //     glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-    //     glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-    //     glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
-    vector<glm::vec3> cubePositions = {glm::vec3(0.0f, 0.0f, 0.0f)};
+    // 创建箱子立方体
+    vector<glm::vec3> cubePositions = {
+        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
     for (int i = 0; i < cubePositions.size(); ++i)
     {
-        auto cube = Node::Create<Cube>();
+        auto cube = Node::Create<Renderer>();
         cube->position = cubePositions[i];
         cube->SetMesh(meshCube);
-        cube->SetMaterial(mat_Real);
+        cube->SetMaterial(mat_Container);
 
-        // 生成边框
-        auto border = Node::Create<Border>();
-        border->position = cubePositions[i];
-        border->scale = {1.1, 1.1, 1.1};
-        border->SetMesh(meshCube);
-        border->SetMaterial(mat_Border);
+        // 创建箱子的边框
+        // auto border = Node::Create<Border>();
+        // border->position = cubePositions[i];
+        // border->scale = {1.1, 1.1, 1.1};
+        // border->SetMesh(meshCube);
+        // border->SetMaterial(mat_Border);
     }
+
+    // 创建窗户
+    auto window1 = Node::Create<Renderer>();
+    window1->position = {5, 0, 5};
+    window1->SetMesh(meshPlane);
+    window1->SetMaterial(mat_Window);
+    window1->EnableBlend = true;
+    window1->SetOrder(-1);
 
 
     // 光源
@@ -130,28 +175,4 @@ void App::Run()
     camera->position = {5, 0, 10};
     auto cameraController = Node::Create<CameraController>();
     cameraController->camera = camera;
-
-    float deltaTime = 0.0f; // 当前帧与上一帧的时间差
-    float lastFrame = 0.0f; // 上一帧的时间
-
-    // 主循环
-    while (!glfwWindowShouldClose(window))
-    {
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-
-        NodeSystem::Instance()->Update(deltaTime);
-
-        // 检查并调用事件
-        glfwPollEvents();
-        Input::SetLastCursorPos(Input::GetCursorPos());
-
-        // 渲染
-        RenderSystem::Instance()->Render();
-    }
-
-    ResourceSystem::UnloadInstance();
-    RenderSystem::UnloadInstance();
-    NodeSystem::UnloadInstance();
 }

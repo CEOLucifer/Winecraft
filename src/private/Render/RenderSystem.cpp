@@ -2,8 +2,8 @@
 #include "GLFW/glfw3.h"
 #include "Render/Renderer.h"
 #include "Debug/Debug.h"
-#include "Render/Shader/ShaderProgram.h"
 #include <format>
+#include <algorithm>
 
 using namespace std;
 
@@ -35,6 +35,7 @@ void RenderSystem::OnLoad()
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 
 
     // 事件监听
@@ -75,4 +76,10 @@ void RenderSystem::Render()
 
 
     glfwSwapBuffers(window);
+}
+
+void RenderSystem::SortAll()
+{
+    ranges::sort(renderVec,
+                 [](auto a, auto b) { return a->GetOrder() > b->GetOrder(); });
 }

@@ -74,6 +74,17 @@ void Renderer::Draw(Camera& camera)
         glDisable(GL_DEPTH_TEST);
     }
 
+    // 混合
+    if (EnableBlend)
+    {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    else
+    {
+        glDisable(GL_BLEND);
+    }
+
     // 多边形模式
     glPolygonMode(GL_FRONT_AND_BACK, polygonMode);
 
@@ -87,4 +98,9 @@ void Renderer::Draw(Camera& camera)
         glDrawElements(GL_TRIANGLES, mesh->GetIndices().size(), GL_UNSIGNED_INT,
                        0);
     }
+}
+void Renderer::SetOrder(int value)
+{
+    order = value;
+    RenderSystem::Instance()->SortAll();
 }
