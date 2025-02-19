@@ -14,4 +14,9 @@ public:
     {
         info = std::format("({}, {})", value.x, value.y);
     }
+
+    Debugable(const glm::vec3 value)
+    {
+        info = std::format("({}, {}, {})", value.x, value.y, value.z);
+    }
 };

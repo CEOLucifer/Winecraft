@@ -8,5 +8,8 @@
 class SingleColorMaterial : public Material
 {
 public:
-    glm::vec4 Color;
+    glm::vec3 Color = glm::vec3(1.0f);
+
+public:
+    void OnUpdateShaderProgram(Camera& camera) override;
 };

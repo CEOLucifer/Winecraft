@@ -9,11 +9,10 @@ void Border::OnInit()
     StencilFunc.func = GL_NOTEQUAL;
     StencilFunc.ref = 1;
     StencilMask = 0x00;
-    EnableDepthTest = false;
+    // EnableDepthTest = false;
 }
 
 void Border::OnUpdate(float deltaTime)
 {
     Renderer::OnUpdate(deltaTime);
-    GetMaterial()->shaderProgram->SetVec4("color", {1, 1, 1, 1});
 }

@@ -3,6 +3,7 @@
 #include "GLFW/glfw3.h"
 #include "InputSystem.h"
 #include <algorithm>
+#include "Debug/Debug.h"
 
 using namespace std;
 

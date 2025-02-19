@@ -28,4 +28,6 @@ public:
         RenderSystem::Instance()->camera =
             std::dynamic_pointer_cast<Camera>(weak.lock());
     }
+
+    void OnUpdate(float deltaTime) override;
 };

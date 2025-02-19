@@ -14,7 +14,11 @@ private:
     static glm::vec2 lastCursorPos;
 
 public:
-    static void SetWindow(GLFWwindow* value) { window = value; }
+    static void SetWindow(GLFWwindow* value)
+    {
+        window = value;
+        lastCursorPos = GetCursorPos();
+    }
 
     static bool GetKey(int key, int type)
     {

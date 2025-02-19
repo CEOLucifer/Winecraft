@@ -75,16 +75,19 @@ void App::Run()
 
     // 材质
     MaterialFactory matFac;
-    auto mat = matFac.CreateRaw<RealMaterial>();
-    mat->diffuseTex = tex_Container;
-    mat->specularTex = tex_ContainerSpecular;
-    mat->shaderProgram = sp_Universal;
+    auto mat_Real = matFac.CreateRaw<RealMaterial>();
+    mat_Real->diffuseTex = tex_Container;
+    mat_Real->specularTex = tex_ContainerSpecular;
+    mat_Real->shaderProgram = sp_Universal;
 
     auto mat_LightCube = matFac.CreateRaw<SingleColorMaterial>();
     mat_LightCube->shaderProgram = sp_SingleColor;
+    mat_LightCube->Color = {1.0, 0, 0};
 
-    auto mat_SingleColor = matFac.CreateRaw<SingleColorMaterial>();
-    mat_SingleColor->shaderProgram = sp_SingleColor;
+    auto mat_Border = matFac.CreateRaw<SingleColorMaterial>();
+    mat_Border->shaderProgram = sp_SingleColor;
+    mat_Border->Color = {1.0, 1.0, 0};
+
 
 
     // 生成箱子立方体
@@ -102,14 +105,14 @@ void App::Run()
         auto cube = Node::Create<Cube>();
         cube->position = cubePositions[i];
         cube->SetMesh(meshCube);
-        cube->SetMaterial(mat);
+        cube->SetMaterial(mat_Real);
 
         // 生成边框
         auto border = Node::Create<Border>();
         border->position = cubePositions[i];
         border->scale = {1.1, 1.1, 1.1};
         border->SetMesh(meshCube);
-        border->SetMaterial(mat_SingleColor);
+        border->SetMaterial(mat_Border);
     }
 
 
@@ -118,7 +121,7 @@ void App::Run()
     spotLightCube->renderer->SetMesh(meshCube);
     spotLightCube->renderer->SetMaterial(mat_LightCube);
     spotLightCube->renderer->position = {10, 0, 0};
-    spotLightCube->spotLight->Color = {1, 1, 1};
+    spotLightCube->spotLight->Color = {1, 0, 0};
 
     auto directionalLight = Node::Create<DirectionalLight>();
 
