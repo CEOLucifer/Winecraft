@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Render/RenderSystem.h"
 #include <glm/glm.hpp>
-#include <memory>
 #include "Node/Node3D.h"
+#include "Typedef.h"
+
+class FrameBuffer;
 
 /// @brief 摄像机
 class Camera : public Node3D
@@ -15,6 +16,11 @@ private:
     float far = 100.0f;
     float fov = 45.0f;
 
+    /// @brief 渲染的目标帧缓冲
+    Sp<FrameBuffer> targetFrameBuffer;
+
+    glm::vec3 clearColor = {0.1, 0.1, 0.1};
+
 public:
     float GetWidth() { return width; }
     float GetHeight() { return height; }
@@ -23,11 +29,14 @@ public:
     float GetFar() { return far; }
     float GetFov() { return fov; }
 
-    void OnInit() override
-    {
-        RenderSystem::Instance()->camera =
-            std::dynamic_pointer_cast<Camera>(weak.lock());
-    }
+    void OnInit() override;
 
     void OnUpdate(float deltaTime) override;
+
+    void OnRender();
+
+    void SetTargetFrameBuffer(Sp<FrameBuffer> value)
+    {
+        targetFrameBuffer = value;
+    }
 };

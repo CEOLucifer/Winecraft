@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Node/NodeSystem.h"
 #include "Node/Parentable.h"
+#include "Render/FrameBuffer.h"
 #include "Render/Material.h"
 #include "Resource/ResourceSystem.h"
 #include "Shader.h"
@@ -170,9 +171,23 @@ void App::StartUser()
 
     auto directionalLight = Node::Create<DirectionalLight>();
 
+
+
+
+
     // 摄像机
-    auto camera = Node::Create<Camera>();
-    camera->position = {5, 0, 10};
+    auto mainCamera = Node::Create<Camera>();
+    mainCamera->position = {5, 0, 10};
     auto cameraController = Node::Create<CameraController>();
-    cameraController->camera = camera;
+    cameraController->camera = mainCamera;
+
+
+
+    // 帧缓冲
+    // auto frameBuffer = FrameBuffer::CreateNormal();
+
+    // 输出到自定义帧缓冲的摄像机
+    // auto camera_FrameBuffer = Node::Create<Camera>();
+    // camera_FrameBuffer->position = {5, 0, 10};
+    // camera_FrameBuffer->SetTargetFrameBuffer(frameBuffer);
 }

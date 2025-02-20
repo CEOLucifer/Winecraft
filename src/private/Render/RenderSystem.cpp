@@ -4,6 +4,7 @@
 #include "Debug/Debug.h"
 #include <format>
 #include <algorithm>
+#include "Camera.h"
 
 using namespace std;
 
@@ -58,22 +59,11 @@ void RenderSystem::OnUnload() { glfwTerminate(); }
 
 void RenderSystem::Render()
 {
-    // 以下3行似乎也会影响glClear的效果。放这里好点
-    glStencilMask(0xFF);
-    glStencilFunc(GL_ALWAYS, 0, 0xFF);
-    glEnable(GL_DEPTH_TEST);
-
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClearDepth(1);
-    glClearStencil(0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-    // 调用每个渲染器的Draw函数
-    for (auto renderer : renderVec)
+    // 调用每个摄像机的Render
+    for(auto each : cameraVec)
     {
-        renderer->Draw(*camera.get());
+        each->OnRender();
     }
-
 
     glfwSwapBuffers(window);
 }

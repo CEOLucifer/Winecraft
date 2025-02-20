@@ -43,12 +43,6 @@ public:
 
 class MeshFactory : public ResourceFactory<Mesh>
 {
-private:
-    static uint32_t vao_next_id;
-    static uint32_t vbo_next_id;
-    static uint32_t ebo_next_id;
-
-
 public:
     std::shared_ptr<Mesh> CreateRaw();
 

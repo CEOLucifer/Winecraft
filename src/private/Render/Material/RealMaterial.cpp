@@ -2,6 +2,7 @@
 #include "Render/Shader/ShaderProgram.h"
 #include "Texture.h"
 #include "Camera.h"
+#include "Render/RenderSystem.h"
 
 void RealMaterial::OnUpdateShaderProgram(Camera& camera)
 {

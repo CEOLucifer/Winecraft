@@ -8,6 +8,8 @@
 #include <glm/glm.hpp>
 #include "StencilFunc.h"
 #include "StencilOp.h"
+#include "Texture.h"
+#include "Typedef.h"
 
 class Camera;
 class Mesh;
@@ -35,7 +37,9 @@ public:
 private:
     /// @brief 网格
     std::shared_ptr<Mesh> mesh;
+
     int polygonMode = GL_FILL;
+
     /// @brief 材质
     std::shared_ptr<Material> material;
 

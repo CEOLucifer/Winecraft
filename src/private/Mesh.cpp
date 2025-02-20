@@ -7,23 +7,15 @@
 
 using namespace std;
 
-uint32_t MeshFactory::vao_next_id = 1;
-uint32_t MeshFactory::vbo_next_id = 1;
-uint32_t MeshFactory::ebo_next_id = 1;
-
 shared_ptr<Mesh> MeshFactory::CreateRaw()
 {
     shared_ptr<Mesh> This(new Mesh);
 
-    glGenVertexArrays(vao_next_id, &This->vao);
-    ++vao_next_id;
+    glGenVertexArrays(1, &This->vao);
     glBindVertexArray(This->vao);
 
-    glGenBuffers(vbo_next_id, &This->vbo);
-    ++vbo_next_id;
-
-    glGenBuffers(ebo_next_id, &This->ebo);
-    ++ebo_next_id;
+    glGenBuffers(1, &This->vbo);
+    glGenBuffers(1, &This->ebo);
 
     return This;
 }

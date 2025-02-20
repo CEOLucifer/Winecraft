@@ -3,6 +3,7 @@
 #include "DirectionalLight.h"
 #include "Singleton.h"
 #include "SpotLight.h"
+#include "Typedef.h"
 #include <memory>
 #include <vector>
 #include <glad/glad.h>
@@ -17,14 +18,18 @@ class RenderSystem : public Singleton<RenderSystem>
 
 private:
     /// @brief 存储所有渲染器
-    std::vector<std::shared_ptr<Renderer>> renderVec;
+    std::vector<Sp<Renderer>> renderVec;
+
     /// @brief 摄像机
-    std::shared_ptr<Camera> camera;
+    std::vector<Sp<Camera>> cameraVec;
+
     GLFWwindow* window = nullptr;
+
     /// @brief 点光源
-    std::shared_ptr<SpotLight> spotLight;
+    Sp<SpotLight> spotLight;
+    
     /// @brief 定向光
-    std::shared_ptr<DirectionalLight> directionalLight;
+    Sp<DirectionalLight> directionalLight;
 
 public:
     void OnLoad() override;
@@ -74,6 +79,20 @@ public:
         }
     }
 
-    /// @brief 对所有Renderer的渲染顺序排序 
+    /// @brief 对所有Renderer的渲染顺序排序
     void SortAll();
+
+    void AddCamera(Sp<Camera> camera) { cameraVec.push_back(camera); }
+
+    void RemoveCamera(Sp<Camera> camera)
+    {
+        for (auto each = cameraVec.begin(); each != cameraVec.end(); each++)
+        {
+            if (*each == camera)
+            {
+                cameraVec.erase(each);
+                break;
+            }
+        }
+    }
 };

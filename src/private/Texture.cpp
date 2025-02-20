@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void TextureFactory::onCreate(std::shared_ptr<Texture> res, std::string path)
+void TextureFactory::onCreate(Sp<Texture> res, string path)
 {
     Debug::Log(format("loading texture, path:{}", path));
 
@@ -15,11 +15,11 @@ void TextureFactory::onCreate(std::shared_ptr<Texture> res, std::string path)
     glBindTexture(GL_TEXTURE_2D, res->id);
 
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,
-    //                 GL_REPEAT); 
+    //                 GL_REPEAT);
     // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -51,4 +51,33 @@ void TextureFactory::onCreate(std::shared_ptr<Texture> res, std::string path)
         Debug::Log(format("Failed to load texture, path:{}", path));
     }
     stbi_image_free(data);
+}
+
+Sp<Texture> TextureFactory::CreateRaw(int internalFormat, int format, int width,
+                                      int height, int type)
+{
+    Sp<Texture> This(new Texture);
+    glGenTextures(1, &This->id);
+    glBindTexture(GL_TEXTURE_2D, This->id);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format,
+                 type, NULL);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    This->internalFormt = internalFormat;
+    This->format = format;
+    return This;
+}
+
+Sp<Texture> TextureFactory::CreateRGBA(int width, int height)
+{
+    return CreateRaw(GL_RGBA, GL_RGBA, width, height, GL_UNSIGNED_BYTE);
+}
+
+Sp<Texture> TextureFactory::CreateDepthStencil(int width, int height)
+{
+    return CreateRaw(GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, width, height,
+                     GL_UNSIGNED_INT_24_8);
 }
