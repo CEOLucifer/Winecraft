@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void FrameBuffer::Destroy() { glDeleteFramebuffers(1, &id); }
+FrameBuffer::~FrameBuffer() { glDeleteFramebuffers(1, &id); }
 
 void FrameBuffer::BindTexture(Sp<Texture> tex)
 {
@@ -59,6 +59,7 @@ void FrameBuffer::BindRenderBuffer(Sp<RenderBuffer> renderBuffer)
 
 bool FrameBuffer::IsCompleted()
 {
+    glBindFramebuffer(GL_FRAMEBUFFER, id);
     return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
 }
 
@@ -69,15 +70,15 @@ Sp<FrameBuffer> FrameBuffer::Create()
     return This;
 }
 
-Sp<FrameBuffer> FrameBuffer::CreateNormal()
+Sp<FrameBuffer> FrameBuffer::CreateUtility(int width, int height)
 {
     auto This = Create();
 
     TextureFactory texFac;
-    auto rgba = texFac.CreateRGBA(800, 600);
+    auto rgba = texFac.CreateRGBA(width, height);
     This->BindRGBA(rgba);
 
-    auto renderBuffer = RenderBuffer::Create(800, 600);
+    auto renderBuffer = RenderBuffer::Create(width, height);
     This->BindRenderBuffer(renderBuffer);
 
     assert(This->IsCompleted());

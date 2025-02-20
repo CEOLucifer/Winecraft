@@ -27,6 +27,8 @@ void CameraController::OnUpdate(float deltaTime)
 
     camera->position += posDelta;
 
+    Debug::Log(1 / deltaTime);
+
 
     glm::vec2 cursorDelta = Input::GetCursorDelta() * cursorSpeed * deltaTime;
     camera->rotation.x =

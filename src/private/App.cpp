@@ -27,6 +27,7 @@
 #include "Render/Renderer.h"
 #include "Render/RealMaterial.h"
 #include "Render/SingleColorMaterial.h"
+#include "Debug/Debug.h"
 
 using namespace std;
 
@@ -184,10 +185,20 @@ void App::StartUser()
 
 
     // 帧缓冲
-    // auto frameBuffer = FrameBuffer::CreateNormal();
+    auto frameBuffer = FrameBuffer::CreateUtility(800, 600);
 
     // 输出到自定义帧缓冲的摄像机
-    // auto camera_FrameBuffer = Node::Create<Camera>();
-    // camera_FrameBuffer->position = {5, 0, 10};
-    // camera_FrameBuffer->SetTargetFrameBuffer(frameBuffer);
+    auto camera_FrameBuffer = Node::Create<Camera>();
+    camera_FrameBuffer->position = {10, 0, 10};
+    camera_FrameBuffer->rotation.y = 45;
+    camera_FrameBuffer->SetTargetFrameBuffer(frameBuffer);
+
+    auto mat_frameBuffer = matFac.CreateRaw<RealMaterial>();
+    mat_frameBuffer->shaderProgram = sp_Universal;
+    mat_frameBuffer->diffuseTex = frameBuffer->GetTexture();
+
+    auto cube = Node::Create<Renderer>();
+    cube->position = {5, 0, 0};
+    cube->SetMesh(meshCube);
+    cube->SetMaterial(mat_frameBuffer);
 }

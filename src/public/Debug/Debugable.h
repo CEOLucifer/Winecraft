@@ -19,4 +19,10 @@ public:
     {
         info = std::format("({}, {}, {})", value.x, value.y, value.z);
     }
+
+    Debugable(const std::string& value) { info = value; }
+
+    Debugable(const char* value) { info = value; }
+
+    Debugable(auto value) { info = std::format("{}", value); }
 };
