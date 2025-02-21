@@ -13,12 +13,12 @@ private:
     std::shared_ptr<ParentNode> root;
 
 public:
-    void Update(float deltaTime);
+    void Update();
 
     void OnLoad() override;
 
     std::shared_ptr<ParentNode> GetRoot() { return root; }
 
 private:
-    void updateNode(std::shared_ptr<Node> node, float deltaTime);
+    void updateNode(std::shared_ptr<Node> node);
 };

@@ -8,15 +8,24 @@ void RealMaterial::OnUpdateShaderProgram(Camera& camera)
 {
     // 绑定纹理
     // ！！！目前frag shader中只有两个纹理：diffuse 和 specular。
+    glActiveTexture(GL_TEXTURE0);
     if (diffuseTex)
     {
-        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, diffuseTex->GetID());
     }
+    else
+    {
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    glActiveTexture(GL_TEXTURE1);
     if (specularTex)
     {
-        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specularTex->GetID());
+    }
+    else
+    {
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     // 绑定多个纹理。

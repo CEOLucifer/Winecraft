@@ -2,7 +2,7 @@
 
 #include "Material.h"
 
-/// @brief 现实材质
+/// @brief 真实材质
 ///
 class RealMaterial : public Material
 {

@@ -28,6 +28,7 @@
 #include "Render/RealMaterial.h"
 #include "Render/SingleColorMaterial.h"
 #include "Debug/Debug.h"
+#include "TimeSystem.h"
 
 using namespace std;
 
@@ -36,26 +37,22 @@ void App::Run()
     NodeSystem::LoadInstance();
     RenderSystem::LoadInstance();
     GLFWwindow* window = RenderSystem::Instance()->GetWindow();
-    Input::SetWindow(window);
     ResourceSystem::LoadInstance();
-
+    Input::init(window);
+    Time::init();
+    
     StartUser();
-
-    float deltaTime = 0.0f; // 当前帧与上一帧的时间差
-    float lastFrame = 0.0f; // 上一帧的时间
 
     // 主循环
     while (!glfwWindowShouldClose(window))
     {
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
+        Time::record();
+        Input::record();
 
-        NodeSystem::Instance()->Update(deltaTime);
+        NodeSystem::Instance()->Update();
 
         // 检查并调用事件
         glfwPollEvents();
-        Input::SetLastCursorPos(Input::GetCursorPos());
 
         // 渲染
         RenderSystem::Instance()->Render();
@@ -160,7 +157,7 @@ void App::StartUser()
     window1->SetMesh(meshPlane);
     window1->SetMaterial(mat_Window);
     window1->EnableBlend = true;
-    window1->SetOrder(-1);
+    window1->SetOrder(1);
 
 
     // 光源

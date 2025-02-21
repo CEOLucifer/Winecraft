@@ -12,7 +12,7 @@ void Border::OnInit()
     // EnableDepthTest = false;
 }
 
-void Border::OnUpdate(float deltaTime)
+void Border::OnUpdate()
 {
-    Renderer::OnUpdate(deltaTime);
+    Renderer::OnUpdate();
 }

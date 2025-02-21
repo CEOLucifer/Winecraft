@@ -3,7 +3,7 @@
 #include "Render/RenderSystem.h"
 #include "Render/Renderer.h"
 
-void Camera::OnUpdate(float deltaTime) {}
+void Camera::OnUpdate() {}
 
 void Camera::OnRender()
 {
@@ -37,6 +37,7 @@ void Camera::OnRender()
 
 void Camera::OnInit()
 {
+    // 注册到渲染系统。
     RenderSystem::Instance()->AddCamera(
         dynamic_pointer_cast<Camera>(weak.lock()));
 }

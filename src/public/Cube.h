@@ -12,5 +12,5 @@ class Cube : public Renderer
 public:
     void OnInit() override;
 
-    void OnUpdate(float deltaTime) override;
+    void OnUpdate() override;
 };

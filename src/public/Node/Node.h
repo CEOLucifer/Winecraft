@@ -20,7 +20,7 @@ private:
 public:
     virtual void OnInit() {}
 
-    virtual void OnUpdate(float deltaTime) {}
+    virtual void OnUpdate() {}
 
     virtual void OnDestory() {}
 

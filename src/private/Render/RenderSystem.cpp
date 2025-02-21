@@ -60,7 +60,7 @@ void RenderSystem::OnUnload() { glfwTerminate(); }
 void RenderSystem::Render()
 {
     // 调用每个摄像机的Render
-    for(auto each : cameraVec)
+    for (auto each : cameraVec)
     {
         each->OnRender();
     }
@@ -71,5 +71,5 @@ void RenderSystem::Render()
 void RenderSystem::SortAll()
 {
     ranges::sort(renderVec,
-                 [](auto a, auto b) { return a->GetOrder() > b->GetOrder(); });
+                 [](auto a, auto b) { return a->GetOrder() < b->GetOrder(); });
 }

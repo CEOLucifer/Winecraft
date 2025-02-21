@@ -17,4 +17,4 @@ void SpotLightCube::OnInit()
     renderer->position = {10, 0, 0};
 }
 
-void SpotLightCube::OnUpdate(float deltaTime) {}
+void SpotLightCube::OnUpdate() {}

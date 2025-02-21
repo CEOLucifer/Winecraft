@@ -10,7 +10,7 @@ void Cube::OnInit()
     EnableDepthTest = true;
 }
 
-void Cube::OnUpdate(float deltaTime)
+void Cube::OnUpdate()
 {
     // rotation.y += deltaTime * 10;
     // renderer->rotation.x += deltaTime * 10;

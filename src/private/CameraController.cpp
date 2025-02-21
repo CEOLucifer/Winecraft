@@ -4,10 +4,11 @@
 #include "InputSystem.h"
 #include <algorithm>
 #include "Debug/Debug.h"
+#include "TimeSystem.h"
 
 using namespace std;
 
-void CameraController::OnUpdate(float deltaTime)
+void CameraController::OnUpdate()
 {
     glm::vec3 posDelta = {};
     if (Input::GetKey(GLFW_KEY_W, GLFW_PRESS))
@@ -18,7 +19,7 @@ void CameraController::OnUpdate(float deltaTime)
         posDelta += -camera->GetRight() * cameraSpeed;
     if (Input::GetKey(GLFW_KEY_D, GLFW_PRESS))
         posDelta += camera->GetRight() * cameraSpeed;
-    posDelta *= deltaTime;
+    posDelta *= Time::GetDeltaTime();
 
     if (Input::GetKey(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS))
     {
@@ -27,10 +28,11 @@ void CameraController::OnUpdate(float deltaTime)
 
     camera->position += posDelta;
 
-    Debug::Log(1 / deltaTime);
+    // Debug::Log(1 / deltaTime);
 
 
-    glm::vec2 cursorDelta = Input::GetCursorDelta() * cursorSpeed * deltaTime;
+    glm::vec2 cursorDelta =
+        Input::GetCursorDelta() * cursorSpeed * Time::GetDeltaTime();
     camera->rotation.x =
         clamp(camera->rotation.x + cursorDelta.y, -90.0f, 90.0f);
     camera->rotation.y = camera->rotation.y - cursorDelta.x;
