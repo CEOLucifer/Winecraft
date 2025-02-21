@@ -25,7 +25,7 @@ public:
 
     static glm::vec2 GetCursorPos() { return curCursorPos; }
 
-    static glm::vec2 GetCursorDelta() { return deltaCursorPos; }
+    static glm::vec2 GetCursorDelta();
 
 private:
     static void init(GLFWwindow* value)

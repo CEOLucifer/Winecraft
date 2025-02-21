@@ -10,7 +10,7 @@ class CameraController : public Node
 public:
     std::shared_ptr<Camera> camera;
     float cameraSpeed = 3;
-    float cursorSpeed = 50;
+    float cursorSpeed = 0.2;
 
 
 public:
