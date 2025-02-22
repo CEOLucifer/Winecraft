@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <glad/glad.h>
 #include <memory>
 #include <string>
 
@@ -12,7 +11,7 @@ private:
     uint32_t id;
 
 public:
-    ~Shader() { glDeleteShader(id); }
+    ~Shader();
 
     uint32_t GetID() { return id; }
 

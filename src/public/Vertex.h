@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 /// @brief 顶点
-/// 
+///
 class Vertex
 {
 public:

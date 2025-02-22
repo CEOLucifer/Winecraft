@@ -22,4 +22,6 @@ public:
     glm::mat4 GetRotateMat();
 
     glm::mat4 GetViewMat();
+
+    glm::mat4 GetModelMat();
 };

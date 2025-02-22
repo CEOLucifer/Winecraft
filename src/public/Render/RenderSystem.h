@@ -6,7 +6,6 @@
 #include "Typedef.h"
 #include <memory>
 #include <vector>
-#include <glad/glad.h>
 
 class Renderer;
 class Camera;
@@ -36,10 +35,7 @@ public:
 
     void OnUnload() override;
 
-    void onFrameBufferResize(GLFWwindow* window, int w, int h)
-    {
-        glViewport(0, 0, w, h);
-    }
+    void onFrameBufferResize(GLFWwindow *window, int w, int h);
 
     GLFWwindow* GetWindow() { return window; }
 

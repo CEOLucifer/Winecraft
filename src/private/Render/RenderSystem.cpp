@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "Render/RenderSystem.h"
 #include "GLFW/glfw3.h"
 #include "Render/Renderer.h"
@@ -72,4 +73,9 @@ void RenderSystem::SortAll()
 {
     ranges::sort(renderVec,
                  [](auto a, auto b) { return a->GetOrder() < b->GetOrder(); });
+}
+
+void RenderSystem::onFrameBufferResize(GLFWwindow* window, int w, int h)
+{
+    glViewport(0, 0, w, h);
 }

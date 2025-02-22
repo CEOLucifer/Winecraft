@@ -1,8 +1,11 @@
 #include "Shader.h"
 #include "FileHelper.h"
 #include <iostream>
+#include <glad/glad.h>
 
 using namespace std;
+
+Shader::~Shader() { glDeleteShader(id); }
 
 shared_ptr<Shader> Shader::Create(int type, string src)
 {

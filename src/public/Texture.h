@@ -2,9 +2,9 @@
 
 #include "Resource/Resource.h"
 #include "Resource/ResourceFactory.h"
+#include <array>
 #include <cstdint>
 #include "Typedef.h"
-#include <glad/glad.h>
 #include <string>
 
 /// @brief 纹理
@@ -27,7 +27,7 @@ private:
     int format;
 
 public:
-    ~Texture() { glDeleteTextures(1, &id); }
+    ~Texture();
 
     uint32_t GetID() { return id; }
 
@@ -45,10 +45,12 @@ public:
     /// @param width
     /// @param height
     /// @return Sp<Texture>
-    Sp<Texture> CreateRaw(int internalFormat, int format,
-                                       int width, int height, int type);
+    Sp<Texture> CreateRaw(int internalFormat, int format, int width, int height,
+                          int type);
 
     Sp<Texture> CreateRGBA(int width, int height);
 
     Sp<Texture> CreateDepthStencil(int width, int height);
+
+    Sp<Texture> CreateCube(const std::array<std::string, 6>& paths);
 };

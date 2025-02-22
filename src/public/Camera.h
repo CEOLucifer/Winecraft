@@ -39,4 +39,6 @@ public:
     {
         targetFrameBuffer = value;
     }
+
+    glm::mat4 GetProjectionMat();
 };

@@ -3,6 +3,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include <iostream>
 #include <memory>
+#include <glad/glad.h>
 
 using namespace std;
 
@@ -66,3 +67,4 @@ void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders)
         }
     }
 }
+ShaderProgram::~ShaderProgram() { glDeleteProgram(id); }

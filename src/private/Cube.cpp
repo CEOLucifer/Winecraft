@@ -4,10 +4,6 @@
 void Cube::OnInit()
 {
     Renderer::OnInit();
-    StencilFunc.func = GL_ALWAYS;
-    StencilFunc.ref = 1;
-    StencilMask = 0xFF;
-    EnableDepthTest = true;
 }
 
 void Cube::OnUpdate()

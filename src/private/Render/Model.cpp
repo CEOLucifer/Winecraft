@@ -5,6 +5,8 @@
 #include "assimp/postprocess.h"
 #include <iostream>
 #include <memory>
+#include "Vertex.h"
+#include "MeshFactory.h"
 
 
 using namespace std;

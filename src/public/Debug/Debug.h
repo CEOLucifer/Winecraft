@@ -2,7 +2,9 @@
 
 #include "Debug/Debugable.h"
 #include "Debugable.h"
+#include <exception>
 #include <iostream>
+#include <stdexcept>
 
 class Debug
 {
@@ -22,5 +24,6 @@ public:
     {
         std::cout << std::format("\033[0m\033[31m{}\033[0m", debugable.info)
                   << std::endl;
+        throw std::runtime_error(debugable.info);
     }
 };

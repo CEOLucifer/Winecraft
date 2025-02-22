@@ -1,9 +1,9 @@
 #include "SpotLightCube.h"
 #include "Render/Renderer.h"
-#include "Render/SingleColorMaterial.h"
+#include "Render/Material/SingleColorMaterial.h"
 #include "Render/SpotLight.h"
 #include "Render/Shader/ShaderProgram.h"
-#include "Render/Material.h"
+#include "Render/Material/Material.h"
 #include <memory>
 
 using namespace std;

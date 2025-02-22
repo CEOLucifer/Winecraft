@@ -1,11 +1,15 @@
-#include "Render/RealMaterial.h"
+#include <glad/glad.h>
+#include "Render/Material/RealMaterial.h"
+#include "Render/Material/Material.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "Texture.h"
 #include "Camera.h"
 #include "Render/RenderSystem.h"
 
-void RealMaterial::OnUpdateShaderProgram(Camera& camera)
+void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {
+    Material::OnUpdateShaderProgram(renderer, camera);
+
     // 绑定纹理
     // ！！！目前frag shader中只有两个纹理：diffuse 和 specular。
     glActiveTexture(GL_TEXTURE0);

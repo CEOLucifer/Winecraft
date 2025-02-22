@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <glad/glad.h>
 #include "Render/FrameBuffer.h"
 #include "Render/RenderSystem.h"
 #include "Render/Renderer.h"
@@ -17,10 +18,11 @@ void Camera::OnRender()
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    // 以下3行似乎也会影响glClear的效果。放这里好点
+    // 以下4行似乎也会影响glClear的效果。放这里好点
     glStencilMask(0xFF);
     glStencilFunc(GL_ALWAYS, 0, 0xFF);
     glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
 
     glClearColor(clearColor.r, clearColor.g, clearColor.b, 1.0f);
     glClearDepth(1);
@@ -40,4 +42,11 @@ void Camera::OnInit()
     // 注册到渲染系统。
     RenderSystem::Instance()->AddCamera(
         dynamic_pointer_cast<Camera>(weak.lock()));
+}
+
+glm::mat4 Camera::GetProjectionMat()
+{
+    glm::mat4 projection = glm::mat4(1.0f);
+    projection = glm::perspective(glm::radians(fov), GetAspect(), near, far);
+    return projection;
 }

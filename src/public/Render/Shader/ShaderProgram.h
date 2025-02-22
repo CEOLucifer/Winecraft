@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
-#include <glad/glad.h>
 #include "Shader.h"
+#include "Typedef.h"
 
 class Renderer;
 class Camera;
@@ -18,7 +18,7 @@ private:
     uint32_t id;
 
 public:
-    virtual ~ShaderProgram() { glDeleteProgram(id); }
+    virtual ~ShaderProgram();
 
     uint32_t GetID() { return id; }
 
@@ -32,19 +32,18 @@ public:
     void SetVec3(const std::string& name, const glm::vec3& value);
 
 protected:
-    /// @brief 由子类重写。用于设置纹理位置。 
-    /// 
+    /// @brief 由子类重写。用于设置纹理位置。
+    ///
     virtual void onSetTextureLocation() {};
 
 private:
-    void init(const std::vector<std::shared_ptr<Shader>>& shaders);
+    void init(const std::vector<Sp<Shader>>& shaders);
 
 public:
     template <typename T>
-    static std::shared_ptr<T>
-    Create(const std::vector<std::shared_ptr<Shader>>& shaders)
+    static Sp<T> Create(const std::vector<Sp<Shader>>& shaders)
     {
-        std::shared_ptr<ShaderProgram> shaderProgram(new T);
+        Sp<ShaderProgram> shaderProgram(new T);
         shaderProgram->init(shaders);
         shaderProgram->onSetTextureLocation();
         return std::dynamic_pointer_cast<T>(shaderProgram);
