@@ -2,7 +2,6 @@
 
 #include "Debug/Debugable.h"
 #include "Debugable.h"
-#include <exception>
 #include <iostream>
 #include <stdexcept>
 

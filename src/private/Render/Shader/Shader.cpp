@@ -1,4 +1,5 @@
 #include "Shader.h"
+#include "Debug/Debug.h"
 #include "FileHelper.h"
 #include <iostream>
 #include <glad/glad.h>
@@ -22,8 +23,7 @@ shared_ptr<Shader> Shader::Create(int type, string src)
         if (!success)
         {
             glGetShaderInfoLog(shader->id, 512, NULL, infoLog);
-            std::cout << "ERROR::SHADER::COMPILATION_FAILED\n"
-                      << infoLog << std::endl;
+            Debug::LogError(format("ERROR::SHADER::COMPILATION_FAILED\n{}", infoLog));
         }
     }
     return shader;

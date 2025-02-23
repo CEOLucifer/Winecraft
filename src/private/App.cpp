@@ -13,7 +13,7 @@
 #include "Resource/ResourceSystem.h"
 #include "Shader.h"
 #include <GLFW/glfw3.h>
-#include "Render/Shader/UniversalShaderProgram.h"
+#include "Render/Shader/RealShaderProgram.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "SpotLightCube.h"
 #include "Texture.h"
@@ -85,11 +85,11 @@ void App::StartUser()
     auto fs_skybox =
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/skybox.frag");
     // 创建着色器程序
-    auto sp = ShaderProgram::Create<UniversalShaderProgram>({vs, fs});
+    auto sp = ShaderProgram::Create<RealShaderProgram>({vs, fs});
     auto sp_Universal =
-        ShaderProgram::Create<UniversalShaderProgram>({vs, fs_Universal});
+        ShaderProgram::Create<RealShaderProgram>({vs, fs_Universal});
     auto sp_SingleColor =
-        ShaderProgram::Create<UniversalShaderProgram>({vs, fs_SingleColor});
+        ShaderProgram::Create<RealShaderProgram>({vs, fs_SingleColor});
     auto sp_Depth = ShaderProgram::Create<ShaderProgram>({vs, fs_Depth});
     auto sp_skybox =
         ShaderProgram::Create<SkyboxShaderProgram>({vs_skybox, fs_skybox});

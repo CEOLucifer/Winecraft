@@ -9,6 +9,8 @@ void SkyboxMaterial::OnInit() { DepthMask = GL_FALSE; }
 void SkyboxMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {
     updateSkybox(renderer, camera);
+
+    // 绑定天空盒纹理
     glActiveTexture(GL_TEXTURE0);
     if (cubeTexture)
     {

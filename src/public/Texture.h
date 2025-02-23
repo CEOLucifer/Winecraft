@@ -22,7 +22,7 @@ private:
     ///
     std::string type;
 
-    int internalFormt;
+    int internalFormat;
 
     int format;
 
@@ -31,7 +31,7 @@ public:
 
     uint32_t GetID() { return id; }
 
-    int GetInternalFormat() { return internalFormt; }
+    int GetInternalFormat() { return internalFormat; }
 };
 
 class TextureFactory : public ResourceFactory<Texture>

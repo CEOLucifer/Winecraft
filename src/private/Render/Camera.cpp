@@ -40,8 +40,7 @@ void Camera::OnRender()
 void Camera::OnInit()
 {
     // 注册到渲染系统。
-    RenderSystem::Instance()->AddCamera(
-        dynamic_pointer_cast<Camera>(weak.lock()));
+    RenderSystem::Instance()->AddCamera(CastTo<Camera>());
 }
 
 glm::mat4 Camera::GetProjectionMat()

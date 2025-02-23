@@ -1,9 +1,9 @@
 #include "Render/Shader/ShaderProgram.h"
 #include "Shader.h"
 #include "glm/gtc/type_ptr.hpp"
-#include <iostream>
 #include <memory>
 #include <glad/glad.h>
+#include "Debug/Debug.h"
 
 using namespace std;
 
@@ -62,9 +62,9 @@ void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders)
         if (!success)
         {
             glGetProgramInfoLog(id, 512, NULL, infoLog);
-            std::cout << "ERROR::SHADER::shaderProgram::LINK_FAILED\n"
-                      << infoLog << std::endl;
+            Debug::LogError(format("ERROR::SHADER::shaderProgram::LINK_FAILED\n{}", infoLog));
         }
     }
 }
+
 ShaderProgram::~ShaderProgram() { glDeleteProgram(id); }

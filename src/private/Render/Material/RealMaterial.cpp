@@ -6,6 +6,8 @@
 #include "Camera.h"
 #include "Render/RenderSystem.h"
 
+void RealMaterial::OnInit() {}
+
 void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {
     Material::OnUpdateShaderProgram(renderer, camera);

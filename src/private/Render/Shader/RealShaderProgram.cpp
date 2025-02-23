@@ -1,6 +1,6 @@
-#include "Render/Shader/UniversalShaderProgram.h"
+#include "Render/Shader/RealShaderProgram.h"
 
-void UniversalShaderProgram::onSetTextureLocation()
+void RealShaderProgram::onSetTextureLocation()
 {
     // 设置uniform纹理位置。这一步和Renderer Draw函数中glActiveTexture对应。
     SetInt("material.diffuse", 0);
