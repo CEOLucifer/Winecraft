@@ -1,6 +1,4 @@
 #version 330 core
-out vec4 FragColor;
-
 in vec3 Normal;
 in vec3 FragPos;
 
@@ -104,7 +102,7 @@ void main()
     vec3 result = vec3(0, 0, 0);
     result += GetDirectionalLight();
     result += GetSpotLightColor();
-    FragColor =
+    gl_FragColor =
         vec4(result,
              texture(material.diffuse, TexCoords).a); // 不透明度取diffuse纹理的
 }

@@ -77,7 +77,7 @@ void App::StartUser()
     // 创建片段着色器
     auto fs = Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag0.frag");
     auto fs_Universal =
-        Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/universal.frag");
+        Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/real.frag");
     auto fs_SingleColor =
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/singleColor.frag");
     auto fs_Depth =
@@ -120,115 +120,116 @@ void App::StartUser()
     // auto backpackModel = modelFac.Create("res/backpack/backpack.obj");
 
     // 材质
-    MaterialFactory matFac;
-    auto mat_Container = matFac.CreateRaw<RealMaterial>();
-    mat_Container->diffuseTex = tex_Container;
-    mat_Container->specularTex = tex_ContainerSpecular;
-    mat_Container->shaderProgram = sp_Universal;
-    mat_Container->StencilFunc.func = GL_ALWAYS;
-    mat_Container->StencilFunc.ref = 1;
-    mat_Container->StencilMask = 0xFF;
-    mat_Container->EnableDepthTest = true;
+    // MaterialFactory matFac;
+    // auto mat_Container = matFac.CreateRaw<RealMaterial>();
+    // mat_Container->diffuseTex = tex_Container;
+    // mat_Container->specularTex = tex_ContainerSpecular;
+    // mat_Container->shaderProgram = sp_Universal;
+    // mat_Container->StencilFunc.func = GL_ALWAYS;
+    // mat_Container->StencilFunc.ref = 1;
+    // mat_Container->StencilMask = 0xFF;
+    // mat_Container->EnableDepthTest = true;
 
-    auto mat_LightCube = matFac.CreateRaw<SingleColorMaterial>();
-    mat_LightCube->shaderProgram = sp_SingleColor;
-    mat_LightCube->Color = {1.0, 0, 0};
+    // auto mat_LightCube = matFac.CreateRaw<SingleColorMaterial>();
+    // mat_LightCube->shaderProgram = sp_SingleColor;
+    // mat_LightCube->Color = {1.0, 0, 0};
 
-    auto mat_Border = matFac.CreateRaw<SingleColorMaterial>();
-    mat_Border->shaderProgram = sp_SingleColor;
-    mat_Border->Color = {1.0, 1.0, 0};
-    mat_Border->StencilFunc.func = GL_NOTEQUAL;
-    mat_Border->StencilFunc.ref = 1;
-    mat_Border->StencilMask = 0x00;
+    // auto mat_Border = matFac.CreateRaw<SingleColorMaterial>();
+    // mat_Border->shaderProgram = sp_SingleColor;
+    // mat_Border->Color = {1.0, 1.0, 0};
+    // mat_Border->StencilFunc.func = GL_NOTEQUAL;
+    // mat_Border->StencilFunc.ref = 1;
+    // mat_Border->StencilMask = 0x00;
 
-    auto mat_Grass = matFac.CreateRaw<RealMaterial>();
-    mat_Grass->diffuseTex = tex_Grass;
-    mat_Grass->shaderProgram = sp_Universal;
+    // auto mat_Grass = matFac.CreateRaw<RealMaterial>();
+    // mat_Grass->diffuseTex = tex_Grass;
+    // mat_Grass->shaderProgram = sp_Universal;
 
-    auto mat_Window = matFac.CreateRaw<RealMaterial>();
-    mat_Window->diffuseTex = tex_Window;
-    mat_Window->shaderProgram = sp_Universal;
-    mat_Window->EnableBlend = true;
+    // auto mat_Window = matFac.CreateRaw<RealMaterial>();
+    // mat_Window->diffuseTex = tex_Window;
+    // mat_Window->shaderProgram = sp_Universal;
+    // mat_Window->EnableBlend = true;
 
-    auto mat_Skybox = matFac.CreateRaw<SkyboxMaterial>();
-    mat_Skybox->cubeTexture = tex_skybox;
-    mat_Skybox->shaderProgram = sp_skybox;
+    // auto mat_Skybox = matFac.CreateRaw<SkyboxMaterial>();
+    // mat_Skybox->cubeTexture = tex_skybox;
+    // mat_Skybox->shaderProgram = sp_skybox;
 
 
 
     // 创建箱子立方体
-    vector<glm::vec3> cubePositions = {
-        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+    // vector<glm::vec3> cubePositions = {
+    //     glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+    //     glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+    //     glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+    //     glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+    //     glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
-    for (int i = 0; i < cubePositions.size(); ++i)
-    {
-        auto cube = Node::Create<Renderer>();
-        cube->position = cubePositions[i];
-        cube->SetMesh(mesh_Cube);
-        cube->SetMaterial(mat_Container);
+    // for (int i = 0; i < cubePositions.size(); ++i)
+    // {
+    //     auto cube = Node::Create<Renderer>();
+    //     cube->position = cubePositions[i];
+    //     cube->SetMesh(mesh_Cube);
+    //     cube->SetMaterial(mat_Container);
+    //     // cube->SetPolygonMode(GL_POINT);
 
-        // 创建箱子的边框
-        // auto border = Node::Create<Border>();
-        // border->position = cubePositions[i];
-        // border->scale = {1.1, 1.1, 1.1};
-        // border->SetMesh(meshCube);
-        // border->SetMaterial(mat_Border);
-    }
+    //     // 创建箱子的边框
+    //     // auto border = Node::Create<Border>();
+    //     // border->position = cubePositions[i];
+    //     // border->scale = {1.1, 1.1, 1.1};
+    //     // border->SetMesh(meshCube);
+    //     // border->SetMaterial(mat_Border);
+    // }
 
     // 创建窗户
-    auto window1 = Node::Create<Renderer>();
-    window1->position = {5, 0, 5};
-    window1->SetMesh(mesh_Plane);
-    window1->SetMaterial(mat_Window);
-    window1->SetOrder(1);
+    // auto window1 = Node::Create<Renderer>();
+    // window1->position = {5, 0, 5};
+    // window1->SetMesh(mesh_Plane);
+    // window1->SetMaterial(mat_Window);
+    // window1->SetOrder(1);
 
 
     // 光源
-    auto spotLightCube = Node::Create<SpotLightCube>();
-    spotLightCube->renderer->SetMesh(mesh_Cube);
-    spotLightCube->renderer->SetMaterial(mat_LightCube);
-    spotLightCube->renderer->position = {10, 0, 0};
-    spotLightCube->spotLight->Color = {1, 0, 0};
+    // auto spotLightCube = Node::Create<SpotLightCube>();
+    // spotLightCube->renderer->SetMesh(mesh_Cube);
+    // spotLightCube->renderer->SetMaterial(mat_LightCube);
+    // spotLightCube->renderer->position = {10, 0, 0};
+    // spotLightCube->spotLight->Color = {1, 0, 0};
 
-    auto directionalLight = Node::Create<DirectionalLight>();
+    // auto directionalLight = Node::Create<DirectionalLight>();
 
 
 
 
 
     // 摄像机
-    auto mainCamera = Node::Create<Camera>();
-    mainCamera->position = {5, 0, 10};
-    auto cameraController = Node::Create<CameraController>();
-    cameraController->camera = mainCamera;
+    // auto mainCamera = Node::Create<Camera>();
+    // mainCamera->position = {5, 0, 10};
+    // auto cameraController = Node::Create<CameraController>();
+    // cameraController->camera = mainCamera;
 
 
 
     // 帧缓冲
-    auto frameBuffer = FrameBuffer::CreateUtility(800, 600);
+    // auto frameBuffer = FrameBuffer::CreateUtility(800, 600);
 
     // 输出到自定义帧缓冲的摄像机
-    auto camera_FrameBuffer = Node::Create<Camera>();
-    camera_FrameBuffer->position = {10, 0, 10};
-    camera_FrameBuffer->rotation.y = 45;
-    camera_FrameBuffer->SetTargetFrameBuffer(frameBuffer);
+    // auto camera_FrameBuffer = Node::Create<Camera>();
+    // camera_FrameBuffer->position = {10, 0, 10};
+    // camera_FrameBuffer->rotation.y = 45;
+    // camera_FrameBuffer->SetTargetFrameBuffer(frameBuffer);
 
-    auto mat_FrameBuffer = matFac.CreateRaw<RealMaterial>();
-    mat_FrameBuffer->shaderProgram = sp_Universal;
-    mat_FrameBuffer->diffuseTex = frameBuffer->GetTexture();
+    // auto mat_FrameBuffer = matFac.CreateRaw<RealMaterial>();
+    // mat_FrameBuffer->shaderProgram = sp_Universal;
+    // mat_FrameBuffer->diffuseTex = frameBuffer->GetTexture();
 
-    auto cube = Node::Create<Renderer>();
-    cube->position = {5, 0, 0};
-    cube->SetMesh(mesh_Cube);
-    cube->SetMaterial(mat_FrameBuffer);
+    // auto cube = Node::Create<Renderer>();
+    // cube->position = {5, 0, 0};
+    // cube->SetMesh(mesh_Cube);
+    // cube->SetMaterial(mat_FrameBuffer);
 
     // 天空盒
-    auto skybox = Node::Create<Renderer>();
-    skybox->SetMaterial(mat_Skybox);
-    skybox->SetMesh(mesh_Skybox);
-    skybox->SetOrder(INT_MIN); // 天空盒一定要最先渲染
+    // auto skybox = Node::Create<Renderer>();
+    // skybox->SetMaterial(mat_Skybox);
+    // skybox->SetMesh(mesh_Skybox);
+    // skybox->SetOrder(INT_MIN); // 天空盒一定要最先渲染
 }
