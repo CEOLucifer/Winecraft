@@ -1,12 +1,12 @@
 #include "Cube.h"
 #include "Render/Renderer.h"
 
-void Cube::OnInit()
+void Cube::Awake()
 {
-    Renderer::OnInit();
+    Renderer::Awake();
 }
 
-void Cube::OnUpdate()
+void Cube::Update()
 {
     // rotation.y += deltaTime * 10;
     // renderer->rotation.x += deltaTime * 10;

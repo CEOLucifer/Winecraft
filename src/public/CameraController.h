@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Node/Node.h"
+#include "Core/Component.h"
 #include <memory>
 
 class Camera;
 
-class CameraController : public Node
+class CameraController : public Component
 {
 public:
     std::shared_ptr<Camera> camera;
@@ -14,5 +14,5 @@ public:
 
 
 public:
-    void OnUpdate() override;
+    void Update() override;
 };

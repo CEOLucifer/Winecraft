@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Node/Node3D.h"
-#include <memory>
+#include "Core/Component.h"
+#include "Typedef.h"
 
 class SpotLight;
 class Renderer;
 
-class SpotLightCube : public Node3D
+class SpotLightCube : public Component
 {
 public:
-    std::shared_ptr<SpotLight> spotLight;
-    std::shared_ptr<Renderer> renderer;
+    Sp<SpotLight> spotLight;
+    Sp<Renderer> renderer;
 
 public:
-    void OnInit() override;
+    void Awake() override;
 
-    void OnUpdate() override;
+    void Update() override;
 };

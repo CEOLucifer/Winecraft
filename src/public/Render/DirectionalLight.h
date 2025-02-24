@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Node/Node.h"
+#include "Core/Component.h"
 #include <glm/glm.hpp>
 
 /// @brief 定向光
 /// 
-class DirectionalLight : public Node
+class DirectionalLight : public Component
 {
 public:
     glm::vec3 direction = {0, 0, -1};
@@ -13,5 +13,5 @@ public:
     float intensity = 0.5;
 
 public:
-    void OnInit() override;
+    void Awake() override;
 };

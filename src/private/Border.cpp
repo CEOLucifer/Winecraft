@@ -3,12 +3,12 @@
 #include "Render/Renderer.h"
 #include "Render/Shader/ShaderProgram.h"
 
-void Border::OnInit()
+void Border::Awake()
 {
-    Renderer::OnInit();
+    Renderer::Awake();
 }
 
-void Border::OnUpdate()
+void Border::Update()
 {
-    Renderer::OnUpdate();
+    Renderer::Update();
 }

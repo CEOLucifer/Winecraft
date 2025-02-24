@@ -1,7 +1,6 @@
 #pragma once
 
 
-#include "Node/Node.h"
 #include "Render/Renderer.h"
 
 
@@ -10,7 +9,7 @@ class Renderer;
 class Cube : public Renderer
 {
 public:
-    void OnInit() override;
+    void Awake() override;
 
-    void OnUpdate() override;
+    void Update() override;
 };

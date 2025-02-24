@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Node/Node3D.h"
+#include "Core/Component.h"
+#include <glm/glm.hpp>
 
-class SpotLight : public Node3D
+class SpotLight : public Component
 {
 public:
     glm::vec3 Color = {1, 1, 1};
@@ -15,5 +16,5 @@ public:
     float Quadratic = 0.032;
 
 public:
-    void OnInit() override;
+    void Awake() override;
 };

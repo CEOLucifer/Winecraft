@@ -3,8 +3,9 @@
 #include "Render/FrameBuffer.h"
 #include "Render/RenderSystem.h"
 #include "Render/Renderer.h"
+#include <glm/gtc/matrix_transform.hpp>
 
-void Camera::OnUpdate() {}
+void Camera::Update() {}
 
 void Camera::OnRender()
 {
@@ -37,7 +38,7 @@ void Camera::OnRender()
     }
 }
 
-void Camera::OnInit()
+void Camera::Awake()
 {
     // 注册到渲染系统。
     RenderSystem::Instance()->AddCamera(CastTo<Camera>());

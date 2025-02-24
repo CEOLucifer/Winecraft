@@ -1,7 +1,7 @@
 #include "Render/DirectionalLight.h"
 #include "Render/RenderSystem.h"
 
-void DirectionalLight::OnInit()
+void DirectionalLight::Awake()
 {
     RenderSystem::Instance()->SetDirectionalLight(CastTo<DirectionalLight>());
 }

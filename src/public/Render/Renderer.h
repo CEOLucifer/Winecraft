@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
-#include "Node/Node3D.h"
+#include "Core/Component.h"
 #include <glm/glm.hpp>
 #include "Typedef.h"
 
@@ -11,7 +11,7 @@ class Material;
 
 /// @brief 渲染器
 ///
-class Renderer : public Node3D
+class Renderer : public Component
 {
 private:
     /// @brief 网格
@@ -25,7 +25,7 @@ private:
     int order = 0;
 
 public:
-    void OnInit() override;
+    void Awake() override;
 
     void Draw(Camera& camera);
 

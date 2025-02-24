@@ -1,13 +1,13 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Node/Node3D.h"
+#include "Core/Component.h"
 #include "Typedef.h"
 
 class FrameBuffer;
 
 /// @brief 摄像机
-class Camera : public Node3D
+class Camera : public Component
 {
 private:
     float width = 800;
@@ -29,9 +29,9 @@ public:
     float GetFar() { return far; }
     float GetFov() { return fov; }
 
-    void OnInit() override;
+    void Awake() override;
 
-    void OnUpdate() override;
+    void Update() override;
 
     void OnRender();
 

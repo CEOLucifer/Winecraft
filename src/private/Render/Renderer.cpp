@@ -10,7 +10,7 @@
 #include "Render/Shader/ShaderProgram.h"
 #include "Render/Material/Material.h"
 
-void Renderer::OnInit() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
+void Renderer::Awake() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
 
 void Renderer::Draw(Camera& camera)
 {
