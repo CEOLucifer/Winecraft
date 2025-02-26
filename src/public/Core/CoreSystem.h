@@ -3,20 +3,20 @@
 #include "Singleton.h"
 #include "Typedef.h"
 
-class GameObject;
+class Branch;
 
 class CoreSystem : public Singleton<CoreSystem>
 {
 private:
-    Sp<GameObject> root;
+    Sp<Branch> root;
 
 public:
-    void Update();
+    void UpdateAll();
 
     void OnLoad() override;
 
-    Sp<GameObject> GetRoot() { return root; }
+    Sp<Branch> GetRoot() { return root; }
 
 private:
-    void updateGameObject(Sp<GameObject> gameObject);
+    void updateBranch(Sp<Branch> node);
 };

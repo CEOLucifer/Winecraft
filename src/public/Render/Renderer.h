@@ -1,7 +1,7 @@
 #pragma once
 
 #include <glad/glad.h>
-#include "Core/Component.h"
+#include "Core/Node.h"
 #include <glm/glm.hpp>
 #include "Typedef.h"
 
@@ -11,7 +11,7 @@ class Material;
 
 /// @brief 渲染器
 ///
-class Renderer : public Component
+class Renderer : public Node
 {
 private:
     /// @brief 网格

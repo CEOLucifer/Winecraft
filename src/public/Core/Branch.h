@@ -1,13 +1,16 @@
 #pragma once
 
-#include <vector>
-#include "Component.h"
+#include <list>
+#include "Node.h"
 #include "Typedef.h"
 #include <glm/glm.hpp>
 
-class GameObject
+/// @brief 分支
+/// 
+class Branch : public Node
 {
     friend class CoreSystem;
+    friend class Node;
 
 #pragma region 变换
 
@@ -17,8 +20,11 @@ public:
     glm::vec3 Scale = {1, 1, 1};
 
 private:
-    Wp<GameObject> parent;
-    std::vector<Sp<GameObject>> children;
+    // 继承Node而不继承Branch的子结点
+    std::list<Sp<Node>> childNodes;
+
+    // 继承Branch的子结点。用于变换。
+    std::list<Sp<Branch>> childBranches;
 
 public:
     glm::vec3 GetForward();
@@ -33,17 +39,14 @@ public:
 
     glm::mat4 GetModelMat();
 
-    void SetParent(Sp<GameObject> value);
-
 #pragma endregion
 
 
 private:
-    std::vector<Sp<Component>> components;
-    Wp<GameObject> weak;
+    std::list<Sp<Node>> components;
 
 public:
-    template <typename T> Sp<T> GetComponent()
+    template <typename T> Sp<T> GetChild()
     {
         for (auto each : components)
         {
@@ -55,10 +58,14 @@ public:
         return nullptr;
     }
 
-    void AddComponent(Sp<Component>);
-
-    void RemoveComponent(Sp<Component>);
-
-public:
-    static Sp<GameObject> Create();
+    template <typename T> Sp<T> GetChildOrAdd()
+    {
+        Sp<T> node = GetChild<T>();
+        if (node == nullptr)
+        {
+            node = Node::Create<T>();
+            node->SetParent(CastTo<Branch>());
+        }
+        return node;
+    }
 };

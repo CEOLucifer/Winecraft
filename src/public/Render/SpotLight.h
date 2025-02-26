@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Core/Component.h"
+#include "Core/Node.h"
 #include <glm/glm.hpp>
 
-class SpotLight : public Component
+class SpotLight : public Node
 {
 public:
     glm::vec3 Color = {1, 1, 1};

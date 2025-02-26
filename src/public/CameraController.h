@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Core/Component.h"
-#include <memory>
+#include "Core/Node.h"
+#include "Typedef.h"
 
 class Camera;
 
-class CameraController : public Component
+class CameraController : public Node
 {
 public:
-    std::shared_ptr<Camera> camera;
+    Sp<Camera> camera;
     float cameraSpeed = 3;
     float cursorSpeed = 0.2;
 

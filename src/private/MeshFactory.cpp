@@ -118,3 +118,24 @@ Sp<Mesh1> MeshFactory::CreateMesh1_Skybox()
     This->SetVertices(std::move(vertices));
     return This;
 }
+
+Sp<Mesh2> MeshFactory::CreateMesh2()
+{
+    Sp<Mesh2> This(new Mesh2);
+    return This;
+}
+
+Sp<Mesh2> MeshFactory::CreateMesh2_Control()
+{
+    Sp<Mesh2> This = CreateMesh2();
+    vector<Vertex2> vertices = {
+        {{-0.5f, -0.5f, 0}, {0.0f, 0.0f}},
+        {{0.5f, -0.5f, 0}, {1.0f, 0.0f}},
+        {{0.5f, 0.5f, 0}, {1.0f, 1.0f}},
+        {{-0.5f, 0.5f, 0}, {0.0f, 1.0f}},
+    };
+    vector<uint32_t> indices = {0, 1, 2, 2, 3, 0};
+    This->SetVertices(std::move(vertices));
+    This->SetIndices(std::move(indices));
+    return This;
+}

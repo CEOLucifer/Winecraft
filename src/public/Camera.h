@@ -1,13 +1,13 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Core/Component.h"
+#include "Core/Node.h"
 #include "Typedef.h"
 
 class FrameBuffer;
 
 /// @brief 摄像机
-class Camera : public Component
+class Camera : public Node
 {
 private:
     float width = 800;

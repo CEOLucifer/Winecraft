@@ -17,18 +17,28 @@ void Renderer::Draw(Camera& camera)
     if (!mesh || !material || !material->shaderProgram)
         return;
 
+    // 顶点数据
     glBindVertexArray(mesh->GetVao());
-    
+
     // 材质
     glUseProgram(material->shaderProgram->GetID());
     material->OnUpdateShaderProgram(*this, camera);
 
     // 模板测试
-    glStencilOp(material->StencilOp.stencilFail, material->StencilOp.depthFail,
-                material->StencilOp.depthPass);
-    glStencilFunc(material->StencilFunc.func, material->StencilFunc.ref,
-                  material->StencilFunc.mask);
-    glStencilMask(material->StencilMask); // 将写入的模板缓冲值
+    if (material->EnableStencilTest)
+    {
+        glEnable(GL_STENCIL_TEST);
+        glStencilOp(material->StencilOp.stencilFail,
+                    material->StencilOp.depthFail,
+                    material->StencilOp.depthPass);
+        glStencilFunc(material->StencilFunc.func, material->StencilFunc.ref,
+                      material->StencilFunc.mask);
+        glStencilMask(material->StencilMask); // 将写入的模板缓冲值
+    }
+    else
+    {
+        glDisable(GL_STENCIL_TEST);
+    }
 
     // 深度测试
     if (material->EnableDepthTest)
@@ -81,6 +91,7 @@ void Renderer::Draw(Camera& camera)
                        0);
     }
 }
+
 void Renderer::SetOrder(int value)
 {
     order = value;

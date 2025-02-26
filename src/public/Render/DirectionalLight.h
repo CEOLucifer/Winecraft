@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Core/Component.h"
+#include "Core/Node.h"
 #include <glm/glm.hpp>
 
 /// @brief 定向光
 /// 
-class DirectionalLight : public Component
+class DirectionalLight : public Node
 {
 public:
     glm::vec3 direction = {0, 0, -1};

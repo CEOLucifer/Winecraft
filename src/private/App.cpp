@@ -1,15 +1,15 @@
 #include "App.h"
 #include <climits>
 #include <glad/glad.h>
-#include "Border.h"
 #include "CameraController.h"
-#include "Core/Component.h"
+#include "Core/Node.h"
 #include "Core/CoreSystem.h"
-#include "Core/GameObject.h"
+#include "Core/Branch.h"
 #include "Mesh.h"
 #include "Render/FrameBuffer.h"
 #include "Render/Material/Material.h"
 #include "Render/Material/SkyboxMaterial.h"
+#include "Render/Shader/ControlShaderProgram.h"
 #include "Render/Shader/SkyboxShaderProgram.h"
 #include "Render/SpotLight.h"
 #include "Resource/ResourceSystem.h"
@@ -17,7 +17,6 @@
 #include <GLFW/glfw3.h>
 #include "Render/Shader/RealShaderProgram.h"
 #include "Render/Shader/ShaderProgram.h"
-#include "SpotLightCube.h"
 #include "Texture.h"
 #include "glm/fwd.hpp"
 #include <memory>
@@ -26,7 +25,6 @@
 #include <string>
 #include <vector>
 #include "Render/RenderSystem.h"
-#include "Cube.h"
 #include "Camera.h"
 #include "InputSystem.h"
 #include "Render/Model.h"
@@ -36,6 +34,7 @@
 #include "Debug/Debug.h"
 #include "TimeSystem.h"
 #include "MeshFactory.h"
+#include "UI/Image.h"
 
 using namespace std;
 
@@ -56,7 +55,7 @@ void App::Run()
         Time::record();
         Input::record();
 
-        CoreSystem::Instance()->Update();
+        CoreSystem::Instance()->UpdateAll();
 
         // 检查并调用事件
         glfwPollEvents();
@@ -76,6 +75,8 @@ void App::StartUser()
     auto vs = Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/vert0.vert");
     auto vs_skybox =
         Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/skybox.vert");
+    auto vs_control =
+        Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/control.vert");
     // 创建片段着色器
     auto fs = Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/frag0.frag");
     auto fs_Universal =
@@ -86,6 +87,8 @@ void App::StartUser()
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/depth.frag");
     auto fs_skybox =
         Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/skybox.frag");
+    auto fs_control =
+        Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/control.frag");
     // 创建着色器程序
     auto sp = ShaderProgram::Create<RealShaderProgram>({vs, fs});
     auto sp_Universal =
@@ -95,6 +98,8 @@ void App::StartUser()
     auto sp_Depth = ShaderProgram::Create<ShaderProgram>({vs, fs_Depth});
     auto sp_skybox =
         ShaderProgram::Create<SkyboxShaderProgram>({vs_skybox, fs_skybox});
+    auto sp_control =
+        ShaderProgram::Create<ControlShaderProgram>({vs_control, fs_control});
 
 
     // 纹理
@@ -115,6 +120,7 @@ void App::StartUser()
     auto mesh_Cube = meshFac.CreateCube();
     auto mesh_Plane = meshFac.CreatePlane();
     auto mesh_Skybox = meshFac.CreateMesh1_Skybox();
+    auto mesh_Control = meshFac.CreateMesh2_Control();
 
     // 模型
     ModelFactory modelFac;
@@ -168,9 +174,9 @@ void App::StartUser()
 
     for (int i = 0; i < cubePositions.size(); ++i)
     {
-        auto cube = GameObject::Create();
-        auto renderer = Component::Create<Renderer>();
-        cube->AddComponent(renderer);
+        auto cube = Node::Create<Branch>("cube");
+        auto renderer = Node::Create<Renderer>("cubeRenderer");
+        renderer->SetParent(cube);
         cube->Position = cubePositions[i];
         renderer->SetMesh(mesh_Cube);
         renderer->SetMaterial(mat_Container);
@@ -193,33 +199,33 @@ void App::StartUser()
 
 
     // 光源
-    auto spotLightObj = GameObject::Create();
+    auto spotLightObj = Node::Create<Branch>("spotLight");
     spotLightObj->Position = {10, 0, 0};
-    auto spotLight = Component::Create<SpotLight>();
-    spotLightObj->AddComponent(spotLight);
+    auto spotLight = Node::Create<SpotLight>();
+    spotLight->SetParent(spotLightObj);
     spotLight->Color = {1, 0, 0};
 
-    auto spotLightRenderer = Component::Create<Renderer>();
-    spotLightObj->AddComponent(spotLightRenderer);
+    auto spotLightRenderer = Node::Create<Renderer>();
+    spotLightRenderer->SetParent(spotLightObj);
     spotLightRenderer->SetMesh(mesh_Cube);
     spotLightRenderer->SetMaterial(mat_LightCube);
 
 
-    auto directionalLightObj = GameObject::Create();
-    auto directionalLight = Component::Create<DirectionalLight>();
-    directionalLightObj->AddComponent(directionalLight);
+    auto directionalLightObj = Node::Create<Branch>("directionalLight");
+    auto directionalLight = Node::Create<DirectionalLight>();
+    directionalLight->SetParent(directionalLightObj);
 
 
 
 
 
     // 摄像机
-    auto cameraObj = GameObject::Create();
-    auto camera = Component::Create<Camera>();
-    cameraObj->AddComponent(camera);
+    auto cameraObj = Node::Create<Branch>("camera");
+    auto camera = Node::Create<Camera>();
+    camera->SetParent(cameraObj);
     cameraObj->Position = {5, 0, 10};
-    auto cameraController = Component::Create<CameraController>();
-    cameraObj->AddComponent(cameraController);
+    auto cameraController = Node::Create<CameraController>();
+    cameraController->SetParent(cameraObj);
     cameraController->camera = camera;
 
 
@@ -243,9 +249,15 @@ void App::StartUser()
     // cube->SetMaterial(mat_FrameBuffer);
 
     // 天空盒
-    auto skyboxObj = GameObject::Create();
-    auto skybox = Component::Create<Renderer>();
-    skybox->SetMaterial(mat_Skybox);
-    skybox->SetMesh(mesh_Skybox);
-    skybox->SetOrder(INT_MIN); // 天空盒一定要最先渲染
+    // auto skyboxObj = Node::Create<Branch>("skybox");
+    // auto skybox = Node::Create<Renderer>();
+    // skybox->SetMaterial(mat_Skybox);
+    // skybox->SetMesh(mesh_Skybox);
+    // skybox->SetOrder(INT_MIN); // 天空盒一定要最先渲染
+
+
+    // Image
+    // auto imageObj = Node::Create<Branch>("image");
+    // auto image = Node::Create<Image>();
+    // imageObj->AddChild(image);
 }

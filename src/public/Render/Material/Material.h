@@ -20,7 +20,7 @@ public:
     Sp<ShaderProgram> shaderProgram;
 
     // 模板测试相关
-
+    bool EnableStencilTest = true;
     StencilOp StencilOp;
     StencilFunc StencilFunc;
     int StencilMask = 0x00;

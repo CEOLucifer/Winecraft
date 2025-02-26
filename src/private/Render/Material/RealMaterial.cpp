@@ -5,7 +5,8 @@
 #include "Texture.h"
 #include "Camera.h"
 #include "Render/RenderSystem.h"
-#include "Core/GameObject.h"
+#include "Core/Node.h"
+#include "Core/Branch.h"
 
 void RealMaterial::OnInit() {}
 
@@ -46,7 +47,7 @@ void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 
 
     // 摄像机
-    shaderProgram->SetVec3("viewPos", camera.GetGameObject()->Position);
+    shaderProgram->SetVec3("viewPos", camera.GetParent().lock()->Position);
     // 点光源
     auto spotLight = RenderSystem::Instance()->GetSpotLight();
     // 定向光
@@ -55,7 +56,7 @@ void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
     if (spotLight)
     {
         shaderProgram->SetVec3("spotLight.position",
-                               spotLight->GetGameObject()->Position);
+                               spotLight->GetParent().lock()->Position);
         shaderProgram->SetVec3("spotLight.color", spotLight->Color);
         shaderProgram->SetVec3("spotLight.ambient", spotLight->Ambient);
         shaderProgram->SetFloat("spotLight.constant", spotLight->Constant);

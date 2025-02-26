@@ -1,9 +1,8 @@
-#include "Core/GameObject.h"
-#include "Core/Component.h"
+#include "Core/Branch.h"
 #include "Core/CoreSystem.h"
 #include <glm/gtc/matrix_transform.hpp>
 
-glm::mat4 GameObject::GetViewMat()
+glm::mat4 Branch::GetViewMat()
 {
     glm::mat4 view;
 
@@ -14,28 +13,28 @@ glm::mat4 GameObject::GetViewMat()
     return view;
 }
 
-glm::vec3 GameObject::GetForward()
+glm::vec3 Branch::GetForward()
 {
     glm::vec3 forward;
     forward = GetRotateMat() * glm::vec4(0, 0, -1, 0);
     return forward;
 }
 
-glm::vec3 GameObject::GetUp()
+glm::vec3 Branch::GetUp()
 {
     glm::vec3 up;
     up = GetRotateMat() * glm::vec4(0, 1, 0, 0);
     return up;
 }
 
-glm::vec3 GameObject::GetRight()
+glm::vec3 Branch::GetRight()
 {
     glm::vec3 right;
     right = GetRotateMat() * glm::vec4(1, 0, 0, 0);
     return right;
 }
 
-glm::mat4 GameObject::GetRotateMat()
+glm::mat4 Branch::GetRotateMat()
 {
     glm::mat4 rotate = {1};
     // 直接在一个矩阵上应用所有旋转
@@ -49,7 +48,7 @@ glm::mat4 GameObject::GetRotateMat()
 }
 
 
-glm::mat4 GameObject::GetModelMat()
+glm::mat4 Branch::GetModelMat()
 {
     // 初始化模型矩阵为单位矩阵
     glm::mat4 model = glm::mat4(1.0f);
@@ -65,62 +64,4 @@ glm::mat4 GameObject::GetModelMat()
     // 应用缩放
     model = glm::scale(model, Scale);
     return model;
-}
-
-void GameObject::SetParent(Sp<GameObject> value)
-{
-    Sp<GameObject> oldParent = parent.lock();
-
-    if (oldParent)
-    {
-        auto& children = oldParent->children;
-        children.erase(
-            std::remove(children.begin(), children.end(), weak.lock()),
-            children.end());
-    }
-
-    parent = value;
-
-    if (value)
-    {
-        value->children.push_back(weak.lock());
-    }
-}
-
-
-
-
-void GameObject::AddComponent(Sp<Component> component)
-{
-    auto gameObject = component->gameObject.lock();
-    if (gameObject.get() == this)
-    {
-        return;
-    }
-
-    components.push_back(component);
-    component->gameObject = weak;
-}
-
-void GameObject::RemoveComponent(Sp<Component> component)
-{
-    auto gameObject = component->gameObject.lock();
-
-    if (gameObject.get() != this)
-    {
-        return;
-    }
-
-    components.erase(
-        std::remove(components.begin(), components.end(), component));
-    component->gameObject.reset();
-}
-
-
-Sp<GameObject> GameObject::Create()
-{
-    Sp<GameObject> This(new GameObject);
-    This->weak = This;
-    This->SetParent(CoreSystem::Instance()->GetRoot());
-    return This;
 }

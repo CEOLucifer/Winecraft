@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Node/ParentNode2D.h"
+#include "Core/Node.h"
+#include <glm/glm.hpp>
 
 /// @brief 控件基类
-class Control : public ParentNode2D
+class Control : public Node
 {
 public:
+    /// @brief 宽高 
     glm::vec2 Size;
-
-public:
-    virtual void Draw();
 };

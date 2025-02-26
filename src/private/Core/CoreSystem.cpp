@@ -1,30 +1,37 @@
 #include "Core/CoreSystem.h"
-#include "Core/Component.h"
-#include "Core/GameObject.h"
+#include "Core/Node.h"
+#include "Core/Branch.h"
+#include <memory>
 
-void CoreSystem::Update()
+void CoreSystem::UpdateAll()
 {
     if (!root)
         return;
-    updateGameObject(root);
+    updateBranch(root);
 }
 
-void CoreSystem::OnLoad() { root = GameObject::Create(); }
-
-void CoreSystem::updateGameObject(Sp<GameObject> gameObject)
+void CoreSystem::OnLoad()
 {
-    if (!gameObject)
+    root = std::make_shared<Branch>();
+    root->thisWeak = root;
+    root->name = "root";
+}
+
+void CoreSystem::updateBranch(Sp<Branch> branch)
+{
+    if (!branch)
         return;
 
-    // Update Component
-    for (Sp<Component> each : gameObject->components)
+    branch->Update();
+
+    for (Sp<Node> each : branch->childNodes)
     {
         each->Update();
     }
 
-    // 递归地更新子对象
-    for (Sp<GameObject> each : gameObject->children)
+    // 递归地更新子分支
+    for (Sp<Branch> each : branch->childBranches)
     {
-        updateGameObject(each);
+        updateBranch(each);
     }
 }
