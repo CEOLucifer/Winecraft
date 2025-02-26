@@ -191,11 +191,15 @@ void App::StartUser()
     }
 
     // 创建窗户
-    // auto window1 = Node::Create<Renderer>();
-    // window1->position = {5, 0, 5};
-    // window1->SetMesh(mesh_Plane);
-    // window1->SetMaterial(mat_Window);
-    // window1->SetOrder(1);
+    auto windowObj = Node::Create<Branch>("windowObj");
+    auto window1 = Node::Create<Renderer>("windowRenderer");
+    window1->SetParent(windowObj);
+    windowObj->Position = {5, 0, 5};
+    window1->SetMesh(mesh_Plane);
+    window1->SetMaterial(mat_Window);
+    window1->SetOrder(1);
+
+    windowObj->Destroy();
 
 
     // 光源

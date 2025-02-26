@@ -2,13 +2,21 @@
 
 #include "Singleton.h"
 #include "Typedef.h"
+#include <vector>
 
 class Branch;
+class Node;
 
 class CoreSystem : public Singleton<CoreSystem>
 {
+    friend class Node;
+
 private:
     Sp<Branch> root;
+
+    std::vector<Sp<Node>> nodeVec;
+
+    std::vector<Sp<Node>> destoryingNodes;
 
 public:
     void UpdateAll();
@@ -18,5 +26,5 @@ public:
     Sp<Branch> GetRoot() { return root; }
 
 private:
-    void updateBranch(Sp<Branch> node);
+    void _processDestroyingNodes();
 };

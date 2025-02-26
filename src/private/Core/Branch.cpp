@@ -65,3 +65,21 @@ glm::mat4 Branch::GetModelMat()
     model = glm::scale(model, Scale);
     return model;
 }
+
+void Branch::_callOnDestroyedOfChildren()
+{
+    for (auto each : childNodes)
+    {
+        each->OnDestroyed();
+    }
+
+    for (auto each : childBranches)
+    {
+        each->OnDestroyed();
+    }
+
+    for (auto each : childBranches)
+    {
+        each->_callOnDestroyedOfChildren();
+    }
+}

@@ -12,6 +12,11 @@
 
 void Renderer::Awake() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
 
+void Renderer::OnDestroyed()
+{
+    RenderSystem::Instance()->Remove(CastTo<Renderer>());
+}
+
 void Renderer::Draw(Camera& camera)
 {
     if (!mesh || !material || !material->shaderProgram)

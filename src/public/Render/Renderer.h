@@ -27,6 +27,8 @@ private:
 public:
     void Awake() override;
 
+    void OnDestroyed() override;
+
     void Draw(Camera& camera);
 
     void SetMesh(Sp<Mesh> value) { mesh = value; }

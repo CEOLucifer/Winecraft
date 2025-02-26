@@ -3,35 +3,39 @@
 #include "Core/Branch.h"
 #include <memory>
 
+using namespace std;
+
 void CoreSystem::UpdateAll()
 {
-    if (!root)
-        return;
-    updateBranch(root);
+    for (auto each : nodeVec)
+    {
+        if (!each->isDestroyed)
+        {
+            each->Update();
+        }
+        else
+        {
+            destoryingNodes.push_back(each);
+        }
+    }
+    _processDestroyingNodes();
 }
 
-void CoreSystem::OnLoad()
+void CoreSystem::OnLoad() { root = Node::Create<Branch>("root"); }
+
+void CoreSystem::_processDestroyingNodes()
 {
-    root = std::make_shared<Branch>();
-    root->thisWeak = root;
-    root->name = "root";
-}
-
-void CoreSystem::updateBranch(Sp<Branch> branch)
-{
-    if (!branch)
-        return;
-
-    branch->Update();
-
-    for (Sp<Node> each : branch->childNodes)
+    for (auto each : destoryingNodes)
     {
-        each->Update();
-    }
+        auto nodeEnd = nodeVec.back();
 
-    // 递归地更新子分支
-    for (Sp<Branch> each : branch->childBranches)
-    {
-        updateBranch(each);
+        // 最后一个元素换到this原来的位置
+        nodeVec[each->index] = nodeEnd;
+
+        // 最后一个元素的索引，设置为this的
+        nodeEnd->index = each->index;
+
+        nodeVec.pop_back();
     }
+    destoryingNodes.clear();
 }

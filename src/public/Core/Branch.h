@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 
 /// @brief 分支
-/// 
+///
 class Branch : public Node
 {
     friend class CoreSystem;
@@ -68,4 +68,7 @@ public:
         }
         return node;
     }
+
+private:
+    void _callOnDestroyedOfChildren();
 };
