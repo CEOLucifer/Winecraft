@@ -63,12 +63,32 @@ public:
         Sp<T> node = GetChild<T>();
         if (node == nullptr)
         {
-            node = Node::Create<T>();
-            node->SetParent(CastTo<Branch>());
+            node = AddNode<T>();
         }
         return node;
     }
 
+    template <typename T> Sp<T> AddNode(std::string _name = "")
+    {
+        Sp<T> newNode = Node::_createRaw<T>(_name);
+        newNode->SetParent(CastTo<Branch>());
+        newNode->OnAdded();
+        return newNode;
+    }
+
 private:
     void _callOnDestroyedOfChildren();
+
+public:
+    template <typename T> static Sp<T> Create(std::string _name = "")
+    {
+        Sp<T> This = _createRaw<T>(_name);
+        This->SetParent(CoreSystem::Instance()->root);
+        return This;
+    }
+
+    static Sp<Branch> Create(std::string _name = "")
+    {
+        return Create<Branch>();
+    }
 };

@@ -21,7 +21,7 @@ void CoreSystem::UpdateAll()
     _processDestroyingNodes();
 }
 
-void CoreSystem::OnLoad() { root = Node::Create<Branch>("root"); }
+void CoreSystem::OnLoad() { root = Branch::Create("root"); }
 
 void CoreSystem::_processDestroyingNodes()
 {

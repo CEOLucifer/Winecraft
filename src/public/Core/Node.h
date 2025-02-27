@@ -6,7 +6,7 @@
 
 class Branch;
 
-/// @brief 节点
+/// @brief 节点。不允许直接创建非Branch子类。只能通过Branch的AddNode方法创建。
 class Node
 {
     friend class CoreSystem;
@@ -39,7 +39,7 @@ public:
 
     virtual void Update() {}
 
-    /// @brief !!! 严禁实现销毁 
+    /// @brief !!! 严禁实现销毁
     virtual void OnDestroyed() {}
 
     void Destroy();
@@ -52,8 +52,8 @@ private:
     /// @brief 从旧父结点的子链表中移除
     void _removeFromParent();
 
-public:
-    template <typename T> static Sp<T> Create(std::string _name = "")
+private:
+    template <typename T> static Sp<T> _createRaw(std::string _name = "")
     {
         Sp<T> This(new T);
         This->thisWeak = This;
@@ -62,8 +62,6 @@ public:
         // 添加到nodeVec
         CoreSystem::Instance()->nodeVec.push_back(This);
         This->index = CoreSystem::Instance()->nodeVec.size() - 1;
-
-        This->SetParent(CoreSystem::Instance()->GetRoot());
         This->Awake();
         return This;
     }

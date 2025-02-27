@@ -6,6 +6,7 @@
 #include "Core/CoreSystem.h"
 #include "Core/Branch.h"
 #include "Mesh.h"
+#include "Render/DirectionalLight.h"
 #include "Render/FrameBuffer.h"
 #include "Render/Material/Material.h"
 #include "Render/Material/SkyboxMaterial.h"
@@ -174,9 +175,8 @@ void App::StartUser()
 
     for (int i = 0; i < cubePositions.size(); ++i)
     {
-        auto cube = Node::Create<Branch>("cube");
-        auto renderer = Node::Create<Renderer>("cubeRenderer");
-        renderer->SetParent(cube);
+        auto cube = Branch::Create<Branch>("cube");
+        auto renderer = cube->AddNode<Renderer>("cubeRenderer");
         cube->Position = cubePositions[i];
         renderer->SetMesh(mesh_Cube);
         renderer->SetMaterial(mat_Container);
@@ -191,32 +191,31 @@ void App::StartUser()
     }
 
     // 创建窗户
-    auto windowObj = Node::Create<Branch>("windowObj");
-    auto window1 = Node::Create<Renderer>("windowRenderer");
+    auto windowObj = Branch::Create("windowObj");
+    auto window1 = windowObj->AddNode<Renderer>("windowRenderer");
     window1->SetParent(windowObj);
     windowObj->Position = {5, 0, 5};
     window1->SetMesh(mesh_Plane);
     window1->SetMaterial(mat_Window);
     window1->SetOrder(1);
 
-    windowObj->Destroy();
 
 
     // 光源
-    auto spotLightObj = Node::Create<Branch>("spotLight");
+    auto spotLightObj = Branch::Create("spotLight");
     spotLightObj->Position = {10, 0, 0};
-    auto spotLight = Node::Create<SpotLight>();
+    auto spotLight = spotLightObj->AddNode<SpotLight>();
     spotLight->SetParent(spotLightObj);
     spotLight->Color = {1, 0, 0};
 
-    auto spotLightRenderer = Node::Create<Renderer>();
+    auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
     spotLightRenderer->SetParent(spotLightObj);
     spotLightRenderer->SetMesh(mesh_Cube);
     spotLightRenderer->SetMaterial(mat_LightCube);
 
 
-    auto directionalLightObj = Node::Create<Branch>("directionalLight");
-    auto directionalLight = Node::Create<DirectionalLight>();
+    auto directionalLightObj = Branch::Create("directionalLight");
+    auto directionalLight = directionalLightObj->AddNode<DirectionalLight>();
     directionalLight->SetParent(directionalLightObj);
 
 
@@ -224,11 +223,11 @@ void App::StartUser()
 
 
     // 摄像机
-    auto cameraObj = Node::Create<Branch>("camera");
-    auto camera = Node::Create<Camera>();
+    auto cameraObj = Branch::Create("camera");
+    auto camera = cameraObj->AddNode<Camera>();
     camera->SetParent(cameraObj);
     cameraObj->Position = {5, 0, 10};
-    auto cameraController = Node::Create<CameraController>();
+    auto cameraController = cameraObj->AddNode<CameraController>();
     cameraController->SetParent(cameraObj);
     cameraController->camera = camera;
 
@@ -261,7 +260,6 @@ void App::StartUser()
 
 
     // Image
-    // auto imageObj = Node::Create<Branch>("image");
-    // auto image = Node::Create<Image>();
-    // imageObj->AddChild(image);
+    auto imageObj = Branch::Create("image");
+    auto image = imageObj->AddNode<Image>();
 }

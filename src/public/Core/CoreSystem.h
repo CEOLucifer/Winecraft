@@ -10,6 +10,7 @@ class Node;
 class CoreSystem : public Singleton<CoreSystem>
 {
     friend class Node;
+    friend class Branch;
 
 private:
     Sp<Branch> root;
@@ -22,8 +23,6 @@ public:
     void UpdateAll();
 
     void OnLoad() override;
-
-    Sp<Branch> GetRoot() { return root; }
 
 private:
     void _processDestroyingNodes();
