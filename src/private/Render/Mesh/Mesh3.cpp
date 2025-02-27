@@ -1,9 +1,9 @@
-#include "Mesh3.h"
-#include "DrawMode.h"
-#include "Vertex.h"
+#include "Render/Mesh/Mesh3.h"
+#include "Render/DrawMode.h"
+#include "Render/Vertex.h"
 #include <cstddef>
 #include <memory>
-#include <glad/glad.h>
+#include "glad/glad.h"
 
 using namespace std;
 

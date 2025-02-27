@@ -1,12 +1,12 @@
 #include "Render/Model.h"
-#include "Mesh.h"
-#include "Texture.h"
+#include "Render/Mesh/Mesh.h"
+#include "Render/Texture.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
 #include <iostream>
 #include <memory>
-#include "Vertex.h"
-#include "MeshFactory.h"
+#include "Render/Vertex.h"
+#include "Render/Mesh/MeshFactory.h"
 
 
 using namespace std;

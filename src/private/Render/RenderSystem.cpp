@@ -5,7 +5,7 @@
 #include "Debug/Debug.h"
 #include <format>
 #include <algorithm>
-#include "Camera.h"
+#include "Render/Camera.h"
 
 using namespace std;
 

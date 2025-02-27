@@ -1,7 +1,7 @@
-#include <glad/glad.h>
-#include "MeshFactory.h"
-#include "Mesh1.h"
-#include "Vertex1.h"
+#include "glad/glad.h"
+#include "Render/Mesh/MeshFactory.h"
+#include "Render/Mesh/Mesh1.h"
+#include "Render/Vertex1.h"
 #include <vector>
 
 using namespace std;

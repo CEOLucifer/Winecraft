@@ -1,5 +1,5 @@
-#include <glad/glad.h>
-#include "Mesh.h"
+#include "glad/glad.h"
+#include "Render/Mesh/Mesh.h"
 
 void Mesh::SetIndices(std::vector<uint32_t>&& value)
 {

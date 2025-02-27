@@ -1,11 +1,11 @@
 #include "App.h"
 #include <climits>
 #include <glad/glad.h>
-#include "CameraController.h"
+#include "Test/CameraController.h"
 #include "Core/Node.h"
 #include "Core/CoreSystem.h"
 #include "Core/Branch.h"
-#include "Mesh.h"
+#include "Render/Mesh/Mesh.h"
 #include "Render/DirectionalLight.h"
 #include "Render/FrameBuffer.h"
 #include "Render/Material/Material.h"
@@ -14,11 +14,11 @@
 #include "Render/Shader/SkyboxShaderProgram.h"
 #include "Render/SpotLight.h"
 #include "Resource/ResourceSystem.h"
-#include "Shader.h"
+#include "Render/Shader/Shader.h"
 #include <GLFW/glfw3.h>
 #include "Render/Shader/RealShaderProgram.h"
 #include "Render/Shader/ShaderProgram.h"
-#include "Texture.h"
+#include "Render/Texture.h"
 #include "glm/fwd.hpp"
 #include <memory>
 #include <stb/stb_image.h>
@@ -26,7 +26,7 @@
 #include <string>
 #include <vector>
 #include "Render/RenderSystem.h"
-#include "Camera.h"
+#include "Render/Camera.h"
 #include "InputSystem.h"
 #include "Render/Model.h"
 #include "Render/Renderer.h"
@@ -34,7 +34,7 @@
 #include "Render/Material/SingleColorMaterial.h"
 #include "Debug/Debug.h"
 #include "TimeSystem.h"
-#include "MeshFactory.h"
+#include "Render/Mesh/MeshFactory.h"
 #include "UI/Image.h"
 
 using namespace std;

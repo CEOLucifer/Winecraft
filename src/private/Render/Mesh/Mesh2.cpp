@@ -1,5 +1,5 @@
-#include "Mesh2.h"
-#include <glad/glad.h>
+#include "Render/Mesh/Mesh2.h"
+#include "glad/glad.h"
 
 void Mesh2::SetVertices(std::vector<Vertex2>&& value)
 {

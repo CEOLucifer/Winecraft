@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include "Render/Material/SkyboxMaterial.h"
 #include "Render/Material/Material.h"
-#include "Texture.h"
+#include "Render/Texture.h"
 
 void SkyboxMaterial::OnInit() { DepthMask = GL_FALSE; }
 

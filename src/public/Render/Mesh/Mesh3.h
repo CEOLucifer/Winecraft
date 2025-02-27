@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Vertex.h"
+#include "Render/Vertex.h"
 #include <vector>
 #include "Mesh.h"
 

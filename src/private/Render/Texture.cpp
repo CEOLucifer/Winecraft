@@ -1,7 +1,7 @@
-#include "Texture.h"
+#include "Render/Texture.h"
 #include <memory>
-#include <glad/glad.h>
-#include <stb/stb_image.h>
+#include "glad/glad.h"
+#include "stb/stb_image.h"
 #include <string>
 #include "Debug/Debug.h"
 

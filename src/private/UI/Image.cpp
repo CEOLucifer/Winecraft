@@ -1,15 +1,15 @@
 #include <glad/glad.h>
 #include "UI/Image.h"
 #include "Core/Branch.h"
-#include "MeshFactory.h"
+#include "Render/Mesh/MeshFactory.h"
 #include "Render/Material/ControlMaterial.h"
 #include "Render/Material/Material.h"
 #include "Render/Shader/ControlShaderProgram.h"
 #include "Render/Shader/ShaderProgram.h"
-#include "Shader.h"
+#include "Render/Shader/Shader.h"
 #include "Render/Renderer.h"
 #include "Typedef.h"
-#include "Texture.h"
+#include "Render/Texture.h"
 
 
 void Image::Awake()

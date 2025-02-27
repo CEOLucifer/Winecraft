@@ -1,12 +1,12 @@
 #include <glad/glad.h>
 #include "Render/Renderer.h"
-#include "DrawMode.h"
-#include "Mesh.h"
+#include "Render/DrawMode.h"
+#include "Render/Mesh/Mesh.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "Render/RenderSystem.h"
-#include "Camera.h"
+#include "Render/Camera.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "Render/Material/Material.h"
 #include "Render/Addition.h"

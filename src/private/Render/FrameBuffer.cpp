@@ -1,6 +1,6 @@
 #include <glad/glad.h>
 #include "Render/FrameBuffer.h"
-#include "Texture.h"
+#include "Render/Texture.h"
 #include "Debug/Debug.h"
 #include "Render/RenderBuffer.h"
 

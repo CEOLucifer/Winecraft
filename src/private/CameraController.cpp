@@ -1,6 +1,5 @@
-#include "CameraController.h"
-#include "Camera.h"
-#include "Core/Node.h"
+#include "Test/CameraController.h"
+#include "Render/Camera.h"
 #include "GLFW/glfw3.h"
 #include "InputSystem.h"
 #include <algorithm>

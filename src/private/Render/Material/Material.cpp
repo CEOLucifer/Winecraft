@@ -1,6 +1,6 @@
 #include "Render/Renderer.h"
 #include "Render/Material/Material.h"
-#include "Camera.h"
+#include "Render/Camera.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "Core/Branch.h"
 

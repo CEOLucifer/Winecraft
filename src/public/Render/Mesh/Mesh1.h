@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Mesh.h"
-#include "Vertex1.h"
+#include "Render/Vertex1.h"
 
 /// @brief 仅坐标网格
 /// 

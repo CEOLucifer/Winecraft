@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <vector>
-#include "DrawMode.h"
+#include "Render/DrawMode.h"
 #include "Typedef.h"
 
 class Texture;
