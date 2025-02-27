@@ -9,6 +9,7 @@
 #include "Camera.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "Render/Material/Material.h"
+#include "Render/Addition.h"
 
 void Renderer::Awake() { RenderSystem::Instance()->Add(CastTo<Renderer>()); }
 
@@ -19,6 +20,8 @@ void Renderer::OnDestroyed()
 
 void Renderer::Draw(Camera& camera)
 {
+    // 描述了一次绘制的主要过程
+
     if (!mesh || !material || !material->shaderProgram)
         return;
 
@@ -28,6 +31,10 @@ void Renderer::Draw(Camera& camera)
     // 材质
     glUseProgram(material->shaderProgram->GetID());
     material->OnUpdateShaderProgram(*this, camera);
+    if (addition)
+    {
+        addition->Add();
+    }
 
     // 模板测试
     if (material->EnableStencilTest)
@@ -102,3 +109,5 @@ void Renderer::SetOrder(int value)
     order = value;
     RenderSystem::Instance()->SortAll();
 }
+
+void Renderer::SetAddition(Up<Addition> value) { addition = std::move(value); }

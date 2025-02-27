@@ -17,7 +17,7 @@ void Mesh2::SetVertices(std::vector<Vertex2>&& value)
                           (void*)(offsetof(Vertex2, Position)));
     glEnableVertexAttribArray(0);
     // 纹理属性
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2),
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2),
                           (void*)(offsetof(Vertex2, TexCoord)));
     glEnableVertexAttribArray(1);
 }

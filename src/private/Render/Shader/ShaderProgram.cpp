@@ -32,6 +32,13 @@ void ShaderProgram::SetMat4(const std::string& name, const glm::mat4& value)
                        glm::value_ptr(value));
 }
 
+void ShaderProgram::SetMat3(const std::string& name, const glm::mat3& value)
+{
+    glUseProgram(id);
+    glUniformMatrix3fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE,
+                       glm::value_ptr(value));
+}
+
 void ShaderProgram::SetVec4(const std::string& name, const glm::vec4& value)
 {
     glUseProgram(id);
@@ -43,6 +50,13 @@ void ShaderProgram::SetVec3(const std::string& name, const glm::vec3& value)
 {
     glUseProgram(id);
     glUniform3fv(glGetUniformLocation(id, name.c_str()), 1,
+                 glm::value_ptr(value));
+}
+
+void ShaderProgram::SetVec2(const std::string& name, const glm::vec2& value)
+{
+    glUseProgram(id);
+    glUniform2fv(glGetUniformLocation(id, name.c_str()), 1,
                  glm::value_ptr(value));
 }
 
@@ -62,7 +76,8 @@ void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders)
         if (!success)
         {
             glGetProgramInfoLog(id, 512, NULL, infoLog);
-            Debug::LogError(format("ERROR::SHADER::shaderProgram::LINK_FAILED\n{}", infoLog));
+            Debug::LogError(format(
+                "ERROR::SHADER::shaderProgram::LINK_FAILED\n{}", infoLog));
         }
     }
 }

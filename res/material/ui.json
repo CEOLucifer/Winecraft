@@ -1,0 +1,4 @@
+{
+    "vert" : "shader/control.vert",
+    "frag" : "shader/control.frag"
+}

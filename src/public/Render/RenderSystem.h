@@ -4,6 +4,7 @@
 #include "Singleton.h"
 #include "SpotLight.h"
 #include "Typedef.h"
+#include "glm/fwd.hpp"
 #include <memory>
 #include <vector>
 
@@ -38,6 +39,8 @@ public:
     void onFrameBufferResize(GLFWwindow *window, int w, int h);
 
     GLFWwindow* GetWindow() { return window; }
+
+    glm::vec2 GetWindowSize();
 
     void SetSpotLight(std::shared_ptr<SpotLight> value) { spotLight = value; }
 

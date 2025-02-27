@@ -166,29 +166,29 @@ void App::StartUser()
 
 
     // 创建箱子立方体
-    vector<glm::vec3> cubePositions = {
-        glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
-        glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
-        glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
-        glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
-        glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
+    // vector<glm::vec3> cubePositions = {
+    //     glm::vec3(0.0f, 0.0f, 0.0f),    glm::vec3(2.0f, 5.0f, -15.0f),
+    //     glm::vec3(-1.5f, -2.2f, -2.5f), glm::vec3(-3.8f, -2.0f, -12.3f),
+    //     glm::vec3(2.4f, -0.4f, -3.5f),  glm::vec3(-1.7f, 3.0f, -7.5f),
+    //     glm::vec3(1.3f, -2.0f, -2.5f),  glm::vec3(1.5f, 2.0f, -2.5f),
+    //     glm::vec3(1.5f, 0.2f, -1.5f),   glm::vec3(-1.3f, 1.0f, -1.5f)};
 
-    for (int i = 0; i < cubePositions.size(); ++i)
-    {
-        auto cube = Branch::Create<Branch>("cube");
-        auto renderer = cube->AddNode<Renderer>("cubeRenderer");
-        cube->Position = cubePositions[i];
-        renderer->SetMesh(mesh_Cube);
-        renderer->SetMaterial(mat_Container);
-        // cube->SetPolygonMode(GL_POINT);
+    // for (int i = 0; i < cubePositions.size(); ++i)
+    // {
+    //     auto cube = Branch::Create<Branch>("cube");
+    //     auto renderer = cube->AddNode<Renderer>("cubeRenderer");
+    //     cube->Position = cubePositions[i];
+    //     renderer->SetMesh(mesh_Cube);
+    //     renderer->SetMaterial(mat_Container);
+    //     // cube->SetPolygonMode(GL_POINT);
 
-        // 创建箱子的边框
-        // auto border = Node::Create<Border>();
-        // border->position = cubePositions[i];
-        // border->scale = {1.1, 1.1, 1.1};
-        // border->SetMesh(meshCube);
-        // border->SetMaterial(mat_Border);
-    }
+    //     // 创建箱子的边框
+    //     // auto border = Node::Create<Border>();
+    //     // border->position = cubePositions[i];
+    //     // border->scale = {1.1, 1.1, 1.1};
+    //     // border->SetMesh(meshCube);
+    //     // border->SetMaterial(mat_Border);
+    // }
 
     // 创建窗户
     auto windowObj = Branch::Create("windowObj");
@@ -202,21 +202,21 @@ void App::StartUser()
 
 
     // 光源
-    auto spotLightObj = Branch::Create("spotLight");
-    spotLightObj->Position = {10, 0, 0};
-    auto spotLight = spotLightObj->AddNode<SpotLight>();
-    spotLight->SetParent(spotLightObj);
-    spotLight->Color = {1, 0, 0};
+    // auto spotLightObj = Branch::Create("spotLight");
+    // spotLightObj->Position = {10, 0, 0};
+    // auto spotLight = spotLightObj->AddNode<SpotLight>();
+    // spotLight->SetParent(spotLightObj);
+    // spotLight->Color = {1, 0, 0};
 
-    auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
-    spotLightRenderer->SetParent(spotLightObj);
-    spotLightRenderer->SetMesh(mesh_Cube);
-    spotLightRenderer->SetMaterial(mat_LightCube);
+    // auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
+    // spotLightRenderer->SetParent(spotLightObj);
+    // spotLightRenderer->SetMesh(mesh_Cube);
+    // spotLightRenderer->SetMaterial(mat_LightCube);
 
 
-    auto directionalLightObj = Branch::Create("directionalLight");
-    auto directionalLight = directionalLightObj->AddNode<DirectionalLight>();
-    directionalLight->SetParent(directionalLightObj);
+    // auto directionalLightObj = Branch::Create("directionalLight");
+    // auto directionalLight = directionalLightObj->AddNode<DirectionalLight>();
+    // directionalLight->SetParent(directionalLightObj);
 
 
 
@@ -262,4 +262,5 @@ void App::StartUser()
     // Image
     auto imageObj = Branch::Create("image");
     auto image = imageObj->AddNode<Image>();
+    imageObj->Scale = {1000, 1000, 1};
 }

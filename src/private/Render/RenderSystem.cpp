@@ -79,3 +79,11 @@ void RenderSystem::onFrameBufferResize(GLFWwindow* window, int w, int h)
 {
     glViewport(0, 0, w, h);
 }
+
+glm::vec2 RenderSystem::GetWindowSize()
+{
+    int w;
+    int h;
+    glfwGetWindowSize(window, &w, &h);
+    return {w, h};
+}

@@ -15,6 +15,11 @@ class Renderer;
 ///
 class Material
 {
+    // 由于不同物体渲染的时设置uniform的逻辑不同，故需要派生子类。
+    // 子类材质可以自定义属性，一般来说和uniform对应。然后在OnUpdateShaderProgram中设置
+
+
+
 public:
     /// @brief shader程序
     Sp<ShaderProgram> shaderProgram;
@@ -38,23 +43,31 @@ public:
     FaceCull FaceCull;
 
 
+
 public:
     /// @brief 用于配置默认属性
     virtual void OnInit() {}
 
     /// @brief 用于更新Shader的uniform。默认：更新变换。 由子类重写。
-    virtual void OnUpdateShaderProgram(Renderer& renderer, Camera& camera) { updateAllTransform(renderer, camera); }
+    virtual void OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
+    {
+        updateAllTransform(renderer, camera);
+    }
 
 protected:
+    // 以下是工具函数，供子类使用
+
     void updateAllTransform(Renderer& renderer, Camera& camera);
 
     void updateSkybox(Renderer& renderer, Camera& camera);
+
+    void updateControl(Renderer& renderer, Camera& camera);
 };
 
 class MaterialFactory
 {
 public:
-    template <typename T> static Sp<T> CreateRaw()
+    template <typename T> Sp<T> CreateRaw()
     {
         Sp<T> This(new T);
         This->OnInit();

@@ -8,8 +8,9 @@
 class Camera;
 class Mesh;
 class Material;
+class Addition;
 
-/// @brief 渲染器
+/// @brief 渲染器。一次绘制的基本单位。
 ///
 class Renderer : public Node
 {
@@ -23,6 +24,8 @@ private:
     Sp<Material> material;
 
     int order = 0;
+
+    Up<Addition> addition;
 
 public:
     void Awake() override;
@@ -43,5 +46,5 @@ public:
 
     int GetOrder() { return order; }
 
-    
+    void SetAddition(Up<Addition> value);
 };

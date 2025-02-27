@@ -13,11 +13,15 @@ void Material::updateAllTransform(Renderer& renderer, Camera& camera)
 
 void Material::updateSkybox(Renderer& renderer, Camera& camera)
 {
-    // 移除观察矩阵的位移分量。
     auto t = camera.GetParent();
 
-
+    // 移除观察矩阵的位移分量。
     shaderProgram->SetMat4(
         "view", glm::mat4(glm::mat3(camera.GetParent().lock()->GetViewMat())));
     shaderProgram->SetMat4("projection", camera.GetProjectionMat());
+}
+
+void Material::updateControl(Renderer& renderer, Camera& camera)
+{
+    shaderProgram->SetMat3("model", renderer.GetParent().lock()->GetModelMat());
 }
