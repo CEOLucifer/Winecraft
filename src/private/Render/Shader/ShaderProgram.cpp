@@ -60,13 +60,20 @@ void ShaderProgram::SetVec2(const std::string& name, const glm::vec2& value)
                  glm::value_ptr(value));
 }
 
-void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders)
+void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders) {}
+
+ShaderProgram::~ShaderProgram() { glDeleteProgram(id); }
+
+
+
+void ShaderProgram::OnCreated(const JsonDocument& doc)
 {
+    auto vertShader = Resource::Load<Shader>(doc["vert"]);
+    auto fragShader = Resource::Load<Shader>(doc["frag"]);
+
     id = glCreateProgram();
-    for (auto each : shaders)
-    {
-        glAttachShader(id, each->GetID());
-    }
+    glAttachShader(id, vertShader->GetID());
+    glAttachShader(id, fragShader->GetID());
     glLinkProgram(id);
     // 检查着色器程序是否链接成功
     {
@@ -80,6 +87,5 @@ void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders)
                 "ERROR::SHADER::shaderProgram::LINK_FAILED\n{}", infoLog));
         }
     }
+    onSetTextureLocation();
 }
-
-ShaderProgram::~ShaderProgram() { glDeleteProgram(id); }

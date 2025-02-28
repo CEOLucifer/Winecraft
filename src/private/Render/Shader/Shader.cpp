@@ -1,36 +1,43 @@
+#include <glad/glad.h>
 #include "Render/Shader/Shader.h"
 #include "Debug/Debug.h"
 #include "FileHelper.h"
-#include <iostream>
-#include <glad/glad.h>
 
 using namespace std;
 
 Shader::~Shader() { glDeleteShader(id); }
 
-shared_ptr<Shader> Shader::Create(int type, string src)
+void Shader::OnCreated(const JsonDocument& doc)
 {
-    shared_ptr<Shader> shader(new Shader());
-    shader->id = glCreateShader(type);
+    string path = doc["path"];
+
+    auto src = FileHelper::ReadFile(path);
+
+    int type;
+    string str_type = doc["type"];
+    if (str_type == "vert")
+    {
+        type = GL_VERTEX_SHADER;
+    }
+    else
+    {
+        type = GL_FRAGMENT_SHADER;
+    }
+
+    id = glCreateShader(type);
     char* _src = src.data();
-    glShaderSource(shader->id, 1, &_src, NULL);
-    glCompileShader(shader->id);
+    glShaderSource(id, 1, &_src, NULL);
+    glCompileShader(id);
     // 检查顶点着色器是否编译成功
     {
         int success;
         char infoLog[512];
-        glGetShaderiv(shader->id, GL_COMPILE_STATUS, &success);
+        glGetShaderiv(id, GL_COMPILE_STATUS, &success);
         if (!success)
         {
-            glGetShaderInfoLog(shader->id, 512, NULL, infoLog);
-            Debug::LogError(format("ERROR::SHADER::COMPILATION_FAILED\n{}", infoLog));
+            glGetShaderInfoLog(id, 512, NULL, infoLog);
+            Debug::LogError(
+                format("ERROR::SHADER::COMPILATION_FAILED\n{}", infoLog));
         }
     }
-    return shader;
-}
-
-shared_ptr<Shader> Shader::CreateFromFile(int type, string path)
-{
-    auto src = FileHelper::ReadFile(path);
-    return Create(type, src.data());
 }

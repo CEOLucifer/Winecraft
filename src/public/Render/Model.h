@@ -2,11 +2,11 @@
 
 #include "Render/Mesh/Mesh.h"
 #include "Resource/Resource.h"
-#include "Resource/ResourceFactory.h"
 #include "Texture.h"
 #include <memory>
 #include <vector>
 #include <assimp/scene.h>
+#include <ArduinoJson.h>
 
 class aiNode;
 class aiScene;
@@ -39,10 +39,4 @@ private:
     std::vector<std::shared_ptr<Texture>>
     loadMaterialTextures(aiMaterial* mat, aiTextureType type,
                          std::string typeName);
-};
-
-class ModelFactory : public ResourceFactory<Model>
-{
-protected:
-    void onCreate(std::shared_ptr<Model> res, std::string path) override;
 };

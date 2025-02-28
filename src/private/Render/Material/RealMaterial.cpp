@@ -7,8 +7,15 @@
 #include "Render/RenderSystem.h"
 #include "Core/Node.h"
 #include "Core/Branch.h"
+#include "Resource/Resource.h"
 
-void RealMaterial::OnInit() {}
+void RealMaterial::OnCreated(const JsonDocument& doc)
+{
+    Material::OnCreated(doc);
+    diffuseTex = Resource::Load<Texture>(doc["diffuseTex"]);
+    specularTex = Resource::Load<Texture>(doc["specularTex"]);
+    shininess = doc["shininess"];
+}
 
 void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {

@@ -5,6 +5,7 @@
 #include "Render/StencilOp.h"
 #include "Render/StencilFunc.h"
 #include <GL/gl.h>
+#include "Resource/Resource.h"
 #include "Typedef.h"
 
 class ShaderProgram;
@@ -13,7 +14,7 @@ class Renderer;
 
 /// @brief 材质
 ///
-class Material
+class Material : public Resource
 {
     // 由于不同物体渲染的时设置uniform的逻辑不同，故需要派生子类。
     // 子类材质可以自定义属性，一般来说和uniform对应。然后在OnUpdateShaderProgram中设置
@@ -45,8 +46,7 @@ public:
 
 
 public:
-    /// @brief 用于配置默认属性
-    virtual void OnInit() {}
+    void OnCreated(const JsonDocument& doc) override;
 
     /// @brief 用于更新Shader的uniform。默认：更新变换。 由子类重写。
     virtual void OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
@@ -62,15 +62,4 @@ protected:
     void updateSkybox(Renderer& renderer, Camera& camera);
 
     void updateControl(Renderer& renderer, Camera& camera);
-};
-
-class MaterialFactory
-{
-public:
-    template <typename T> Sp<T> CreateRaw()
-    {
-        Sp<T> This(new T);
-        This->OnInit();
-        return This;
-    }
 };

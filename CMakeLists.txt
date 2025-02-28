@@ -40,9 +40,19 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(glm)
 target_link_libraries(LearnOpenGL PRIVATE glm)
 
+# assimp
 FetchContent_Declare(
     assimp
     GIT_REPOSITORY https://github.com/assimp/assimp
 )
 FetchContent_MakeAvailable(assimp)
 target_link_libraries(LearnOpenGL PRIVATE assimp)
+
+# arduinoJson
+include(FetchContent)
+FetchContent_Declare(ArduinoJson
+    GIT_REPOSITORY https://github.com/bblanchon/ArduinoJson.git
+    GIT_TAG        v7.3.0
+)
+FetchContent_MakeAvailable(ArduinoJson)
+target_link_libraries(LearnOpenGL PRIVATE ArduinoJson)

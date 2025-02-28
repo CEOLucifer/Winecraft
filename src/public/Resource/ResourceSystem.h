@@ -1,27 +1,37 @@
 #pragma once
 
 #include "Singleton.h"
-#include <memory>
 #include <string>
 #include <unordered_map>
+#include "Typedef.h"
+#include "FileHelper.h"
+#include "Debug/Debug.h"
+#include "Creator.h"
+#include <ArduinoJson.h>
 
 class Resource;
 
+class BaseCreator;
+
 /// @brief 资源系统
-/// 
+///
 class ResourceSystem : public Singleton<ResourceSystem>
 {
 private:
-    /// @brief 资源的缓存map。 
-    /// 
-    std::unordered_map<std::string, std::shared_ptr<Resource>> resMap;
+    /// @brief 资源的缓存map。
+    ///
+    std::unordered_map<std::string, Sp<Resource>> resMap;
+
+    std::unordered_map<std::string, Up<BaseCreator>> creatorMap;
 
 public:
-    /// @brief 获取指定路径资源的缓存 
-    /// 
-    /// @param path 
-    /// @return std::shared_ptr<Resource> 
-    std::shared_ptr<Resource> Get(std::string path)
+    void OnLoad() override;
+
+    /// @brief 获取指定路径资源的缓存
+    ///
+    /// @param path
+    /// @return Sp<Resource>
+    Sp<Resource> Get(const std::string& path)
     {
         if (resMap.contains(path))
         {
@@ -30,8 +40,57 @@ public:
         return nullptr;
     }
 
-    /// @brief 缓存指定资源 
-    /// 
-    /// @param res 
-    void Cache(std::shared_ptr<Resource> res);
+    /// @brief 缓存指定资源
+    ///
+    /// @param res
+    void Cache(Sp<Resource> res);
+
+    void RegisterAllResources();
+
+    template <typename T>
+        requires std::is_base_of_v<Resource, T>
+    void RegisterResource(const std::string& name)
+    {
+        Up<Creator<T>> newLoader(new Creator<T>);
+        creatorMap.insert({name, std::move(newLoader)});
+    }
+
+    /// 加载指定类型的资源
+    /// \tparam T
+    /// \param path
+    /// \return
+    template <typename T>
+        requires std::is_base_of_v<Resource, T>
+    Sp<T> Load(const std::string& path)
+    {
+        auto _res = std::dynamic_pointer_cast<T>(Get(path));
+        if (_res)
+        {
+            // 已缓存
+            // Debug::Log(format("found resource cached, path:{}", path));
+            return _res;
+        }
+        else
+        {
+            // 新建
+            std::string str = FileHelper::ReadFile(path);
+            JsonDocument doc;
+            deserializeJson(doc, str);
+            std::string className = doc["className"];
+
+            if (!creatorMap.contains(className))
+            {
+                Debug::LogWarning(std::format(
+                    "failed to find loader for class {}", className));
+                return nullptr;
+            }
+            else
+            {
+                // 运用Creator创建资源
+                Creator<T> creator;
+                Sp<T> res = creator.CreateNew(doc);
+                return res;
+            }
+        }
+    }
 };

@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Resource/Resource.h"
-#include "Resource/ResourceFactory.h"
-#include <array>
 #include <cstdint>
 #include "Typedef.h"
 #include <string>
@@ -11,8 +9,6 @@
 ///
 class Texture : public Resource
 {
-    friend class TextureFactory;
-
 private:
     /// @brief opengl id
     ///
@@ -32,12 +28,15 @@ public:
     uint32_t GetID() { return id; }
 
     int GetInternalFormat() { return internalFormat; }
-};
 
-class TextureFactory : public ResourceFactory<Texture>
-{
 public:
-    void onCreate(Sp<Texture> res, std::string path) override;
+    void OnCreated(const JsonDocument& doc) override;
+
+
+public:
+    // 以下函数主要用于自定义帧缓冲
+
+
 
     /// @brief 创建一个空白的纹理
     ///
@@ -45,12 +44,10 @@ public:
     /// @param width
     /// @param height
     /// @return Sp<Texture>
-    Sp<Texture> CreateRaw(int internalFormat, int format, int width, int height,
-                          int type);
+    static Sp<Texture> CreateRaw(int internalFormat, int format, int width,
+                                 int height, int type);
 
-    Sp<Texture> CreateRGBA(int width, int height);
+    static Sp<Texture> CreateRGBA(int width, int height);
 
-    Sp<Texture> CreateDepthStencil(int width, int height);
-
-    Sp<Texture> CreateCube(const std::array<std::string, 6>& paths);
+    static Sp<Texture> CreateDepthStencil(int width, int height);
 };

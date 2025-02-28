@@ -2,11 +2,12 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <memory>
-#include <string>
+#include "Resource/Resource.h"
 
-class Shader
+class Shader : public Resource
 {
+    friend class ShaderFactory;
+
 private:
     uint32_t id;
 
@@ -15,8 +16,5 @@ public:
 
     uint32_t GetID() { return id; }
 
-public:
-    static std::shared_ptr<Shader> Create(int type, std::string src);
-
-    static std::shared_ptr<Shader> CreateFromFile(int type, std::string path);
+    void OnCreated(const JsonDocument& doc) override;
 };

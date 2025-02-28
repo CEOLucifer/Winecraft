@@ -1,0 +1,6 @@
+{
+    "className": "RealMaterial",
+    "diffuseTex": "res/texture/grass.json",
+    "shaderProgram": "res/shaderProgram/real.json",
+    "shininess": 32.0
+}

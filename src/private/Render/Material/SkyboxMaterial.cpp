@@ -2,9 +2,13 @@
 #include "Render/Material/SkyboxMaterial.h"
 #include "Render/Material/Material.h"
 #include "Render/Texture.h"
+#include "Resource/Resource.h"
 
-void SkyboxMaterial::OnInit() { DepthMask = GL_FALSE; }
-
+void SkyboxMaterial::OnCreated(const JsonDocument& doc)
+{
+    DepthMask = GL_FALSE;
+    cubeTexture = Resource::Load<Texture>(doc["texture"]);
+}
 
 void SkyboxMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {

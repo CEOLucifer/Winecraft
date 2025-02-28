@@ -1,0 +1,10 @@
+{
+    "className": "SingleColorMaterial",
+    "texture": "res/texture/skybox.json",
+    "shaderProgram": "res/shaderProgram/singleColor.json",
+    "color": [
+        1.0,
+        0,
+        0
+    ]
+}

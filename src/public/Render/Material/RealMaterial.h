@@ -16,7 +16,7 @@ public:
     float shininess = 32.0;
 
 public:
-    void OnInit() override;
+    void OnCreated(const JsonDocument &doc) override;
 
     void OnUpdateShaderProgram(Renderer& renderer, Camera& camera) override;
 };

@@ -1,0 +1,12 @@
+{
+    "className": "Texture",
+    "type": "skybox",
+    "six": [
+        "res/skybox/right.jpg",
+        "res/skybox/left.jpg",
+        "res/skybox/top.jpg",
+        "res/skybox/bottom.jpg",
+        "res/skybox/front.jpg",
+        "res/skybox/back.jpg"
+    ]
+}

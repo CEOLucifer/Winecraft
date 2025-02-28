@@ -12,7 +12,7 @@ public:
     Sp<Texture> cubeTexture;
 
 public:
-    void OnInit() override;
+    void OnCreated(const JsonDocument &doc) override;
 
     void OnUpdateShaderProgram(Renderer& renderer, Camera& camera) override;
 };

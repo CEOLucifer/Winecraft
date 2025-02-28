@@ -1,0 +1,5 @@
+{
+    "className": "SkyboxMaterial",
+    "texture": "res/texture/skybox.json",
+    "shaderProgram": "res/shaderProgram/skybox.json"
+}

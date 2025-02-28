@@ -3,6 +3,12 @@
 #include "Render/Camera.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "Core/Branch.h"
+#include "Resource/Resource.h"
+
+void Material::OnCreated(const JsonDocument& doc)
+{
+    shaderProgram = Resource::Load<ShaderProgram>(doc["shaderProgram"]);
+}
 
 void Material::updateAllTransform(Renderer& renderer, Camera& camera)
 {

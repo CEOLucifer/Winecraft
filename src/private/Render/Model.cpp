@@ -127,20 +127,14 @@ vector<shared_ptr<Texture>> Model::loadMaterialTextures(aiMaterial* mat,
     vector<shared_ptr<Texture>> textures;
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
-        TextureFactory texFac;
         aiString str;
         mat->GetTexture(type, i, &str);
         shared_ptr<Texture> texture =
-            texFac.Create(directory + "/" + str.C_Str());
+            Resource::Load<Texture>(directory + "/" + str.C_Str());
         // texture.id = TextureFromFile(str.C_Str(), directory);
         // texture.type = typeName;
         // texture.path = str;
         textures.push_back(texture);
     }
     return textures;
-}
-
-void ModelFactory::onCreate(std::shared_ptr<Model> res, std::string path)
-{
-    res->loadModel(path);
 }

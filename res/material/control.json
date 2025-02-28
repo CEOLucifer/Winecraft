@@ -1,0 +1,5 @@
+{
+    "className": "ControlMaterial",
+    "texture": "res/texture/skybox.json",
+    "shaderProgram": "res/shaderProgram/singleColor.json"
+}

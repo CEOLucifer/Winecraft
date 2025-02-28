@@ -1,0 +1,5 @@
+{
+    "className": "ShaderProgram",
+    "vert": "res/shader/vert0.json",
+    "frag": "res/shader/singleColor_frag.json"
+}

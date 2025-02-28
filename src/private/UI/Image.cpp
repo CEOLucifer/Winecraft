@@ -14,31 +14,19 @@
 
 void Image::Awake()
 {
-    TextureFactory texFac;
-    texture = texFac.Create("res/awesomeface.png");
+    texture = Resource::Load<Texture>("res/texture/awesomeface.json");
 }
 
 void Image::OnAdded()
 {
     renderer = GetParent().lock()->GetChildOrAdd<Renderer>();
 
-    auto vert = Shader::CreateFromFile(GL_VERTEX_SHADER, "shader/control.vert");
-    auto frag =
-        Shader::CreateFromFile(GL_FRAGMENT_SHADER, "shader/control.frag");
-
-    auto sp = ShaderProgram::Create<ControlShaderProgram>({vert, frag});
-
-
-    MaterialFactory matFac;
-    auto mat = matFac.CreateRaw<ControlMaterial>();
-    mat->shaderProgram = sp;
-
+    auto mat = Resource::Load<ControlMaterial>("res/material/control.json");
     renderer->SetMaterial(mat);
 
 
     MeshFactory meshFac;
     auto mesh = meshFac.CreateMesh2_Control();
-
     renderer->SetMesh(mesh);
 
 

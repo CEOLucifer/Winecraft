@@ -74,8 +74,7 @@ Sp<FrameBuffer> FrameBuffer::CreateUtility(int width, int height)
 {
     auto This = Create();
 
-    TextureFactory texFac;
-    auto rgba = texFac.CreateRGBA(width, height);
+    auto rgba = Texture::CreateRGBA(width, height);
     This->BindRGBA(rgba);
 
     auto renderBuffer = RenderBuffer::Create(width, height);

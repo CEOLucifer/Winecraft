@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
+#include "Resource/Resource.h"
 #include "Shader.h"
 #include "Typedef.h"
 
@@ -12,8 +13,10 @@ class Camera;
 
 /// @brief shader程序。是shader的链接产品。
 ///
-class ShaderProgram
+class ShaderProgram : public Resource
 {
+    friend class ShaderProgramFactory;
+
 private:
     uint32_t id;
 
@@ -21,6 +24,8 @@ public:
     virtual ~ShaderProgram();
 
     uint32_t GetID() { return id; }
+
+    void OnCreated(const JsonDocument& doc) override;
 
     // uniform工具函数
 
@@ -40,14 +45,4 @@ protected:
 
 private:
     void init(const std::vector<Sp<Shader>>& shaders);
-
-public:
-    template <typename T>
-    static Sp<T> Create(const std::vector<Sp<Shader>>& shaders)
-    {
-        Sp<ShaderProgram> shaderProgram(new T);
-        shaderProgram->init(shaders);
-        shaderProgram->onSetTextureLocation();
-        return std::dynamic_pointer_cast<T>(shaderProgram);
-    }
 };

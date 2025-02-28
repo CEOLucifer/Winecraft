@@ -1,0 +1,5 @@
+{
+    "className": "ControlShaderProgram",
+    "vert": "res/shader/skybox_vert.json",
+    "frag": "res/shader/skybox_frag.json"
+}

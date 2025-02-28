@@ -7,8 +7,8 @@
 void ControlMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {
     updateControl(renderer, camera);
-    
-    // auto& shaderProgram = renderer.GetMaterial()->shaderProgram;
-    // shaderProgram->SetVec2(
-    //     "viewportSize", RenderSystem::Instance()->GetWindowSize());
+
+    auto& shaderProgram = renderer.GetMaterial()->shaderProgram;
+    shaderProgram->SetVec2(
+            "viewportSize", RenderSystem::Instance()->GetWindowSize());
 }
