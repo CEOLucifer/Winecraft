@@ -27,6 +27,8 @@ private:
 
     Up<Addition> addition;
 
+    int primitiveMode = GL_TRIANGLES;
+
 public:
     void Awake() override;
 
@@ -47,4 +49,6 @@ public:
     int GetOrder() { return order; }
 
     void SetAddition(Up<Addition> value);
+
+    void SetPrimitiveMode(int value) { primitiveMode = value; }
 };

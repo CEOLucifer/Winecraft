@@ -6,8 +6,7 @@
 #include <iostream>
 #include <memory>
 #include "Render/Vertex.h"
-#include "Render/Mesh/MeshFactory.h"
-
+#include "Render/Mesh/Mesh3.h"
 
 using namespace std;
 

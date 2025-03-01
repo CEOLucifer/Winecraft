@@ -19,9 +19,17 @@ void Shader::OnCreated(const JsonDocument& doc)
     {
         type = GL_VERTEX_SHADER;
     }
-    else
+    else if (str_type == "frag")
     {
         type = GL_FRAGMENT_SHADER;
+    }
+    else if (str_type == "geom")
+    {
+        type = GL_GEOMETRY_SHADER;
+    }
+    else
+    {
+        Debug::LogError(format("unknown shader type:{}", str_type));
     }
 
     id = glCreateShader(type);

@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include "UI/Image.h"
 #include "Core/Branch.h"
-#include "Render/Mesh/MeshFactory.h"
 #include "Render/Material/ControlMaterial.h"
 #include "Render/Material/Material.h"
 #include "Render/Shader/ControlShaderProgram.h"
@@ -10,6 +9,7 @@
 #include "Render/Renderer.h"
 #include "Typedef.h"
 #include "Render/Texture.h"
+#include "Render/Mesh/Mesh2.h"
 
 
 void Image::Awake()

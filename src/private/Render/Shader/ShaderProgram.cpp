@@ -72,6 +72,17 @@ void ShaderProgram::OnCreated(const JsonDocument& doc)
     id = glCreateProgram();
     glAttachShader(id, vertShader->GetID());
     glAttachShader(id, fragShader->GetID());
+
+    Sp<Shader> geomShader;
+
+    // 可选的几何着色器
+    auto geom = doc["geom"];
+    if (!geom.isNull())
+    {
+        auto geomShader = Resource::Load<Shader>(geom);
+        glAttachShader(id, geomShader->GetID());
+    }
+
     glLinkProgram(id);
     // 检查着色器程序是否链接成功
     {
@@ -85,5 +96,6 @@ void ShaderProgram::OnCreated(const JsonDocument& doc)
                 "ERROR::SHADER::shaderProgram::LINK_FAILED\n{}", infoLog));
         }
     }
+    
     onSetTextureLocation();
 }

@@ -13,4 +13,11 @@ void Cube::Awake()
     renderer->SetMaterial(mat_Container);
 
     renderer->SetMesh(Mesh3::LoadCube());
+
+    // 创建箱子的边框
+    // auto border = Node::Create<Border>();
+    // border->position = cubePositions[i];
+    // border->scale = {1.1, 1.1, 1.1};
+    // border->SetMesh(meshCube);
+    // border->SetMaterial(mat_Border);
 }

@@ -1,0 +1,6 @@
+{
+    "className": "ShaderProgram",
+    "vert": "res/shader/geo_vert.json",
+    "geom": "res/shader/geo_geom.json",
+    "frag": "res/shader/geo_frag.json"
+}

@@ -2,7 +2,7 @@
 #include "Common/Skybox.h"
 #include "Core/Branch.h"
 #include "Render/Material/SkyboxMaterial.h"
-#include "Render/Mesh/MeshFactory.h"
+#include "Render/Mesh/Mesh1.h"
 #include "Render/Renderer.h"
 
 void Skybox::OnAdded()

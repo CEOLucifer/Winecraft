@@ -5,6 +5,7 @@ void Mesh::SetIndices(std::vector<uint32_t>&& value)
 {
     indices = std::move(value);
     glBindVertexArray(vao);
+    glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     // 将索引数据从内存送到显存
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t),
@@ -19,5 +20,4 @@ void Mesh::GenBuffers()
     glBindVertexArray(vao);
 
     glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
 }
