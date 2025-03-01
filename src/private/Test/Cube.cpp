@@ -1,8 +1,8 @@
 #include <glad/glad.h>
 #include "Test/Cube.h"
 #include "Render/Material/RealMaterial.h"
-#include "Render/Mesh/MeshFactory.h"
 #include "Render/Renderer.h"
+#include "Render/Mesh/Mesh3.h"
 
 void Cube::Awake()
 {

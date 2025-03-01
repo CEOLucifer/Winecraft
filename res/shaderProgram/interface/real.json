@@ -1,0 +1,5 @@
+{
+    "className": "RealShaderProgram",
+    "vert": "res/shader/interface/vert0.json",
+    "frag": "res/shader/interface/real.json"
+}
