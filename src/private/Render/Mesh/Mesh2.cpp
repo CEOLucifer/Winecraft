@@ -1,5 +1,8 @@
-#include "Render/Mesh/Mesh2.h"
 #include "glad/glad.h"
+#include "Render/Mesh/Mesh2.h"
+#include <vector>
+
+using namespace std;
 
 void Mesh2::SetVertices(std::vector<Vertex2>&& value)
 {
@@ -20,4 +23,29 @@ void Mesh2::SetVertices(std::vector<Vertex2>&& value)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex2),
                           (void*)(offsetof(Vertex2, TexCoord)));
     glEnableVertexAttribArray(1);
+}
+
+Sp<Mesh2> Mesh2::control = nullptr;
+
+Sp<Mesh2> Mesh2::LoadControl()
+{
+    if (control)
+    {
+        return control;
+    }
+
+    Sp<Mesh2> This(new Mesh2);
+    This->GenBuffers();
+    vector<Vertex2> vertices = {
+        {{-0.5f, -0.5f}, {0.0f, 0.0f}},
+        {{0.5f, -0.5f}, {1.0f, 0.0f}},
+        {{0.5f, 0.5f}, {1.0f, 1.0f}},
+        {{-0.5f, 0.5f}, {0.0f, 1.0f}},
+    };
+    vector<uint32_t> indices = {0, 1, 2, 2, 3, 0};
+    This->SetVertices(std::move(vertices));
+    This->SetIndices(std::move(indices));
+
+    control = This;
+    return This;
 }

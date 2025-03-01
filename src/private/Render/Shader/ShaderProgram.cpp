@@ -60,8 +60,6 @@ void ShaderProgram::SetVec2(const std::string& name, const glm::vec2& value)
                  glm::value_ptr(value));
 }
 
-void ShaderProgram::init(const std::vector<std::shared_ptr<Shader>>& shaders) {}
-
 ShaderProgram::~ShaderProgram() { glDeleteProgram(id); }
 
 

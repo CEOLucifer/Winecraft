@@ -111,8 +111,7 @@ shared_ptr<Mesh> Model::processMesh(aiMesh* mesh, const aiScene* scene)
                         specularMaps.end());
     }
 
-    MeshFactory meshFac;
-    auto myMesh = meshFac.CreateRaw();
+    auto myMesh = Mesh3::CreateRaw();
     myMesh->SetVertices(std::move(vertices));
     myMesh->SetIndices(std::move(indices));
     myMesh->SetDefaultTexs(std::move(textures));

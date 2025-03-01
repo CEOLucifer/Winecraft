@@ -15,4 +15,10 @@ public:
     const std::vector<Vertex2>& GetVertices() { return vertices; }
 
     uint32_t GetVerticeCount() override { return vertices.size(); }
+
+private:
+    static Sp<Mesh2> control;
+
+public:
+    static Sp<Mesh2> LoadControl();
 };

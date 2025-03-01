@@ -24,11 +24,7 @@ void Image::OnAdded()
     auto mat = Resource::Load<ControlMaterial>("res/material/control.json");
     renderer->SetMaterial(mat);
 
-
-    MeshFactory meshFac;
-    auto mesh = meshFac.CreateMesh2_Control();
-    renderer->SetMesh(mesh);
-
+    renderer->SetMesh(Mesh2::LoadControl());
 
     Up<ImageAddition> addition(new ImageAddition);
     addition->image = CastTo<Image>();

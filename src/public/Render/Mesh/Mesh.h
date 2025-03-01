@@ -43,6 +43,6 @@ public:
 
     virtual uint32_t GetVerticeCount() = 0;
 
-private:
+protected:
     void GenBuffers();
 };

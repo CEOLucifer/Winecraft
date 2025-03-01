@@ -17,3 +17,39 @@ void Mesh1::SetVertices(std::vector<Vertex1>&& value)
                           (void*)(offsetof(Vertex1, Position)));
     glEnableVertexAttribArray(0);
 }
+
+Sp<Mesh1> Mesh1::skyboxCube = nullptr;
+
+Sp<Mesh1> Mesh1::CreateSkyboxCube()
+{
+    if (skyboxCube)
+    {
+        return skyboxCube;
+    }
+
+    Sp<Mesh1> This(new Mesh1);
+    This->GenBuffers();
+    std::vector<Vertex1> vertices = {
+        // positions
+        {-1.0f, 1.0f, -1.0f},  {-1.0f, -1.0f, -1.0f}, {1.0f, -1.0f, -1.0f},
+        {1.0f, -1.0f, -1.0f},  {1.0f, 1.0f, -1.0f},   {-1.0f, 1.0f, -1.0f},
+
+        {-1.0f, -1.0f, 1.0f},  {-1.0f, -1.0f, -1.0f}, {-1.0f, 1.0f, -1.0f},
+        {-1.0f, 1.0f, -1.0f},  {-1.0f, 1.0f, 1.0f},   {-1.0f, -1.0f, 1.0f},
+
+        {1.0f, -1.0f, -1.0f},  {1.0f, -1.0f, 1.0f},   {1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f},    {1.0f, 1.0f, -1.0f},   {1.0f, -1.0f, -1.0f},
+
+        {-1.0f, -1.0f, 1.0f},  {-1.0f, 1.0f, 1.0f},   {1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f},    {1.0f, -1.0f, 1.0f},   {-1.0f, -1.0f, 1.0f},
+
+        {-1.0f, 1.0f, -1.0f},  {1.0f, 1.0f, -1.0f},   {1.0f, 1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f},    {-1.0f, 1.0f, 1.0f},   {-1.0f, 1.0f, -1.0f},
+
+        {-1.0f, -1.0f, -1.0f}, {-1.0f, -1.0f, 1.0f},  {1.0f, -1.0f, -1.0f},
+        {1.0f, -1.0f, -1.0f},  {-1.0f, -1.0f, 1.0f},  {1.0f, -1.0f, 1.0f}};
+    This->SetVertices(std::move(vertices));
+
+    skyboxCube = This;
+    return This;
+}

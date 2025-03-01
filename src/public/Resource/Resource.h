@@ -9,6 +9,8 @@
 ///
 class Resource
 {
+    friend class ResourceSystem;
+
 private:
     /// @brief 资源的路径。用作ResourceSystem中的缓存键。
     std::string path;

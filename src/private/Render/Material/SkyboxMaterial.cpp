@@ -6,6 +6,7 @@
 
 void SkyboxMaterial::OnCreated(const JsonDocument& doc)
 {
+    Material::OnCreated(doc);
     DepthMask = GL_FALSE;
     cubeTexture = Resource::Load<Texture>(doc["texture"]);
 }

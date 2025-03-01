@@ -34,6 +34,7 @@ public:
     // 深度测试相关
     bool EnableDepthTest = true;
     int DepthMask = GL_TRUE;
+    int DepthFunc = GL_LESS;
 
     // 混合相关
 

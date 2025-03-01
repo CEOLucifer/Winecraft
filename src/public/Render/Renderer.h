@@ -4,11 +4,11 @@
 #include "Core/Node.h"
 #include <glm/glm.hpp>
 #include "Typedef.h"
+#include "Addition.h"
 
 class Camera;
 class Mesh;
 class Material;
-class Addition;
 
 /// @brief 渲染器。一次绘制的基本单位。
 ///

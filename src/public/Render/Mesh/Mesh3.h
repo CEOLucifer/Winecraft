@@ -20,4 +20,16 @@ public:
     const std::vector<Vertex>& GetVertices() { return vertices; }
 
     uint32_t GetVerticeCount() override { return vertices.size(); }
+
+
+private:
+    static Sp<Mesh3> cube;
+    static Sp<Mesh3> plane;
+    static Sp<Mesh3> skyboxCube;
+
+
+public:
+    static Sp<Mesh3> CreateRaw();
+    static Sp<Mesh3> LoadCube();
+    static Sp<Mesh3> LoadPlane();
 };

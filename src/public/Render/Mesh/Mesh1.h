@@ -4,7 +4,7 @@
 #include "Render/Vertex1.h"
 
 /// @brief 仅坐标网格
-/// 
+///
 class Mesh1 : public Mesh
 {
 private:
@@ -16,4 +16,10 @@ public:
     std::vector<Vertex1> GetVertices() { return vertices; }
 
     uint32_t GetVerticeCount() override { return vertices.size(); }
+
+private:
+    static Sp<Mesh1> skyboxCube;
+
+public:
+    static Sp<Mesh1> CreateSkyboxCube();
 };

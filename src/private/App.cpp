@@ -1,39 +1,32 @@
 #include "App.h"
 #include <climits>
 #include <glad/glad.h>
-#include "Render/Material/ControlMaterial.h"
+#include "Common/Skybox.h"
 #include "Test/CameraController.h"
 #include "Core/Node.h"
 #include "Core/CoreSystem.h"
 #include "Core/Branch.h"
 #include "Render/Mesh/Mesh.h"
 #include "Render/DirectionalLight.h"
-#include "Render/FrameBuffer.h"
 #include "Render/Material/Material.h"
 #include "Render/Material/SkyboxMaterial.h"
-#include "Render/Shader/ControlShaderProgram.h"
-#include "Render/Shader/SkyboxShaderProgram.h"
 #include "Render/SpotLight.h"
 #include "Resource/ResourceSystem.h"
-#include "Render/Shader/Shader.h"
 #include <GLFW/glfw3.h>
 #include "Render/Shader/RealShaderProgram.h"
 #include "Render/Shader/ShaderProgram.h"
-#include "Render/Texture.h"
+#include "Test/Cube.h"
 #include "glm/fwd.hpp"
 #include <memory>
 #include <stb/stb_image.h>
-#include <stdexcept>
 #include <string>
 #include <vector>
 #include "Render/RenderSystem.h"
 #include "Render/Camera.h"
 #include "InputSystem.h"
-#include "Render/Model.h"
 #include "Render/Renderer.h"
 #include "Render/Material/RealMaterial.h"
 #include "Render/Material/SingleColorMaterial.h"
-#include "Debug/Debug.h"
 #include "TimeSystem.h"
 #include "Render/Mesh/MeshFactory.h"
 #include "UI/Image.h"
@@ -74,19 +67,13 @@ void App::Run()
 void App::StartUser()
 {
     // 网格
-    MeshFactory meshFac;
-    auto mesh_Cube = meshFac.CreateCube();
-    auto mesh_Plane = meshFac.CreatePlane();
-    auto mesh_Skybox = meshFac.CreateMesh1_Skybox();
-    auto mesh_Control = meshFac.CreateMesh2_Control();
 
     // 模型
     // auto backpackModel = modelFac.Create("res/cylinder.obj");
     // auto backpackModel = modelFac.Create("res/backpack/backpack.obj");
 
     // 材质
-    auto mat_Container =
-        Resource::Load<RealMaterial>("res/material/container.json");
+
 
     auto mat_LightCube =
         Resource::Load<SingleColorMaterial>("res/material/lightCube.json");
@@ -105,8 +92,7 @@ void App::StartUser()
     // mat_Window->shaderProgram = sp_Universal;
     // mat_Window->EnableBlend = true;
 
-    auto mat_Skybox =
-        Resource::Load<SkyboxMaterial>("res/material/skybox.json");
+
 
     // 创建箱子立方体
     vector<glm::vec3> cubePositions = {
@@ -119,12 +105,8 @@ void App::StartUser()
 
     for (int i = 0; i < cubePositions.size(); ++i)
     {
-        auto cube = Branch::Create("cube");
-        auto renderer = cube->AddNode<Renderer>("cubeRenderer");
+        auto cube = Branch::Create<Cube>("cube");
         cube->Position = cubePositions[i];
-        renderer->SetMesh(mesh_Cube);
-        renderer->SetMaterial(mat_Container);
-        // cube->SetPolygonMode(GL_POINT);
 
         // 创建箱子的边框
         // auto border = Node::Create<Border>();
@@ -146,6 +128,8 @@ void App::StartUser()
 
 
     // 光源
+
+    // 点光源
     auto spotLightObj = Branch::Create("spotLight");
     spotLightObj->Position = {10, 0, 0};
     auto spotLight = spotLightObj->AddNode<SpotLight>();
@@ -154,13 +138,14 @@ void App::StartUser()
 
     auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
     spotLightRenderer->SetParent(spotLightObj);
-    spotLightRenderer->SetMesh(mesh_Cube);
+    spotLightRenderer->SetMesh(Mesh3::LoadCube());
     spotLightRenderer->SetMaterial(mat_LightCube);
 
-
+    // 定向光
     auto directionalLightObj = Branch::Create("directionalLight");
     auto directionalLight = directionalLightObj->AddNode<DirectionalLight>();
     directionalLight->SetParent(directionalLightObj);
+    directionalLight->intensity = 0.05;
 
 
 
@@ -196,11 +181,9 @@ void App::StartUser()
     // cube->SetMaterial(mat_FrameBuffer);
 
     // 天空盒
-    // auto skyboxObj = Branch::Create("skybox");
-    // auto skybox = skyboxObj->AddNode<Renderer>();
-    // skybox->SetMaterial(mat_Skybox);
-    // skybox->SetMesh(mesh_Skybox);
-    // skybox->SetOrder(INT_MIN); // 天空盒一定要最先渲染
+    auto skyboxObj = Branch::Create("skybox");
+    auto skybox = skyboxObj->AddNode<Skybox>();
+
 
 
     // Image

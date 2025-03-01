@@ -34,3 +34,102 @@ void Mesh3::SetVertices(std::vector<Vertex>&& value)
 }
 
 
+
+Sp<Mesh3> Mesh3::cube = nullptr;
+Sp<Mesh3> Mesh3::plane = nullptr;
+
+Sp<Mesh3> Mesh3::CreateRaw()
+{
+    Sp<Mesh3> This(new Mesh3);
+    This->GenBuffers();
+    return This;
+}
+
+Sp<Mesh3> Mesh3::LoadCube()
+{
+    if (cube)
+    {
+        return cube;
+    }
+
+    Sp<Mesh3> This(new Mesh3);
+    This->GenBuffers();
+
+    vector<Vertex> vertices = {
+        // 前面
+        {{-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+        {{0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+        {{0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-0.5f, 0.5f, 0.5f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+        // 后面
+        {{-0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}},
+        {{0.5f, -0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}},
+        {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}},
+        {{-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}},
+        // 顶面
+        {{-0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 1.0f}},
+        {{0.5f, 0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 1.0f}},
+        {{0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
+        {{-0.5f, 0.5f, 0.5f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f}},
+        // 底面
+        {{-0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
+        {{0.5f, -0.5f, -0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 1.0f}},
+        {{0.5f, -0.5f, 0.5f}, {0.0f, -1.0f, 0.0f}, {1.0f, 0.0f}},
+        {{-0.5f, -0.5f, 0.5f}, {0.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
+        // 右面
+        {{0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},
+        {{0.5f, 0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+        {{0.5f, 0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+        {{0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+        // 左面
+        {{-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
+        {{-0.5f, 0.5f, -0.5f}, {-1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},
+        {{-0.5f, 0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},
+        {{-0.5f, -0.5f, 0.5f}, {-1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}}};
+
+    vector<uint32_t> indices = {// 前面
+                                0, 1, 2, 2, 3, 0,
+                                // 后面
+                                4, 5, 6, 6, 7, 4,
+                                // 顶面
+                                8, 9, 10, 10, 11, 8,
+                                // 底面
+                                12, 13, 14, 14, 15, 12,
+                                // 右面
+                                16, 17, 18, 18, 19, 16,
+                                // 左面
+                                20, 21, 22, 22, 23, 20};
+    This->SetVertices(std::move(vertices));
+    This->SetIndices(std::move(indices));
+
+    cube = This;
+    return This;
+}
+
+Sp<Mesh3> Mesh3::LoadPlane()
+{
+    if (plane)
+    {
+        return plane;
+    }
+
+    Sp<Mesh3> This(new Mesh3);
+    This->GenBuffers();
+    vector<Vertex> vertices = {
+        //     ---- 位置 ----       ---- 法线 ----     - 纹理坐标 -
+        {{0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 1.0f}},   // 右上
+        {{0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {1.0f, 0.0f}},  // 右下
+        {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}}, // 左下
+        {{-0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f}},  // 左上
+    };
+
+    vector<uint32_t> indices = {
+        0, 1, 3, //
+        1, 2, 3, //
+    };
+    This->SetVertices(std::move(vertices));
+    This->SetIndices(std::move(indices));
+
+    plane = This;
+    return This;
+}

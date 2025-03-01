@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Singleton.h"
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include "Typedef.h"
@@ -22,6 +23,8 @@ private:
     ///
     std::unordered_map<std::string, Sp<Resource>> resMap;
 
+    /// @brief
+    /// 存储类名到对应的Creator的映射。这样通过json文件中的className找到对应Creator。
     std::unordered_map<std::string, Up<BaseCreator>> creatorMap;
 
 public:
@@ -63,6 +66,7 @@ public:
         requires std::is_base_of_v<Resource, T>
     Sp<T> Load(const std::string& path)
     {
+        // 尝试从缓存中获取
         auto _res = std::dynamic_pointer_cast<T>(Get(path));
         if (_res)
         {
@@ -87,8 +91,11 @@ public:
             else
             {
                 // 运用Creator创建资源
-                Creator<T> creator;
-                Sp<T> res = creator.CreateNew(doc);
+                BaseCreator* creator = creatorMap[className].get();
+                Sp<Resource> baseRes = creator->CreateNew(doc);
+                Sp<T> res = std::dynamic_pointer_cast<T>(baseRes);
+                res->path = path;
+                Cache(res);
                 return res;
             }
         }

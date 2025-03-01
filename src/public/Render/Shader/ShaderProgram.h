@@ -42,7 +42,4 @@ protected:
     /// @brief 由子类重写。用于设置纹理位置。
     ///
     virtual void onSetTextureLocation() {};
-
-private:
-    void init(const std::vector<Sp<Shader>>& shaders);
 };

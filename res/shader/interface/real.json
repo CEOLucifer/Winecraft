@@ -1,0 +1,5 @@
+{
+    "className": "Shader",
+    "type" : "frag",
+    "path" : "shader/interface/real.frag"
+}

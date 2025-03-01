@@ -58,13 +58,14 @@ void Renderer::Draw(Camera& camera)
         // 启用深度检测。此时交换链有深度字段。
         glEnable(GL_DEPTH_TEST);
         // 深度检测比较函数。默认是GL_LESS
-        // glDepthFunc(GL_LESS);
+        glDepthFunc(material->DepthFunc);
+        // GL_FALSE表示不更新深度值
+        glDepthMask(material->DepthMask);
     }
     else
     {
         glDisable(GL_DEPTH_TEST);
     }
-    glDepthMask(material->DepthMask);
 
     // 混合
     if (material->EnableBlend)
