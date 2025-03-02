@@ -1,0 +1,7 @@
+{
+    "className": "InstanceMaterial",
+    "shaderProgram": "res/shaderProgram/instance.json",
+    "diffuseTex": "res/texture/container.json",
+    "specularTex": "res/texture/container_specular.json",
+    "shininess": 32.0
+}

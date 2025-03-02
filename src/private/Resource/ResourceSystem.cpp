@@ -1,5 +1,6 @@
 #include "Resource/ResourceSystem.h"
 #include "Render/Material/ControlMaterial.h"
+#include "Render/Material/InstanceMaterial.h"
 #include "Render/Material/RealMaterial.h"
 #include "Render/Material/SingleColorMaterial.h"
 #include "Render/Material/SkyboxMaterial.h"
@@ -28,6 +29,7 @@ void ResourceSystem::RegisterAllResources()
     RegisterResource<RealMaterial>("RealMaterial");
     RegisterResource<SingleColorMaterial>("SingleColorMaterial");
     RegisterResource<SkyboxMaterial>("SkyboxMaterial");
+    RegisterResource<InstanceMaterial>("InstanceMaterial");
     
     // ShaderProgram
     RegisterResource<ControlShaderProgram>("ControlShaderProgram");
@@ -35,7 +37,7 @@ void ResourceSystem::RegisterAllResources()
     RegisterResource<ShaderProgram>("ShaderProgram");
     RegisterResource<SkyboxShaderProgram>("SkyboxShaderProgram");
 
-    RegisterResource<Shader>("Shader");
+    RegisterResource<Shader>("Shader"); 
 }
 
 void ResourceSystem::OnLoad() { RegisterAllResources(); }

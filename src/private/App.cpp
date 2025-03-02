@@ -18,6 +18,7 @@
 #include "Render/Shader/RealShaderProgram.h"
 #include "Render/Shader/ShaderProgram.h"
 #include "Test/Cube.h"
+#include "Test/InstanceCube.h"
 #include "glm/fwd.hpp"
 #include <memory>
 #include <stb/stb_image.h>
@@ -115,22 +116,22 @@ void App::StartUser()
     // 光源
 
     // 点光源
-    // auto spotLightObj = Branch::Create("spotLight");
-    // spotLightObj->Position = {10, 0, 0};
-    // auto spotLight = spotLightObj->AddNode<SpotLight>();
-    // spotLight->SetParent(spotLightObj);
-    // spotLight->Color = {1, 0, 0};
+    auto spotLightObj = Branch::Create("spotLight");
+    spotLightObj->Position = {10, 0, 0};
+    auto spotLight = spotLightObj->AddNode<SpotLight>();
+    spotLight->SetParent(spotLightObj);
+    spotLight->Color = {1, 0, 0};
 
-    // auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
-    // spotLightRenderer->SetParent(spotLightObj);
-    // spotLightRenderer->SetMesh(Mesh3::LoadCube());
-    // spotLightRenderer->SetMaterial(mat_LightCube);
+    auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
+    spotLightRenderer->SetParent(spotLightObj);
+    spotLightRenderer->SetMesh(Mesh3::LoadCube());
+    spotLightRenderer->SetMaterial(mat_LightCube);
 
     // 定向光
-    // auto directionalLightObj = Branch::Create("directionalLight");
-    // auto directionalLight = directionalLightObj->AddNode<DirectionalLight>();
-    // directionalLight->SetParent(directionalLightObj);
-    // directionalLight->intensity = 0.05;
+    auto directionalLightObj = Branch::Create("directionalLight");
+    auto directionalLight = directionalLightObj->AddNode<DirectionalLight>();
+    directionalLight->SetParent(directionalLightObj);
+    directionalLight->intensity = 0.05;
 
 
 
@@ -180,19 +181,23 @@ void App::StartUser()
 
 
     // 几何着色器测试
-    auto geoMesh = Mesh_2D_Point::CreateRaw();
-    geoMesh->SetVertices({
-        -0.5f, 0.5f, // 左上
-        0.5f, 0.5f,  // 右上
-        0.5f, -0.5f, // 右下
-        -0.5f, -0.5f // 左下
-    });
+    // auto geoMesh = Mesh_2D_Point::CreateRaw();
+    // geoMesh->SetVertices({
+    //     -0.5f, 0.5f, // 左上
+    //     0.5f, 0.5f,  // 右上
+    //     0.5f, -0.5f, // 右下
+    //     -0.5f, -0.5f // 左下
+    // });
 
-    auto geoBra = Branch::Create("geoBra");
-    auto geoRenderer = geoBra->AddNode<Renderer>();
-    geoRenderer->SetMesh(geoMesh);
-    geoRenderer->SetPrimitiveMode(GL_POINTS);
-    geoRenderer->SetMaterial(Resource::Load<Material>("res/material/geo.json"));
-    // auto geoMat = geoRenderer->GetMaterial();
-    geoRenderer->SetPolygonMode(GL_LINE);
+    // auto geoBra = Branch::Create("geoBra");
+    // auto geoRenderer = geoBra->AddNode<Renderer>();
+    // geoRenderer->SetMesh(geoMesh);
+    // geoRenderer->SetPrimitiveMode(GL_POINTS);
+    // geoRenderer->SetMaterial(Resource::Load<Material>("res/material/geo.json"));
+    // // auto geoMat = geoRenderer->GetMaterial();
+    // geoRenderer->SetPolygonMode(GL_LINE);
+
+
+    // 实例化测试
+    auto instanceCube = Branch::Create<InstanceCube>();
 }

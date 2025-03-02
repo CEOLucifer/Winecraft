@@ -44,16 +44,19 @@ public:
     // 面剔除
     FaceCull FaceCull;
 
+    /// @brief 是否启用实例化？
+    bool EnableInstanced = false;
+
+    /// @brief 在启用实例化时，实例化的个数。
+    uint32_t InstanceCount = 1;
+
 
 
 public:
     void OnCreated(const JsonDocument& doc) override;
 
     /// @brief 用于更新Shader的uniform。默认：更新变换。 由子类重写。
-    virtual void OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
-    {
-        updateAllTransform(renderer, camera);
-    }
+    virtual void OnUpdateShaderProgram(Renderer& renderer, Camera& camera) {}
 
 protected:
     // 以下是工具函数，供子类使用

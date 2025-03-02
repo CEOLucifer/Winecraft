@@ -96,12 +96,29 @@ void Renderer::Draw(Camera& camera)
     // 调用绘制命令
     if (mesh->GetDrawMode() == Normal)
     {
-        glDrawArrays(primitiveMode, 0, mesh->GetVerticeCount());
+        if (material->EnableInstanced)
+        {
+            glDrawArraysInstanced(primitiveMode, 0, mesh->GetVerticeCount(),
+                                  material->InstanceCount);
+        }
+        else
+        {
+            glDrawArrays(primitiveMode, 0, mesh->GetVerticeCount());
+        }
     }
     else if (mesh->GetDrawMode() == Indices)
     {
-        glDrawElements(primitiveMode, mesh->GetIndices().size(),
-                       GL_UNSIGNED_INT, 0);
+        if (material->EnableInstanced)
+        {
+            glDrawElementsInstanced(primitiveMode, mesh->GetIndices().size(),
+                                    GL_UNSIGNED_INT, 0,
+                                    material->InstanceCount);
+        }
+        else
+        {
+            glDrawElements(primitiveMode, mesh->GetIndices().size(),
+                           GL_UNSIGNED_INT, 0);
+        }
     }
 }
 

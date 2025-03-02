@@ -6,7 +6,7 @@
 
 class Branch;
 
-/// @brief 节点。不允许直接创建非Branch子类。只能通过Branch的AddNode方法创建。
+/// @brief 节点。若一个类是Node子类而不是Branch子类。则其只能通过Branch的AddNode方法创建。
 class Node
 {
     friend class CoreSystem;
@@ -39,7 +39,7 @@ public:
 
     virtual void Update() {}
 
-    /// @brief !!! 严禁实现销毁
+    /// @brief !!! 严禁调用销毁相关逻辑
     virtual void OnDestroyed() {}
 
     void Destroy();

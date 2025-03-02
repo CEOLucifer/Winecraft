@@ -4,6 +4,6 @@
 void SingleColorMaterial::OnUpdateShaderProgram(Renderer& renderer,
                                                 Camera& camera)
 {
-    Material::OnUpdateShaderProgram(renderer, camera);
+    updateAllTransform(renderer, camera);
     shaderProgram->SetVec3("color", Color);
 }

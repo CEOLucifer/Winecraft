@@ -1,25 +1,51 @@
 #include <glad/glad.h>
-#include "Render/Material/RealMaterial.h"
-#include "Render/Material/Material.h"
+#include "Render/Material/InstanceMaterial.h"
+#include "Core/Transform.h"
 #include "Render/Shader/ShaderProgram.h"
-#include "Render/Texture.h"
+#include <string>
+#include <format>
 #include "Render/Camera.h"
-#include "Render/RenderSystem.h"
-#include "Core/Node.h"
 #include "Core/Branch.h"
-#include "Resource/Resource.h"
+#include "Render/Texture.h"
+#include "Render/RenderSystem.h"
 
-void RealMaterial::OnCreated(const JsonDocument& doc)
+
+void InstanceMaterial::OnCreated(const JsonDocument& doc)
 {
     Material::OnCreated(doc);
+
+    // 材质直接保留变换数组
+    transforms.reserve(100);
+
+    for (int i = 0; i < 100; ++i)
+    {
+        Transform t;
+        t.Position.x = (i % 10) * 3.0f;
+        t.Position.y = (i / 10) * 3.0f;
+        t.Position.z = 0;
+        transforms.push_back(t);
+    }
+
+    // 设置uniform
+    for (int i = 0; i < 100; ++i)
+    {
+        shaderProgram->SetMat4(std::format("models[{}]", std::to_string(i)),
+                               transforms[i].GetModelMat());
+    }
+
+    EnableInstanced = true;
+    InstanceCount = 100;
+
     diffuseTex = Resource::Load<Texture>(doc["diffuseTex"]);
     specularTex = Resource::Load<Texture>(doc["specularTex"]);
     shininess = doc["shininess"];
 }
 
-void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
+void InstanceMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {
-    updateAllTransform(renderer, camera);
+    shaderProgram->SetMat4("view", camera.GetParent().lock()->GetViewMat());
+    shaderProgram->SetMat4("projection", camera.GetProjectionMat());
+
 
     // 绑定纹理
     // ！！！目前frag shader中只有两个纹理：diffuse 和 specular。
@@ -42,16 +68,6 @@ void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
     {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
-
-    // 绑定多个纹理。
-    // for (int i = 0; i < material->texs.size(); ++i)
-    // {
-    //     // opengl状态里至少有16个纹理。通过下面api设置纹理。
-    //     // 纹理会映射到shader的uniform sampler2D变量中。
-    //     glActiveTexture(GL_TEXTURE0 + i);
-    //     glBindTexture(GL_TEXTURE_2D, texs[i]->GetID());
-    // }
-
 
     // 摄像机
     shaderProgram->SetVec3("viewPos", camera.GetParent().lock()->Position);

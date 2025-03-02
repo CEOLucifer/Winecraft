@@ -12,6 +12,6 @@ void main()
     vec2 _model = vec2(model * vec3(aPos, 1));
 
     gl_Position =
-        vec4(_model.x / viewportSize.x, _model.y / viewportSize.y, 0.0, 1.0);
+        vec4(_model.x / viewportSize.x, _model.y / viewportSize.y, -1.0, 1.0);
     TexCoords = aTexCoords;
 }
