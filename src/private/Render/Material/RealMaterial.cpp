@@ -19,6 +19,9 @@ void RealMaterial::OnCreated(const JsonDocument& doc)
 
 void RealMaterial::OnUpdateShaderProgram(Renderer& renderer, Camera& camera)
 {
+    // 此函数可以当作示例。
+    // 若重复设置同一全局uniform，可以考虑last判断
+
     updateAllTransform(renderer, camera);
 
     // 绑定纹理

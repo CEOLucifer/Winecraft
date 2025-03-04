@@ -18,5 +18,6 @@ public:
 public:
     void OnCreated(const JsonDocument &doc) override;
 
+
     void OnUpdateShaderProgram(Renderer& renderer, Camera& camera) override;
 };

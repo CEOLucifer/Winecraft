@@ -3,6 +3,7 @@
 #include "BaseCreator.h"
 #include "Typedef.h"
 #include <ArduinoJson.h>
+#include "Core/Object.h"
 
 template <typename T> class Creator : public BaseCreator
 {
@@ -14,7 +15,7 @@ public:
 
     Sp<T> _createNew(const JsonDocument& doc)
     {
-        Sp<T> res(new T);
+        Sp<T> res = Object::Create<T>();
         res->OnCreated(doc);
         return res;
     }

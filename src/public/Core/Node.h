@@ -2,21 +2,20 @@
 
 #include "Typedef.h"
 #include "Core/CoreSystem.h"
+#include "Object.h"
 #include <string>
 
 class Branch;
 
 /// @brief 节点。若一个类是Node子类而不是Branch子类。则其只能通过Branch的AddNode方法创建。
-class Node
+class Node : public Object
 {
     friend class CoreSystem;
+
     friend class Branch;
 
 public:
     std::string name;
-
-protected:
-    Wp<Node> thisWeak;
 
 private:
     // !!!除了根节点，其它节点的parent应该都为null
@@ -28,23 +27,23 @@ private:
     bool isDestroyed = false;
 
 public:
-    template <typename T> Sp<T> CastTo()
-    {
-        return std::dynamic_pointer_cast<T>(thisWeak.lock());
-    }
+    virtual void Awake()
+    {}
 
-    virtual void Awake() {}
+    virtual void OnAdded()
+    {}
 
-    virtual void OnAdded() {}
-
-    virtual void Update() {}
+    virtual void Update()
+    {}
 
     /// @brief !!! 严禁调用销毁相关逻辑
-    virtual void OnDestroyed() {}
+    virtual void OnDestroyed()
+    {}
 
     void Destroy();
 
-    Wp<Branch> GetParent() { return parent; }
+    Wp<Branch> GetParent()
+    { return parent; }
 
     void SetParent(Wp<Branch> value);
 
@@ -53,10 +52,10 @@ private:
     void _removeFromParent();
 
 private:
-    template <typename T> static Sp<T> _createRaw(std::string _name = "")
+    template<typename T>
+    static Sp<T> _createRaw(std::string _name = "")
     {
-        Sp<T> This(new T);
-        This->thisWeak = This;
+        Sp<T> This = Create<T>();
         This->name = _name;
 
         // 添加到nodeVec

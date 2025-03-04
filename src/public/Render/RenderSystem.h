@@ -4,17 +4,19 @@
 #include "Singleton.h"
 #include "SpotLight.h"
 #include "Typedef.h"
-#include "glm/fwd.hpp"
+#include <glm/glm.hpp>
 #include <memory>
 #include <vector>
 
 class Renderer;
 class Camera;
 class GLFWwindow;
+class Material;
 
 class RenderSystem : public Singleton<RenderSystem>
 {
     friend class Camera;
+    friend class Renderer;
 
 private:
     /// @brief 存储所有渲染器
@@ -30,6 +32,9 @@ private:
     
     /// @brief 定向光
     Sp<DirectionalLight> directionalLight;
+
+    /// 上一个材质
+    Sp<Material> lastMaterial;
 
 public:
     void OnLoad() override;

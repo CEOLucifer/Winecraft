@@ -6,8 +6,7 @@
 #include "Typedef.h"
 
 /// @brief 资源。用于表示外部文件系统的资源。
-///
-class Resource
+class Resource : public Object
 {
     friend class ResourceSystem;
 
@@ -16,9 +15,6 @@ private:
     std::string path;
 
 public:
-    virtual ~Resource()
-    {}
-
     const std::string& GetPath()
     { return path; }
 

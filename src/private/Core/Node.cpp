@@ -33,7 +33,7 @@ void Node::SetParent(Wp<Branch> value)
         }
         else
         {
-            newParent->childNodes.push_back(thisWeak.lock());
+            newParent->childNodes.push_back(CastTo<Node>());
         }
     }
 }
