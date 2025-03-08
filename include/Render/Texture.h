@@ -1,0 +1,53 @@
+#pragma once
+
+#include "../Resource/Resource.h"
+#include <cstdint>
+#include "../Typedef.h"
+#include <string>
+
+/// @brief 纹理
+///
+class Texture : public Resource
+{
+private:
+    /// @brief opengl id
+    ///
+    uint32_t id;
+
+    /// @brief 类型。表明这个纹理是漫反射还是镜面反射等等纹理。暂时无用。
+    ///
+    std::string type;
+
+    int internalFormat;
+
+    int format;
+
+public:
+    ~Texture() override;
+
+    uint32_t GetID() { return id; }
+
+    int GetInternalFormat() { return internalFormat; }
+
+public:
+    void OnCreated(const JsonDocument& doc) override;
+
+
+public:
+    // 以下函数主要用于自定义帧缓冲
+
+
+
+    /// @brief 创建一个空白的纹理
+    ///
+    /// @param format GL_RGB, GL_RGBA等等
+    /// @param width
+    /// @param height
+    /// @return Sp<Texture>
+    static Sp<Texture> CreateRaw(int internalFormat, int format, int width,
+                                 int height, int type);
+
+    static Sp<Texture> CreateRGBA(int width, int height);
+
+    static Sp<Texture> CreateDepthStencil(int width, int height);
+};
