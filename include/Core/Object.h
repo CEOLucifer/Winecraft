@@ -2,6 +2,7 @@
 
 #include "../Typedef.h"
 
+/// 共享指针托管的对象的类型基类
 class Object
 {
 protected:
@@ -9,6 +10,18 @@ protected:
 
 public:
     virtual ~Object() = default;
+
+    virtual void OnObjectCreated()
+    {}
+
+    void Destroy()
+    {
+        OnDestroyed();
+    }
+
+    virtual void OnDestroyed()
+    {
+    }
 
     template<typename T>
     Sp<T> CastTo()
@@ -29,6 +42,7 @@ public:
     {
         Sp<T> This(new T);
         This->thisWeak = This;
+        This->OnObjectCreated();
         return This;
     }
 };

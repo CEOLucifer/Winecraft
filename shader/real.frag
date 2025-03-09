@@ -1,6 +1,6 @@
 #version 330 core
-in vec3 Normal;
-in vec3 FragPos;
+in vec3 bNormal;
+in vec3 bFragPos;
 
 uniform vec3 viewPos;
 
@@ -12,7 +12,7 @@ struct Material
 };
 
 uniform Material material;
-in vec2 TexCoords;
+in vec2 bTexCoords;
 
 // 定向光
 struct DirectionLight
@@ -47,21 +47,21 @@ vec3 GetDirectionalLight()
 
     // 环境光
     vec3 ambient =
-        directionLight.intensity * vec3(texture(material.diffuse, TexCoords));
+        directionLight.intensity * vec3(texture(material.diffuse, bTexCoords));
 
     // 漫反射
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(dirLightDir - FragPos);
+    vec3 norm = normalize(bNormal);
+    vec3 lightDir = normalize(dirLightDir - bFragPos);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = directionLight.color * diff *
-                   vec3(texture(material.diffuse, TexCoords));
+                   vec3(texture(material.diffuse, bTexCoords));
 
     // 镜面光
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 viewDir = normalize(viewPos - bFragPos);
     vec3 reflectDir = reflect(-dirLightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = directionLight.color * spec *
-                    vec3(texture(material.specular, TexCoords));
+                    vec3(texture(material.specular, bTexCoords));
 
     vec3 result = ambient + diffuse + specular;
     return result;
@@ -70,28 +70,28 @@ vec3 GetDirectionalLight()
 vec3 GetSpotLightColor()
 {
     // 衰减系数
-    float distance = length(spotLight.position - FragPos);
+    float distance = length(spotLight.position - bFragPos);
     float attenuation =
         1.0 / (spotLight.constant + spotLight.linear * distance +
                spotLight.quadratic * (distance * distance));
 
     // 环境光
     vec3 ambient =
-        spotLight.ambient * vec3(texture(material.diffuse, TexCoords));
+        spotLight.ambient * vec3(texture(material.diffuse, bTexCoords));
 
     // 漫反射
-    vec3 norm = normalize(Normal);
-    vec3 lightDir = normalize(spotLight.position - FragPos);
+    vec3 norm = normalize(bNormal);
+    vec3 lightDir = normalize(spotLight.position - bFragPos);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse =
-        spotLight.color * diff * vec3(texture(material.diffuse, TexCoords));
+        spotLight.color * diff * vec3(texture(material.diffuse, bTexCoords));
 
     // 镜面光
-    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 viewDir = normalize(viewPos - bFragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular =
-        spotLight.color * spec * vec3(texture(material.specular, TexCoords));
+        spotLight.color * spec * vec3(texture(material.specular, bTexCoords));
 
     vec3 result = (ambient + diffuse + specular) * attenuation;
     return result;
@@ -104,5 +104,5 @@ void main()
     result += GetSpotLightColor();
     gl_FragColor =
         vec4(result,
-             texture(material.diffuse, TexCoords).a); // 不透明度取diffuse纹理的
+             texture(material.diffuse, bTexCoords).a); // 不透明度取diffuse纹理的
 }

@@ -1,9 +1,9 @@
 #version 330 core
 
-in vec3 iTexCoords;
+in vec3 bTexCoords;
 
-uniform samplerCube tex0;
+out vec4 FragColor;
 
-void main() {
-    gl_FragColor = texture(tex0, iTexCoords);
-}
+uniform samplerCube texCube;
+
+void main() { FragColor = texture(texCube, bTexCoords); }

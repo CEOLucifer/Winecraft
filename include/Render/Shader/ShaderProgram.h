@@ -4,9 +4,9 @@
 #include <cstdint>
 #include <memory>
 #include <vector>
-#include "../../Resource/Resource.h"
+#include "Resource/Resource.h"
 #include "Shader.h"
-#include "../../Typedef.h"
+#include "Typedef.h"
 
 class Renderer;
 class Camera;
@@ -15,8 +15,6 @@ class Camera;
 ///
 class ShaderProgram : public Resource
 {
-    friend class ShaderProgramFactory;
-
 private:
     uint32_t id;
 

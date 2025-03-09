@@ -1,9 +1,9 @@
 #pragma once
 
 #include "DirectionalLight.h"
-#include "../Singleton.h"
+#include "Singleton.h"
 #include "SpotLight.h"
-#include "../Typedef.h"
+#include "Typedef.h"
 #include "glm/glm.hpp"
 #include <memory>
 #include <vector>
@@ -12,6 +12,7 @@ class Renderer;
 class Camera;
 class GLFWwindow;
 class Material;
+class RenderPass;
 
 class RenderSystem : public Singleton<RenderSystem>
 {
@@ -19,8 +20,8 @@ class RenderSystem : public Singleton<RenderSystem>
     friend class Renderer;
 
 private:
-    /// @brief 存储所有渲染器
-    std::vector<Sp<Renderer>> renderVec;
+    /// 所有渲染通道
+    std::vector<Sp<RenderPass>> renderPassVec;
 
     /// @brief 摄像机
     std::vector<Sp<Camera>> cameraVec;
@@ -33,9 +34,6 @@ private:
     /// @brief 定向光
     Sp<DirectionalLight> directionalLight;
 
-    /// 上一个材质
-    Sp<Material> lastMaterial;
-
 public:
     void OnLoad() override;
 
@@ -47,44 +45,38 @@ public:
 
     glm::vec2 GetWindowSize();
 
-    void SetSpotLight(std::shared_ptr<SpotLight> value) { spotLight = value; }
+    void SetSpotLight(Sp<SpotLight> value) { spotLight = value; }
 
+    Sp<SpotLight> GetSpotLight() { return spotLight; }
 
-
-    std::shared_ptr<SpotLight> GetSpotLight() { return spotLight; }
-
-    void SetDirectionalLight(std::shared_ptr<DirectionalLight> value)
+    void SetDirectionalLight(Sp<DirectionalLight> value)
     {
         directionalLight = value;
     }
 
-    std::shared_ptr<DirectionalLight> GetDirectionalLight()
+    Sp<DirectionalLight> GetDirectionalLight()
     {
         return directionalLight;
     }
 
     void Render();
 
-    void Add(std::shared_ptr<Renderer> renderer)
+    void Add(Sp<RenderPass> renderPass)
     {
-        renderVec.push_back(renderer);
-        SortAll();
+        renderPassVec.push_back(renderPass);
     }
 
-    void Remove(std::shared_ptr<Renderer> renderer)
+    void Remove(Sp<RenderPass> renderPass)
     {
-        for (auto each = renderVec.begin(); each != renderVec.end(); each++)
+        for (auto each = renderPassVec.begin(); each != renderPassVec.end(); each++)
         {
-            if (*each == renderer)
+            if (*each == renderPass)
             {
-                renderVec.erase(each);
+                renderPassVec.erase(each);
                 break;
             }
         }
     }
-
-    /// @brief 对所有Renderer的渲染顺序排序
-    void SortAll();
 
     void AddCamera(Sp<Camera> camera) { cameraVec.push_back(camera); }
 

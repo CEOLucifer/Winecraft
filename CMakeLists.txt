@@ -14,16 +14,12 @@ add_executable(LearnOpenGL
         src/InputSystem.cpp
         src/main.cpp
         src/TimeSystem.cpp
-        src/UI/Image.cpp
-        src/Test/Cube.cpp
-        src/Test/InstanceCube.cpp
         src/Resource/ResourceSystem.cpp
         src/Render/Camera.cpp
         src/Render/DirectionalLight.cpp
         src/Render/FrameBuffer.cpp
         src/Render/Model.cpp
         src/Render/RenderBuffer.cpp
-        src/Render/Renderer.cpp
         src/Render/RenderPass.cpp
         src/Render/RenderSystem.cpp
         src/Render/SpotLight.cpp
@@ -33,23 +29,19 @@ add_executable(LearnOpenGL
         src/Render/Mesh/Mesh2.cpp
         src/Render/Mesh/Mesh3.cpp
         src/Render/Mesh/Mesh_2D_Point.cpp
-        src/Render/Material/ControlMaterial.cpp
-        src/Render/Material/InstanceMaterial.cpp
-        src/Render/Material/Material.cpp
-        src/Render/Material/RealMaterial.cpp
-        src/Render/Material/SingleColorMaterial.cpp
-        src/Render/Material/SkyboxMaterial.cpp
         src/Core/Branch.cpp
         src/Core/CoreSystem.cpp
         src/Core/Node.cpp
         src/Core/Transform.cpp
-        src/Common/Skybox.cpp
         src/Block/Section.cpp
         src/Render/Shader/ControlShaderProgram.cpp
         src/Render/Shader/RealShaderProgram.cpp
         src/Render/Shader/Shader.cpp
         src/Render/Shader/ShaderProgram.cpp
-        src/Render/Shader/SkyboxShaderProgram.cpp)
+        src/Render/Shader/SkyboxShaderProgram.cpp
+        include/Block/BlockRenderPass.h
+        src/Render/BlockRenderPass.cpp
+        include/Test/CameraController.h)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 

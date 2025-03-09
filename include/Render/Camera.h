@@ -22,18 +22,29 @@ private:
     glm::vec3 clearColor = {0.1, 0.1, 0.1};
 
 public:
-    float GetWidth() { return width; }
-    float GetHeight() { return height; }
-    float GetAspect() { return width / height; }
-    float GetNear() { return near; }
-    float GetFar() { return far; }
-    float GetFov() { return fov; }
+    float GetWidth()
+    { return width; }
+
+    float GetHeight()
+    { return height; }
+
+    float GetAspect()
+    { return width / height; }
+
+    float GetNear()
+    { return near; }
+
+    float GetFar()
+    { return far; }
+
+    float GetFov()
+    { return fov; }
 
     void Awake() override;
 
     void Update() override;
 
-    void OnRender();
+    void Render();
 
     void SetTargetFrameBuffer(Sp<FrameBuffer> value)
     {
@@ -41,4 +52,9 @@ public:
     }
 
     glm::mat4 GetProjectionMat();
+
+    void SetClearColor(glm::vec3 value)
+    {
+        clearColor = value;
+    }
 };

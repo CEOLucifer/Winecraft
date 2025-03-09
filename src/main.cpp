@@ -1,14 +1,8 @@
-#include "../include/App.h"
-//#include "Test/BerlinTest.h"
-
-using namespace std;
+#include "App.h"
 
 int main()
 {
     App::LoadInstance();
     App::Instance()->Run();
-
-//    BerlinTest t;
-//    t.Run();
     return 0;
 }

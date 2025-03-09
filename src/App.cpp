@@ -1,38 +1,19 @@
 #include "glad/glad.h"
 #include "../include/App.h"
-#include <GL/gl.h>
-#include <climits>
 #include "Common/Skybox.h"
-#include "Render/Mesh/Mesh_2D_Point.h"
-#include "Test/CameraController.h"
-#include "Core/Node.h"
-#include "Core/CoreSystem.h"
 #include "Core/Branch.h"
-#include "Render/Mesh/Mesh3.h"
 #include "Render/DirectionalLight.h"
-#include "Render/Material/Material.h"
-#include "Render/Material/SkyboxMaterial.h"
 #include "Render/SpotLight.h"
-#include "Resource/ResourceSystem.h"
 #include "GLFW/glfw3.h"
 #include "Render/Shader/RealShaderProgram.h"
-#include "Render/Shader/ShaderProgram.h"
-#include "Test/Cube.h"
-#include "Test/InstanceCube.h"
-#include "glm/fwd.hpp"
-#include <memory>
 #include "stb/stb_image.h"
-#include <string>
-#include <vector>
 #include "Render/RenderSystem.h"
 #include "Render/Camera.h"
 #include "../include/InputSystem.h"
-#include "Render/Renderer.h"
-#include "Render/Material/RealMaterial.h"
-#include "Render/Material/SingleColorMaterial.h"
 #include "../include/TimeSystem.h"
-#include "UI/Image.h"
 #include "Block/Section.h"
+#include "Test/CameraController.h"
+#include "Block/BlockRenderPass.h"
 
 using namespace std;
 
@@ -45,23 +26,7 @@ void App::Run()
     Input::init(window);
     Time::init();
 
-//    StartUser();
-
-
-
-
-
-    // 摄像机
-    auto cameraObj = Branch::Create("camera");
-    auto camera = cameraObj->AddNode<Camera>();
-    camera->SetParent(cameraObj);
-    cameraObj->Position = {5, 0, 10};
-    auto cameraController = cameraObj->AddNode<CameraController>();
-    cameraController->SetParent(cameraObj);
-    cameraController->camera = camera;
-
-    Section section = Section::New();
-
+    StartUser();
 
     // 主循环
     while (!glfwWindowShouldClose(window))
@@ -75,9 +40,7 @@ void App::Run()
         glfwPollEvents();
 
         // 渲染
-        section.Draw(camera);
-//        RenderSystem::Instance()->Render();
-
+        RenderSystem::Instance()->Render();
     }
 
     ResourceSystem::UnloadInstance();
@@ -87,8 +50,10 @@ void App::Run()
 
 void App::StartUser()
 {
-    auto mat_LightCube =
-        Resource::Load<SingleColorMaterial>("res/material/lightCube.json");
+    Object::Create<BlockRenderPass>();
+
+    //    auto mat_LightCube =
+    //            Resource::Load<SingleColorMaterial>("res/material/lightCube.json");
 
     // auto mat_Border = Resource::Load<SingleColorMaterial>();
     // mat_Border->shaderProgram = sp_SingleColor;
@@ -97,7 +62,8 @@ void App::StartUser()
     // mat_Border->StencilFunc.ref = 1;
     // mat_Border->StencilMask = 0x00;
 
-    auto mat_Grass = Resource::Load<RealMaterial>("res/material/grass.json");
+    //    auto mat_Grass =
+    //    Resource::Load<RealMaterial>("res/material/grass.json");
 
     // auto mat_Window =
     // Resource::Load<RealMaterial>("res/material/container.json");
@@ -135,22 +101,23 @@ void App::StartUser()
     // 光源
 
     // 点光源
-    auto spotLightObj = Branch::Create("spotLight");
-    spotLightObj->Position = {10, 0, 0};
-    auto spotLight = spotLightObj->AddNode<SpotLight>();
-    spotLight->SetParent(spotLightObj);
-    spotLight->Color = {1, 0, 0};
-
-    auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
-    spotLightRenderer->SetParent(spotLightObj);
-    spotLightRenderer->SetMesh(Mesh3::LoadCube());
-    spotLightRenderer->SetMaterial(mat_LightCube);
+    //    auto spotLightObj = Branch::Create("spotLight");
+    //    spotLightObj->Position = {10, 0, 0};
+    //    auto spotLight = spotLightObj->AddNode<SpotLight>();
+    //    spotLight->SetParent(spotLightObj);
+    //    spotLight->Color = {1, 0, 0};
+    //
+    //    auto spotLightRenderer = spotLightObj->AddNode<Renderer>();
+    //    spotLightRenderer->SetParent(spotLightObj);
+    //    spotLightRenderer->SetMesh(Mesh3::LoadCube());
+    //    spotLightRenderer->SetMaterial(mat_LightCube);
 
     // 定向光
-    auto directionalLightObj = Branch::Create("directionalLight");
-    auto directionalLight = directionalLightObj->AddNode<DirectionalLight>();
-    directionalLight->SetParent(directionalLightObj);
-    directionalLight->intensity = 0.05;
+    //    auto directionalLightObj = Branch::Create("directionalLight");
+    //    auto directionalLight =
+    //    directionalLightObj->AddNode<DirectionalLight>();
+    //    directionalLight->SetParent(directionalLightObj);
+    //    directionalLight->intensity = 0.05;
 
 
 
@@ -160,6 +127,7 @@ void App::StartUser()
     auto cameraObj = Branch::Create("camera");
     auto camera = cameraObj->AddNode<Camera>();
     camera->SetParent(cameraObj);
+    //    camera->SetClearColor({1, 0, 0});
     cameraObj->Position = {5, 0, 10};
     auto cameraController = cameraObj->AddNode<CameraController>();
     cameraController->SetParent(cameraObj);
@@ -218,5 +186,5 @@ void App::StartUser()
 
 
     // 实例化测试
-//    auto instanceCube = Branch::Create<InstanceCube>();
+    //    auto instanceCube = Branch::Create<InstanceCube>();
 }

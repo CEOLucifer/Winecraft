@@ -1,7 +1,6 @@
 #include "glad/glad.h"
 #include "Render/RenderSystem.h"
 #include "GLFW/glfw3.h"
-#include "Render/Renderer.h"
 #include "Debug/Debug.h"
 #include <format>
 #include <algorithm>
@@ -34,11 +33,6 @@ void RenderSystem::OnLoad()
     }
 
     glViewport(0, 0, 800, 600);
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-
 
     // 事件监听
     glfwSetFramebufferSizeCallback(
@@ -63,16 +57,10 @@ void RenderSystem::Render()
     // 调用每个摄像机的Render
     for (auto each : cameraVec)
     {
-        each->OnRender();
+        each->Render();
     }
 
     glfwSwapBuffers(window);
-}
-
-void RenderSystem::SortAll()
-{
-    ranges::sort(renderVec,
-                 [](auto a, auto b) { return a->GetOrder() < b->GetOrder(); });
 }
 
 void RenderSystem::onFrameBufferResize(GLFWwindow* window, int w, int h)
