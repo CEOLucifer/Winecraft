@@ -33,6 +33,7 @@ void RenderSystem::OnLoad()
     }
 
     glViewport(0, 0, 800, 600);
+    glEnable(GL_STENCIL_TEST);
 
     // 事件监听
     glfwSetFramebufferSizeCallback(

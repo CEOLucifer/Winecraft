@@ -61,7 +61,7 @@ void Texture::OnCreated(const JsonDocument& doc)
         }
         stbi_image_free(data);
     }
-    else if (type == "skybox") // 天空盒
+    else if (type == "cubeMap") // 天空盒
     {
         JsonArrayConst six = doc["six"];
         
@@ -77,12 +77,24 @@ void Texture::OnCreated(const JsonDocument& doc)
         {
             data = stbi_load(six[i].as<string>().c_str(), &width, &height,
                              &nrChannels, 0);
+
+            // 检查纹理格式
+            GLenum format;
+            if (nrChannels == 1)
+                format = GL_RED;
+            else if (nrChannels == 3)
+                format = GL_RGB;
+            else if (nrChannels == 4)
+                format = GL_RGBA;
+
+            // 注：interalformat是程序中表示的格式；而format是图片文件的真实格式，必须正确。
+            // internalformat可以和format不一样，但是在cubeMap中，六张图片的internalformat必须一致，否则采样是全黑的。
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width,
-                         height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+                         height, 0, format, GL_UNSIGNED_BYTE, data);
         }
 
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S,
                         GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T,
@@ -90,7 +102,7 @@ void Texture::OnCreated(const JsonDocument& doc)
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
                         GL_CLAMP_TO_EDGE);
 
-        Debug::Log(std::format("skybox texture created"));
+        Debug::Log(std::format("cube map texture created"));
     }
 }
 

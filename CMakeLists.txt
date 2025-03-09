@@ -40,7 +40,7 @@ add_executable(LearnOpenGL
         src/Render/Shader/ShaderProgram.cpp
         src/Render/Shader/SkyboxShaderProgram.cpp
         include/Block/BlockRenderPass.h
-        src/Render/BlockRenderPass.cpp
+        src/Block/BlockRenderPass.cpp
         include/Test/CameraController.h)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)

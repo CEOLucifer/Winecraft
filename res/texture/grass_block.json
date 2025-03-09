@@ -1,0 +1,12 @@
+{
+    "className": "Texture",
+    "type": "cubeMap",
+    "six": [
+        "res/grass_block/grass_block_side.png",
+        "res/grass_block/grass_block_side.png",
+        "res/grass_block/azalea_top.png",
+        "res/grass_block/dirt.png",
+        "res/grass_block/grass_block_side.png",
+        "res/grass_block/grass_block_side.png"
+    ]
+}
