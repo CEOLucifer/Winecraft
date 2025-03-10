@@ -6,8 +6,8 @@
 /// 区块
 class Section
 {
-private:
-    std::array<std::array<std::array<Block, 32>, 32>, 32> blocks = {};
+public:
+    std::array<std::array<std::array<Block, 32>, 32>, 32> Blocks ;
 
 public:
     void FillWith(Block block);

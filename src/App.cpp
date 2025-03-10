@@ -15,6 +15,7 @@
 #include "Test/CameraController.h"
 #include "Block/BlockRenderPass.h"
 #include "Test/FPSWatcher.h"
+#include "Block/BlockSystem.h"
 
 using namespace std;
 
@@ -51,7 +52,8 @@ void App::Run()
 
 void App::StartUser()
 {
-    Object::Create<BlockRenderPass>();
+    BlockSystem::LoadInstance();
+//    Object::Create<BlockRenderPass>();
 //    Branch::Create<FPSWatcher>();
 
     //    auto mat_LightCube =

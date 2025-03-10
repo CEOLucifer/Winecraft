@@ -43,7 +43,12 @@ add_executable(LearnOpenGL
         src/Block/BlockRenderPass.cpp
         include/Test/CameraController.h
         include/Test/FPSWatcher.h
-        src/Test/FPSWatcher.cpp)
+        src/Test/FPSWatcher.cpp
+        include/Block/BlockSystem.h
+        src/Block/BlockSystem.cpp
+        include/Test/BerlinTest.h
+        include/Mathf.h
+        src/Mathf.cpp)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 

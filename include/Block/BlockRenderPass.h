@@ -13,8 +13,6 @@ private:
     uint32_t ebo = 0;
     uint32_t instance_vbo = 0;
 
-    std::vector<std::vector<Section>> sections;
-
 public:
     void OnObjectCreated() override;
 
@@ -22,7 +20,7 @@ protected:
     void RenderCustom(Sp<Camera> camera) override;
 
 private:
-    void initSections();
+
 
     void initInstance_vbo();
 

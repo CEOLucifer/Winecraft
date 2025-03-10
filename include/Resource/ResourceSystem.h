@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../Singleton.h"
+#include "Singleton.h"
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "../Typedef.h"
-#include "../FileHelper.h"
-#include "../Debug/Debug.h"
+#include "Typedef.h"
+#include "FileHelper.h"
+#include "Debug/Debug.h"
 #include "Creator.h"
 #include "ArduinoJson.h"
 

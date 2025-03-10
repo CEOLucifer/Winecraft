@@ -7,6 +7,8 @@
 #include "Core/Branch.h"
 #include "Render/Texture.h"
 #include "Render/Vertex.h"
+#include "Block/BlockSystem.h"
+#include "Block/Block.h"
 
 using namespace std;
 
@@ -102,7 +104,6 @@ void BlockRenderPass::OnObjectCreated()
     shaderProgram->SetInt("texCube", 0);
 
 
-    initSections();
     initInstance_vbo();
 }
 
@@ -126,25 +127,6 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
 Sp<BlockRenderPass> BlockRenderPass::instance = nullptr;
 
 
-void BlockRenderPass::initSections()
-{
-    // 5 x 5
-    sections.resize(5);
-    for (auto& each: sections)
-    {
-        each.resize(5);
-    }
-
-    // 填充id = 1
-    for (auto& each: sections)
-    {
-        for (auto& eachSection: each)
-        {
-            eachSection.FillWith({1});
-        }
-    }
-}
-
 void BlockRenderPass::initInstance_vbo()
 {
     glBindVertexArray(vao);
@@ -152,6 +134,8 @@ void BlockRenderPass::initInstance_vbo()
     std::vector<glm::mat4> aModels;
     aModels.reserve(32 * 32 * 32 * 5 * 5);
 
+    // 根据区块的方块id发送aModel数据
+    auto& sections = BlockSystem::Instance()->sections;
 
     for (int i = 0; i < 5; ++i)
     {
@@ -163,6 +147,11 @@ void BlockRenderPass::initInstance_vbo()
                 {
                     for (int z = 0; z < 32; ++z)
                     {
+                        // 没有方块，continue
+                        if (sections[i][j].Blocks[x][y][z].id == 0)
+                        {
+                            continue;
+                        }
                         Transform t;
                         t.Position = glm::vec3(x * 1, y * 1, z * 1) + glm::vec3(i * 32, 0, j * 32);
                         aModels.push_back(t.GetModelMat());

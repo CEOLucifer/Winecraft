@@ -8,7 +8,7 @@ void Section::FillWith(Block block)
         {
             for (int z = 0; z < 32; ++z)
             {
-                blocks[x][y][z] = block;
+                Blocks[x][y][z] = block;
             }
         }
     }

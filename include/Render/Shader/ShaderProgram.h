@@ -1,12 +1,12 @@
 #pragma once
 
-#include "glm/glm.hpp"
 #include <cstdint>
 #include <memory>
 #include <vector>
 #include "Resource/Resource.h"
 #include "Shader.h"
 #include "Typedef.h"
+#include <glm/glm.hpp>
 
 class Renderer;
 class Camera;
