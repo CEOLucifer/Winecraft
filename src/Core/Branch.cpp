@@ -1,20 +1,20 @@
 #include "Core/Branch.h"
 #include "Core/CoreSystem.h"
 
-void Branch::_callOnDestroyedOfChildren()
+void Branch::_callOnNodeDestroyedOfChildren()
 {
     for (auto each : childNodes)
     {
-        each->OnDestroyed();
+        each->OnNodeDestroyed();
     }
 
     for (auto each : childBranches)
     {
-        each->OnDestroyed();
+        each->OnNodeDestroyed();
     }
 
     for (auto each : childBranches)
     {
-        each->_callOnDestroyedOfChildren();
+        each->_callOnNodeDestroyedOfChildren();
     }
 }

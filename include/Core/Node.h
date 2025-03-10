@@ -7,7 +7,7 @@
 
 class Branch;
 
-/// @brief 节点。若一个类是Node子类而不是Branch子类。则其只能通过Branch的AddNode方法创建。
+/// @brief 节点。若一个类是Node子类而不是Branch子类。则其只能通过Branch的AddNode方法创建，类似Unity的AddComponent。
 class Node : public Object
 {
     friend class CoreSystem;
@@ -36,11 +36,12 @@ public:
     virtual void Update()
     {}
 
-    /// @brief !!! 严禁调用销毁相关逻辑
-    virtual void OnDestroyed()
-    {}
+    /// 销毁此节点
+    void DestroyNode();
 
-    void Destroy();
+    /// 由子类重写。
+    virtual void OnNodeDestroyed()
+    {}
 
     Wp<Branch> GetParent()
     { return parent; }

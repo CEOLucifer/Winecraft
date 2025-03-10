@@ -1,5 +1,5 @@
 #include "glad/glad.h"
-#include "../include/App.h"
+#include "App.h"
 #include "Common/Skybox.h"
 #include "Core/Branch.h"
 #include "Render/DirectionalLight.h"
@@ -9,11 +9,12 @@
 #include "stb/stb_image.h"
 #include "Render/RenderSystem.h"
 #include "Render/Camera.h"
-#include "../include/InputSystem.h"
-#include "../include/TimeSystem.h"
+#include "InputSystem.h"
+#include "TimeSystem.h"
 #include "Block/Section.h"
 #include "Test/CameraController.h"
 #include "Block/BlockRenderPass.h"
+#include "Test/FPSWatcher.h"
 
 using namespace std;
 
@@ -51,6 +52,7 @@ void App::Run()
 void App::StartUser()
 {
     Object::Create<BlockRenderPass>();
+//    Branch::Create<FPSWatcher>();
 
     //    auto mat_LightCube =
     //            Resource::Load<SingleColorMaterial>("res/material/lightCube.json");

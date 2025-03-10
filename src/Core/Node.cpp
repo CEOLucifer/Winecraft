@@ -38,18 +38,6 @@ void Node::SetParent(Wp<Branch> value)
     }
 }
 
-void Node::Destroy()
-{
-    isDestroyed = true;
-    _removeFromParent();
-    OnDestroyed();
-
-    if (auto thisBranch = CastTo<Branch>())
-    {
-        thisBranch->_callOnDestroyedOfChildren();
-    }
-}
-
 void Node::_removeFromParent()
 {
     Sp<Branch> oldParent = parent.lock();
@@ -66,5 +54,16 @@ void Node::_removeFromParent()
         {
             oldParent->childNodes.remove(thisBranch);
         }
+    }
+}
+
+void Node::DestroyNode()
+{
+    isDestroyed = true;
+    _removeFromParent();
+
+    if (auto thisBranch = CastTo<Branch>())
+    {
+        thisBranch->_callOnNodeDestroyedOfChildren();
     }
 }

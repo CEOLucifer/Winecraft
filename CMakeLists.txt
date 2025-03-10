@@ -41,7 +41,9 @@ add_executable(LearnOpenGL
         src/Render/Shader/SkyboxShaderProgram.cpp
         include/Block/BlockRenderPass.h
         src/Block/BlockRenderPass.cpp
-        include/Test/CameraController.h)
+        include/Test/CameraController.h
+        include/Test/FPSWatcher.h
+        src/Test/FPSWatcher.cpp)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 

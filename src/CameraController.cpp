@@ -1,9 +1,9 @@
 #include "Test/CameraController.h"
 #include "Render/Camera.h"
 #include "GLFW/glfw3.h"
-#include "../include/InputSystem.h"
+#include "InputSystem.h"
 #include <algorithm>
-#include "../include/TimeSystem.h"
+#include "TimeSystem.h"
 #include "Core/Branch.h"
 
 using namespace std;
@@ -30,9 +30,6 @@ void CameraController::Update()
     }
 
     parent->Position += posDelta;
-    
-    // Debug::Log(1 / deltaTime);
-    
     
     glm::vec2 cursorDelta =
     Input::GetCursorDelta() * cursorSpeed * Time::GetDeltaTime();

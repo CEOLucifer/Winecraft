@@ -102,18 +102,72 @@ void BlockRenderPass::OnObjectCreated()
     shaderProgram->SetInt("texCube", 0);
 
 
-    // aModel
-    std::vector<glm::mat4> aModels;
-    aModels.reserve(32 * 32 * 32);
-    for (int x = 0; x < 32; ++x)
+    initSections();
+    initInstance_vbo();
+}
+
+void BlockRenderPass::RenderCustom(Sp<Camera> camera)
+{
+    glBindVertexArray(vao);
+
+    glUseProgram(shaderProgram->GetID());
+    shaderProgram->SetMat4("uView", camera->GetParent().lock()->GetViewMat());
+    shaderProgram->SetMat4("uProjection", camera->GetProjectionMat());
+
+    auto texCube = Resource::Load<Texture>("res/texture/grass_block.json");
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texCube->GetID());
+
+//    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, 32 * 32 * 32 * 5 * 5);
+}
+
+
+Sp<BlockRenderPass> BlockRenderPass::instance = nullptr;
+
+
+void BlockRenderPass::initSections()
+{
+    // 5 x 5
+    sections.resize(5);
+    for (auto& each: sections)
     {
-        for (int y = 0; y < 32; ++y)
+        each.resize(5);
+    }
+
+    // 填充id = 1
+    for (auto& each: sections)
+    {
+        for (auto& eachSection: each)
         {
-            for (int z = 0; z < 32; ++z)
+            eachSection.FillWith({1});
+        }
+    }
+}
+
+void BlockRenderPass::initInstance_vbo()
+{
+    glBindVertexArray(vao);
+
+    std::vector<glm::mat4> aModels;
+    aModels.reserve(32 * 32 * 32 * 5 * 5);
+
+
+    for (int i = 0; i < 5; ++i)
+    {
+        for (int j = 0; j < 5; ++j)
+        {
+            for (int x = 0; x < 32; ++x)
             {
-                Transform t;
-                t.Position = {x * 1, y * 1, z * 1};
-                aModels.push_back(t.GetModelMat());
+                for (int y = 0; y < 32; ++y)
+                {
+                    for (int z = 0; z < 32; ++z)
+                    {
+                        Transform t;
+                        t.Position = glm::vec3(x * 1, y * 1, z * 1) + glm::vec3(i * 32, 0, j * 32);
+                        aModels.push_back(t.GetModelMat());
+                    }
+                }
             }
         }
     }
@@ -134,22 +188,3 @@ void BlockRenderPass::OnObjectCreated()
     glVertexAttribDivisor(5, 1);
     glVertexAttribDivisor(6, 1);
 }
-
-void BlockRenderPass::RenderCustom(Sp<Camera> camera)
-{
-    glBindVertexArray(vao);
-
-    glUseProgram(shaderProgram->GetID());
-    shaderProgram->SetMat4("uView", camera->GetParent().lock()->GetViewMat());
-    shaderProgram->SetMat4("uProjection", camera->GetProjectionMat());
-
-    auto texCube = Resource::Load<Texture>("res/texture/grass_block.json");
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texCube->GetID());
-
-//    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, 32 * 32 * 32);
-}
-
-
-Sp<BlockRenderPass> BlockRenderPass::instance = nullptr;

@@ -1,25 +1,15 @@
-#include "glad/glad.h"
 #include "Block/Section.h"
-#include "Render/Vertex.h"
-#include <vector>
-#include "Render/Shader/ShaderProgram.h"
-#include "Core/Transform.h"
-#include "Render/Camera.h"
-#include "Core/Branch.h"
-#include "Render/Texture.h"
 
-
-using namespace std;
-
-void Section::Draw(Sp<Camera> camera)
+void Section::FillWith(Block block)
 {
-
-}
-
-
-Section Section::New()
-{
-    Section This = {};
-
-    return This;
+    for (int x = 0; x < 32; ++x)
+    {
+        for (int y = 0; y < 32; ++y)
+        {
+            for (int z = 0; z < 32; ++z)
+            {
+                blocks[x][y][z] = block;
+            }
+        }
+    }
 }

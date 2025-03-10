@@ -58,9 +58,13 @@ public:
     }
 
 private:
-    void _callOnDestroyedOfChildren();
+    void _callOnNodeDestroyedOfChildren();
 
 public:
+    /// 创建指定子类的Branch
+    /// \tparam T
+    /// \param _name
+    /// \return
     template <typename T> static Sp<T> Create(std::string _name = "")
     {
         Sp<T> This = _createRaw<T>(_name);
@@ -68,8 +72,11 @@ public:
         return This;
     }
 
+    /// 创建空Branch对象
+    /// \param _name
+    /// \return
     static Sp<Branch> Create(std::string _name = "")
     {
-        return Create<Branch>();
+        return Create<Branch>(_name);
     }
 };
