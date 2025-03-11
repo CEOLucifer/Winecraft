@@ -13,6 +13,8 @@ private:
     uint32_t ebo = 0;
     uint32_t instance_vbo = 0;
 
+    std::vector<glm::mat4> aModels;
+
 public:
     void OnObjectCreated() override;
 

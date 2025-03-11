@@ -120,7 +120,7 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
     glBindTexture(GL_TEXTURE_CUBE_MAP, texCube->GetID());
 
 //    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-    glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, 32 * 32 * 32 * 5 * 5);
+    glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, aModels.size());
 }
 
 
@@ -131,29 +131,33 @@ void BlockRenderPass::initInstance_vbo()
 {
     glBindVertexArray(vao);
 
-    std::vector<glm::mat4> aModels;
-    aModels.reserve(32 * 32 * 32 * 5 * 5);
+    aModels.reserve(Section::Size * Section::Size * Section::Height * BlockSystem::Size * BlockSystem::Size);
 
     // 根据区块的方块id发送aModel数据
     auto& sections = BlockSystem::Instance()->sections;
 
-    for (int i = 0; i < 5; ++i)
+    for (int xx = 0; xx < BlockSystem::Size; ++xx)
     {
-        for (int j = 0; j < 5; ++j)
+        for (int zz = 0; zz < BlockSystem::Size; ++zz)
         {
-            for (int x = 0; x < 32; ++x)
+            auto& blocks = sections[xx][zz].Blocks;
+
+            for (int x = 0; x < Section::Size; ++x)
             {
-                for (int y = 0; y < 32; ++y)
+                for (int y = 0; y < Section::Height; ++y)
                 {
-                    for (int z = 0; z < 32; ++z)
+                    for (int z = 0; z < Section::Size; ++z)
                     {
                         // 没有方块，continue
-                        if (sections[i][j].Blocks[x][y][z].id == 0)
+                        if (blocks[x][y][z].id == 0)
                         {
                             continue;
                         }
+                        // todo:上下左右都有方块，continue
+
+                        // 添加一个方块的aModel
                         Transform t;
-                        t.Position = glm::vec3(x * 1, y * 1, z * 1) + glm::vec3(i * 32, 0, j * 32);
+                        t.Position = glm::vec3(x * 1, y * 1, z * 1) + glm::vec3(xx * Section::Size, 0, zz * Section::Size);
                         aModels.push_back(t.GetModelMat());
                     }
                 }

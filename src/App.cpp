@@ -16,6 +16,7 @@
 #include "Block/BlockRenderPass.h"
 #include "Test/FPSWatcher.h"
 #include "Block/BlockSystem.h"
+#include "Mathf.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ void App::Run()
     ResourceSystem::LoadInstance();
     Input::init(window);
     Time::init();
+    Mathf::init();
 
     StartUser();
 

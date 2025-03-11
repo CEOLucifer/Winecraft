@@ -3,25 +3,21 @@
 #include "Block/BlockRenderPass.h"
 #include <glm/glm.hpp>
 #include "Mathf.h"
+#include <string>
+
+using namespace std;
 
 void BlockSystem::OnLoad()
 {
-    initSections();
-
+    initSectionsSize();
+//    generateRandom_Berlin();
+    generateRandom_Bilinear();
     Object::Create<BlockRenderPass>();
 }
 
-void BlockSystem::initSections()
+void BlockSystem::generateRandom_Berlin()
 {
-    // 5 x 5
-    sections.resize(5);
-    for (auto& each: sections)
-    {
-        each.resize(5);
-    }
-
     // 柏林噪声生成高度
-
 
     // 随机梯度向量
     glm::vec2 grads[6][6];
@@ -29,7 +25,7 @@ void BlockSystem::initSections()
     {
         for (int z = 0; z < 6; ++z)
         {
-            grads[x][z] = glm::normalize(glm::vec2{std::rand(), std::rand()});
+            grads[x][z] = Mathf::RandomDir2D();
         }
     }
 
@@ -39,33 +35,42 @@ void BlockSystem::initSections()
     {
         for (int j = 0; j < 5; ++j)
         {
+            // 梯度向量
+            glm::vec2 grad_1 = grads[i][j];
+            glm::vec2 grad_2 = grads[i + 1][j];
+            glm::vec2 grad_3 = grads[i + 1][j + 1];
+            glm::vec2 grad_4 = grads[i][j + 1];
+
+            // 距离向量。总是选取晶格中点
+            glm::vec2 dist_1 = {0.5, 0.5};
+            glm::vec2 dist_2 = {-0.5, 0.5};
+            glm::vec2 dist_3 = {-0.5, -0.5};
+            glm::vec2 dist_4 = {0.5, -0.5};
+
+            float influence_1 = glm::dot(dist_1, grad_1);
+            float influence_2 = glm::dot(dist_2, grad_2);
+            float influence_3 = glm::dot(dist_3, grad_3);
+            float influence_4 = glm::dot(dist_4, grad_4);
+
+
             // (x, z)是相对区块坐标
             for (int x = 0; x < 32; ++x)
             {
                 for (int z = 0; z < 32; ++z)
                 {
-                    int height = 0;
+                    float height = 0;
 
-//                    // 距离向量
-//                    glm::vec2 dist_1 = {x - 0, z - 0};
-//                    glm::vec2 dist_2 = {x - 32, z - 0};
-//                    glm::vec2 dist_3 = {x - 32, z - 32};
-//                    glm::vec2 dist_4 = {x - 0, z - 32};
-//
-//                    // 梯度向量
-//                    glm::vec2 grad_1 = grads[i][j];
-//                    glm::vec2 grad_2 = grads[i + 1][j];
-//                    glm::vec2 grad_3 = grads[i + 1][j + 1];
-//                    glm::vec2 grad_4 = grads[i][j + 1];
-//
-//                    // 计算高度
-//                    height = glm::dot(dist_1, grad_1) + glm::dot(dist_2, grad_2) + glm::dot(dist_3, grad_3) + glm::dot(dist_4, grad_4);
-//                    height = std::clamp(height, 0, 32);
+                    float a = std::lerp(influence_1, influence_2, (float) x / 32);
+                    float b = std::lerp(influence_3, influence_4, (float) x / 32);
+                    float c = std::lerp(a, b, (float) z / 32);
 
-                    height = Mathf::RandomIntRange(0, 32);
+                    // 计算高度
+                    height = (c + 0.5f) * 32;
+
+                    height = std::clamp(height, 1.0f, 32.0f);
 
                     // 以height填充section
-                    for(int y = 0; y < height; ++y)
+                    for (int y = 0; y < height; ++y)
                     {
                         sections[i][j].Blocks[x][y][z] = 1;
                     }
@@ -75,4 +80,57 @@ void BlockSystem::initSections()
     }
 
 
+}
+
+void BlockSystem::initSectionsSize()
+{
+    // Size * Size
+    sections.resize(Size);
+    for (auto& each: sections)
+    {
+        each.resize(Size);
+    }
+}
+
+void BlockSystem::generateRandom_Bilinear()
+{
+    // 随机四顶点高度
+    float verticeHeight[Size + 1][Size + 1];
+    for (int x = 0; x < Size + 1; ++x)
+    {
+        for (int z = 0; z < Size + 1; ++z)
+        {
+            verticeHeight[x][z] = Mathf::RandomFloatRange(1, Section::Height);
+        }
+    }
+
+    for (int xx = 0; xx < Size; ++xx)
+    {
+        for (int zz = 0; zz < Size; ++zz)
+        {
+            // 此晶格的四顶点高度
+            float y1 = verticeHeight[xx][zz + 1];
+            float y2 = verticeHeight[xx + 1][zz + 1];
+            float y3 = verticeHeight[xx][zz];
+            float y4 = verticeHeight[xx + 1][zz];
+
+            for (int x = 0; x < Section::Size; ++x)
+            {
+                for (int z = 0; z < Section::Size; ++z)
+                {
+                    float height;
+
+                    float a = (float) x / Section::Size;
+                    float b = (float) z / Section::Size;
+
+                    height = (1 - a) * b * y1 + a * b * y2 + (1 - a) * (1 - b) * y3 + a * (1 - b) * y4;
+
+                    for (int y = 0; y < height; ++y)
+                    {
+                        sections[xx][zz].Blocks[x][y][z] = 1;
+                    }
+                }
+            }
+        }
+    }
 }

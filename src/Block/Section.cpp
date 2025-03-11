@@ -2,11 +2,11 @@
 
 void Section::FillWith(Block block)
 {
-    for (int x = 0; x < 32; ++x)
+    for (int x = 0; x < Size; ++x)
     {
-        for (int y = 0; y < 32; ++y)
+        for (int y = 0; y < Height; ++y)
         {
-            for (int z = 0; z < 32; ++z)
+            for (int z = 0; z < Size; ++z)
             {
                 Blocks[x][y][z] = block;
             }
