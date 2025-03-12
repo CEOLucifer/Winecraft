@@ -3,7 +3,6 @@
 #include "Block/BlockRenderPass.h"
 #include <glm/glm.hpp>
 #include "Mathf.h"
-#include <string>
 
 using namespace std;
 
@@ -12,7 +11,10 @@ void BlockSystem::OnLoad()
     initSectionsSize();
 //    generateRandom_Berlin();
     generateRandom_Bilinear();
-    Object::Create<BlockRenderPass>();
+    Object::NewObject<BlockRenderPass>();
+
+    // 测试
+    auto b = GetBlock({96, 96, 96});
 }
 
 void BlockSystem::generateRandom_Berlin()
@@ -80,6 +82,24 @@ void BlockSystem::generateRandom_Berlin()
     }
 
 
+}
+
+
+std::optional<Block> BlockSystem::GetBlock(glm::i32vec3 worldCoords)
+{
+    glm::i32vec3 sysCoords = GetSystemCoords();
+
+    // 边界检查
+    if (worldCoords.x < sysCoords.x || worldCoords.x >= sysCoords.x + Size * Section::Size ||
+        worldCoords.z < sysCoords.z || worldCoords.z >= sysCoords.z + Size * Section::Size ||
+        worldCoords.y < 0 || worldCoords.y >= Section::Height)
+    {
+        return nullopt;
+    }
+
+    glm::i32vec3 sectionCoords = {(worldCoords.x - sysCoords.x) / Section::Size, 0, (worldCoords.z - sysCoords.z) / Section::Size};
+    glm::i32vec3 blockCoords = {(worldCoords.x - sysCoords.x) % Section::Size, worldCoords.y, (worldCoords.z - sysCoords.z) % Section::Size};
+    return sections[sectionCoords.x][sectionCoords.z].Blocks[blockCoords.x][blockCoords.y][blockCoords.z];
 }
 
 void BlockSystem::initSectionsSize()

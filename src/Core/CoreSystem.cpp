@@ -7,7 +7,7 @@ using namespace std;
 
 void CoreSystem::UpdateAll()
 {
-    for (auto each : nodeVec)
+    for (auto each: nodeVec)
     {
         if (!each->isDestroyed)
         {
@@ -15,17 +15,29 @@ void CoreSystem::UpdateAll()
         }
         else
         {
-            destoryingNodes.push_back(each);
+            removingNodes.push_back(each);
         }
     }
-    _processDestroyingNodes();
+    _processAddingNodes();
+    _processRemovingNodes();
 }
 
-void CoreSystem::OnLoad() { root = Branch::Create("root"); }
+void CoreSystem::OnLoad()
+{ root = Branch::Create("root"); }
 
-void CoreSystem::_processDestroyingNodes()
+void CoreSystem::_processAddingNodes()
 {
-    for (auto each : destoryingNodes)
+    for (auto each: addingNodes)
+    {
+        nodeVec.push_back(each);
+        each->index = nodeVec.size() - 1;
+    }
+    addingNodes.clear();
+}
+
+void CoreSystem::_processRemovingNodes()
+{
+    for (auto each: removingNodes)
     {
         auto nodeEnd = nodeVec.back();
 
@@ -37,5 +49,5 @@ void CoreSystem::_processDestroyingNodes()
 
         nodeVec.pop_back();
     }
-    destoryingNodes.clear();
+    removingNodes.clear();
 }

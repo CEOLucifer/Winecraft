@@ -153,11 +153,34 @@ void BlockRenderPass::initInstance_vbo()
                         {
                             continue;
                         }
-                        // todo:上下左右都有方块，continue
 
-                        // 添加一个方块的aModel
+                        // 上下左右前后都有方块，continue
+                        auto system = BlockSystem::Instance();
+                        int xc = xx * Section::Size;
+                        int zc = zz * Section::Size;
+                        auto up = system->GetBlock({xc + x, y + 1, zc + z});
+                        auto down = system->GetBlock({xc + x, y - 1, zc + z});
+                        auto left = system->GetBlock({xc + x - 1, y, zc + z});
+                        auto right = system->GetBlock({xc + x + 1, y, zc + z});
+                        auto forward = system->GetBlock({xc + x, y, zc + z + 1});
+                        auto back = system->GetBlock({xc + x, y, zc + z - 1});
+
+                        if (up && (*up).id != 0 &&
+                            down && (*down).id != 0 &&
+                            left && (*left).id != 0 &&
+                            right && (*right).id != 0 &&
+                            forward && (*forward).id != 0 &&
+                            back && (*back).id != 0)
+                        {
+                            continue;
+                        }
+
+                        // 添加一个此方块的aModel
                         Transform t;
-                        t.Position = glm::vec3(x * 1, y * 1, z * 1) + glm::vec3(xx * Section::Size, 0, zz * Section::Size);
+                        t.Position =
+                                glm::vec3(system->GetSystemCoords()) // 系统坐标
+                                + glm::vec3(xx * Section::Size, 0, zz * Section::Size) // 区块坐标
+                                + glm::vec3(x * 1, y * 1, z * 1); // 方块坐标
                         aModels.push_back(t.GetModelMat());
                     }
                 }

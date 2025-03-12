@@ -17,7 +17,8 @@ private:
 
     std::vector<Sp<Node>> nodeVec;
 
-    std::vector<Sp<Node>> destoryingNodes;
+    std::vector<Sp<Node>> addingNodes;
+    std::vector<Sp<Node>> removingNodes;
 
 public:
     void UpdateAll();
@@ -25,5 +26,7 @@ public:
     void OnLoad() override;
 
 private:
-    void _processDestroyingNodes();
+    void _processAddingNodes();
+
+    void _processRemovingNodes();
 };

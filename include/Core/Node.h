@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Typedef.h"
+#include "Typedef.h"
 #include "CoreSystem.h"
 #include "Object.h"
 #include <string>
@@ -11,7 +11,6 @@ class Branch;
 class Node : public Object
 {
     friend class CoreSystem;
-
     friend class Branch;
 
 public:
@@ -24,6 +23,8 @@ private:
     // 在CoreSystem中，nodeVec中的索引。用于快速增删。
     uint32_t index;
 
+    // 是否已经被标记删除？
+    // 若为true，则在nodeVec遍历过程中被加入removingNodes，在node遍历结束后，从nodeVec中移除。
     bool isDestroyed = false;
 
 public:
@@ -56,12 +57,11 @@ private:
     template<typename T>
     static Sp<T> _createRaw(std::string _name = "")
     {
-        Sp<T> This = Create<T>();
+        Sp<T> This = NewObject<T>();
         This->name = _name;
 
         // 添加到nodeVec
-        CoreSystem::Instance()->nodeVec.push_back(This);
-        This->index = CoreSystem::Instance()->nodeVec.size() - 1;
+        CoreSystem::Instance()->addingNodes.push_back(This);
         This->Awake();
         return This;
     }

@@ -1,5 +1,5 @@
-#include "../include/InputSystem.h"
-#include "../include/TimeSystem.h"
+#include "InputSystem.h"
+#include "TimeSystem.h"
 
 GLFWwindow* Input::window = nullptr;
 glm::vec2 Input::deltaCursorPos = {0, 0};

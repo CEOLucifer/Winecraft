@@ -55,7 +55,6 @@ void App::Run()
 void App::StartUser()
 {
     BlockSystem::LoadInstance();
-//    Object::Create<BlockRenderPass>();
 //    Branch::Create<FPSWatcher>();
 
     //    auto mat_LightCube =

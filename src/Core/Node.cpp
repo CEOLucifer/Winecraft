@@ -59,9 +59,10 @@ void Node::_removeFromParent()
 
 void Node::DestroyNode()
 {
-    isDestroyed = true;
     _removeFromParent();
+    isDestroyed = true;
 
+    // 如果此节点是Branch，还要调用每个
     if (auto thisBranch = CastTo<Branch>())
     {
         thisBranch->_callOnNodeDestroyedOfChildren();

@@ -38,7 +38,7 @@ public:
 public:
     template<typename T>
     requires std::is_base_of_v<Object, T>
-    static Sp<T> Create()
+    static Sp<T> NewObject()
     {
         Sp<T> This(new T);
         This->thisWeak = This;

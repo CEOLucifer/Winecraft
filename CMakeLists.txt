@@ -48,7 +48,9 @@ add_executable(LearnOpenGL
         src/Block/BlockSystem.cpp
         include/Test/BerlinTest.h
         include/Mathf.h
-        src/Mathf.cpp)
+        src/Mathf.cpp
+        include/Creature/Creature.h
+        include/Creature/Player.h)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 
