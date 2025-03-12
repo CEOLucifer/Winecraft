@@ -2,7 +2,8 @@
 
 #include "Core/Branch.h"
 
-class FPSWatcher : public Branch{
+class FPSWatcher : public Branch
+{
 public:
     void Update() override;
 };

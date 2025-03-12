@@ -55,6 +55,7 @@ private:
 
 private:
     template<typename T>
+    requires std::is_base_of_v<Node, T>
     static Sp<T> _createRaw(std::string _name = "")
     {
         Sp<T> This = NewObject<T>();

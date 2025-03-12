@@ -6,23 +6,30 @@
 class Object
 {
 protected:
+    /// 指向本对象的弱指针，用于在成员函数中进行类型转换
     Wp<Object> thisWeak;
 
 public:
     virtual ~Object() = default;
 
+    /// 由子类重写
     virtual void OnObjectCreated()
     {}
 
+    /// 销毁此对象
     void Destroy()
     {
         OnDestroyed();
     }
 
+    /// 由子类重写
     virtual void OnDestroyed()
     {
     }
 
+    /// 转型为指定类型
+    /// \tparam T
+    /// \return
     template<typename T>
     Sp<T> CastTo()
     {

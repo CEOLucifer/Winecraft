@@ -13,23 +13,30 @@ class Branch : public Node, public Transform
     friend class CoreSystem;
     friend class Node;
 
-#pragma region 子节点
 private:
     // 继承Node而不继承Branch的子结点
     std::list<Sp<Node>> childNodes;
 
-    // 继承Branch的子结点。用于变换。
+    // 继承Branch的子结点。用于父子空间变换。
     std::list<Sp<Branch>> childBranches;
-#pragma endregion
 
-
-private:
-    std::list<Sp<Node>> components;
 
 public:
-    template <typename T> Sp<T> GetChild()
+    /// 获取指定类型的子结点
+    /// \tparam T
+    /// \return
+    template<typename T>
+    requires std::is_base_of_v<Node, T>
+    Sp<T> GetChild()
     {
-        for (auto each : components)
+        for (auto each: childNodes)
+        {
+            if (Sp<T> target = each->CastTo<T>())
+            {
+                return target;
+            }
+        }
+        for (auto each: childBranches)
         {
             if (Sp<T> target = each->CastTo<T>())
             {
@@ -39,7 +46,12 @@ public:
         return nullptr;
     }
 
-    template <typename T> Sp<T> GetChildOrAdd()
+    /// 获取指定类型的子结点，若不存在，则添加一个此节点并返回。
+    /// \tparam T
+    /// \return
+    template<typename T>
+    requires std::is_base_of_v<Node, T>
+    Sp<T> GetChildOrAdd()
     {
         Sp<T> node = GetChild<T>();
         if (node == nullptr)
@@ -49,7 +61,9 @@ public:
         return node;
     }
 
-    template <typename T> Sp<T> AddNode(std::string _name = "")
+    template<typename T>
+    requires std::is_base_of_v<Node, T>
+    Sp<T> AddNode(std::string _name = "")
     {
         Sp<T> newNode = Node::_createRaw<T>(_name);
         newNode->SetParent(CastTo<Branch>());
@@ -65,7 +79,9 @@ public:
     /// \tparam T
     /// \param _name
     /// \return
-    template <typename T> static Sp<T> Create(std::string _name = "")
+    template<typename T>
+    requires std::is_base_of_v<Branch, T>
+    static Sp<T> Create(std::string _name = "")
     {
         Sp<T> This = _createRaw<T>(_name);
         This->SetParent(CoreSystem::Instance()->root);

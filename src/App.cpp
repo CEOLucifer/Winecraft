@@ -54,6 +54,15 @@ void App::Run()
 
 void App::StartUser()
 {
+    // 摄像机
+    auto cameraBra = Branch::Create("camera");
+    auto camera = cameraBra->AddNode<Camera>();
+    //    camera->SetClearColor({1, 0, 0});
+    cameraBra->Position = {5, 50, 10};
+    cameraBra->Rotation = {-45, -135, 0};
+    auto cameraController = cameraBra->AddNode<CameraController>();
+    cameraController->camera = camera;
+
     BlockSystem::LoadInstance();
 //    Branch::Create<FPSWatcher>();
 
@@ -128,15 +137,7 @@ void App::StartUser()
 
 
 
-    // 摄像机
-    auto cameraObj = Branch::Create("camera");
-    auto camera = cameraObj->AddNode<Camera>();
-    camera->SetParent(cameraObj);
-    //    camera->SetClearColor({1, 0, 0});
-    cameraObj->Position = {5, 0, 10};
-    auto cameraController = cameraObj->AddNode<CameraController>();
-    cameraController->SetParent(cameraObj);
-    cameraController->camera = camera;
+
 
 
 
