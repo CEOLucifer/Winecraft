@@ -2,7 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
-#include "../../Resource/Resource.h"
+#include "Resource/Resource.h"
 
 class Shader : public Resource
 {

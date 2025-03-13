@@ -4,9 +4,9 @@
 #include <memory>
 #include <vector>
 #include "Resource/Resource.h"
-#include "Shader.h"
+#include "Render/Shader.h"
 #include "Typedef.h"
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 class Renderer;
 class Camera;
@@ -16,7 +16,7 @@ class Camera;
 class ShaderProgram : public Resource
 {
 private:
-    uint32_t id;
+    uint32_t id = 0;
 
 public:
     virtual ~ShaderProgram();
@@ -24,6 +24,8 @@ public:
     uint32_t GetID() { return id; }
 
     void OnCreated(const JsonDocument& doc) override;
+
+    void Use();
 
     // uniform工具函数
 
@@ -35,9 +37,4 @@ public:
     void SetVec4(const std::string& name, const glm::vec4& value);
     void SetVec3(const std::string& name, const glm::vec3& value);
     void SetVec2(const std::string& name, const glm::vec2& value);
-
-protected:
-    /// @brief 由子类重写。用于设置纹理位置。
-    ///
-    virtual void onSetTextureLocation() {};
 };

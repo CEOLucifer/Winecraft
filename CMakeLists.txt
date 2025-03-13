@@ -34,11 +34,8 @@ add_executable(LearnOpenGL
         src/Core/Node.cpp
         src/Core/Transform.cpp
         src/Block/Section.cpp
-        src/Render/Shader/ControlShaderProgram.cpp
-        src/Render/Shader/RealShaderProgram.cpp
-        src/Render/Shader/Shader.cpp
-        src/Render/Shader/ShaderProgram.cpp
-        src/Render/Shader/SkyboxShaderProgram.cpp
+        src/Render/Shader.cpp
+        src/Render/ShaderProgram.cpp
         include/Block/BlockRenderPass.h
         src/Block/BlockRenderPass.cpp
         include/Test/CameraController.h
@@ -50,7 +47,19 @@ add_executable(LearnOpenGL
         include/Mathf.h
         src/Mathf.cpp
         include/Creature/Creature.h
-        include/Creature/Player.h)
+        include/Creature/Player.h
+        include/UI/Control.h
+        src/UI/Control.cpp
+        include/UI/Image.h
+        include/UI/Label.h
+        include/UI/Button.h
+        include/UI/Canvas.h
+        include/UI/UIRenderPass.h
+        src/UI/Canvas.cpp
+        src/UI/UIRenderPass.cpp
+        include/UI/MeshControl.h
+        src/UI/MeshControl.cpp
+        src/UI/Image.cpp)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 
@@ -89,10 +98,28 @@ FetchContent_MakeAvailable(assimp)
 target_link_libraries(LearnOpenGL PRIVATE assimp)
 
 # arduinoJson
-include(FetchContent)
 FetchContent_Declare(ArduinoJson
     GIT_REPOSITORY https://github.com/bblanchon/ArduinoJson.git
     GIT_TAG        v7.3.0
 )
 FetchContent_MakeAvailable(ArduinoJson)
 target_link_libraries(LearnOpenGL PRIVATE ArduinoJson)
+
+# freetype
+#FetchContent_Declare(freetype
+#        GIT_REPOSITORY https://github.com/freetype/freetype
+#)
+#FetchContent_MakeAvailable(freetype)
+#target_link_libraries(LearnOpenGL PRIVATE freetype)
+
+## tgui
+## Set properties that will be used while building TGUI
+#set(BUILD_SHARED_LIBS OFF)      # Determines whether TGUI build a static or dynamic/shared library
+#set(TGUI_BACKEND GLFW_OPENGL3)  # Sets which backend TGUI will use
+#FetchContent_Declare(
+#        TGUI
+#        GIT_REPOSITORY https://github.com/texus/TGUI
+#        GIT_TAG v1.4.0  # Change this to wanted version
+#)
+#FetchContent_MakeAvailable(TGUI)
+#target_link_libraries(LearnOpenGL PRIVATE TGUI::TGUI)

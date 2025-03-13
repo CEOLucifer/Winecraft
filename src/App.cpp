@@ -5,7 +5,6 @@
 #include "Render/DirectionalLight.h"
 #include "Render/SpotLight.h"
 #include "GLFW/glfw3.h"
-#include "Render/Shader/RealShaderProgram.h"
 #include "stb/stb_image.h"
 #include "Render/RenderSystem.h"
 #include "Render/Camera.h"
@@ -17,6 +16,10 @@
 #include "Test/FPSWatcher.h"
 #include "Block/BlockSystem.h"
 #include "Mathf.h"
+#include "UI/Image.h"
+#include "Resource/Resource.h"
+#include "Render/Texture.h"
+#include "UI/UIRenderPass.h"
 
 using namespace std;
 
@@ -65,6 +68,12 @@ void App::StartUser()
 
     BlockSystem::LoadInstance();
 //    Branch::Create<FPSWatcher>();
+
+    Object::NewObject<UIRenderPass>();
+    auto imgBra = Branch::Create("ImageBra");
+    auto img = imgBra->AddNode<Image>();
+    img->SetTex(Resource::Load<Texture>("res/texture/container.json"));
+    img->SetSize({100, 100});
 
     //    auto mat_LightCube =
     //            Resource::Load<SingleColorMaterial>("res/material/lightCube.json");

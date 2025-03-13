@@ -16,8 +16,7 @@ class ShaderProgram;
 class RenderPass : public Object
 {
 public:
-    /// @brief shader程序
-    Sp<ShaderProgram> shaderProgram;
+
 
     // 模板测试相关
     bool EnableStencilTest = true;

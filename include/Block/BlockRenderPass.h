@@ -15,6 +15,8 @@ private:
 
     std::vector<glm::mat4> aModels;
 
+    Sp<ShaderProgram> shaderProgram;
+
 public:
     void OnObjectCreated() override;
 

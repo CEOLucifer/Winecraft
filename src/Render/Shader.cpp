@@ -1,7 +1,6 @@
 #include "glad/glad.h"
-#include "Render/Shader/Shader.h"
+#include "Render/Shader.h"
 #include "Debug/Debug.h"
-#include "../../../include/FileHelper.h"
 
 using namespace std;
 

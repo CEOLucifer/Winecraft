@@ -2,7 +2,7 @@
 #include "Block/BlockRenderPass.h"
 #include <vector>
 #include "Core/Transform.h"
-#include "Render/Shader/ShaderProgram.h"
+#include "Render/ShaderProgram.h"
 #include "Render/Camera.h"
 #include "Core/Branch.h"
 #include "Render/Texture.h"
@@ -117,8 +117,6 @@ void BlockRenderPass::OnObjectCreated()
 
     shaderProgram =
             Resource::Load<ShaderProgram>("res/shaderProgram/block.json");
-    shaderProgram->SetInt("texCube", 0);
-
 
     initInstance_vbo();
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Mesh.h"
-#include "../Vertex2.h"
+#include "Render/Vertex2.h"
 #include <vector>
 
 class Mesh2 : public Mesh

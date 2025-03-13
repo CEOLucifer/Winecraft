@@ -1,5 +1,9 @@
 {
-    "className": "RealShaderProgram",
-    "vert": "res/shader/vert0.json",
-    "frag": "res/shader/real.json"
+  "className": "RealShaderProgram",
+  "vert": "res/shader/vert0.json",
+  "frag": "res/shader/real.json",
+  "samplers": [
+    "material.diffuse",
+    "material.specular"
+  ]
 }

@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 
+/// 提供常用数学函数
 class Mathf
 {
     friend class App;

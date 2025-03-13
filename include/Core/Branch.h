@@ -3,7 +3,7 @@
 #include <list>
 #include "Node.h"
 #include "Transform.h"
-#include "../Typedef.h"
+#include "Typedef.h"
 #include "glm/glm.hpp"
 
 /// @brief 分支
@@ -11,6 +11,7 @@
 class Branch : public Node, public Transform
 {
     friend class CoreSystem;
+
     friend class Node;
 
 private:
@@ -69,6 +70,16 @@ public:
         newNode->SetParent(CastTo<Branch>());
         newNode->OnAdded();
         return newNode;
+    }
+
+    const std::list<Sp<Node>>& GetChildNodes()
+    {
+        return childNodes;
+    }
+
+    const std::list<Sp<Branch>>& GetChildBranches()
+    {
+        return childBranches;
     }
 
 private:

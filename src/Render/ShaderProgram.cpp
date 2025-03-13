@@ -1,9 +1,6 @@
-#include "Render/Shader/ShaderProgram.h"
-#include "Render/Shader/Shader.h"
-#include "glm/gtc/type_ptr.hpp"
-#include <memory>
 #include "glad/glad.h"
-#include "Debug/Debug.h"
+#include "Render/ShaderProgram.h"
+#include "glm/gtc/type_ptr.hpp"
 
 using namespace std;
 
@@ -22,7 +19,7 @@ void ShaderProgram::SetInt(const std::string& name, int value) const
 void ShaderProgram::SetBool(const std::string& name, bool value) const
 {
     glUseProgram(id);
-    glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value);
+    glUniform1i(glGetUniformLocation(id, name.c_str()), (int) value);
 }
 
 void ShaderProgram::SetMat4(const std::string& name, const glm::mat4& value)
@@ -60,8 +57,8 @@ void ShaderProgram::SetVec2(const std::string& name, const glm::vec2& value)
                  glm::value_ptr(value));
 }
 
-ShaderProgram::~ShaderProgram() { glDeleteProgram(id); }
-
+ShaderProgram::~ShaderProgram()
+{ glDeleteProgram(id); }
 
 
 void ShaderProgram::OnCreated(const JsonDocument& doc)
@@ -93,9 +90,23 @@ void ShaderProgram::OnCreated(const JsonDocument& doc)
         {
             glGetProgramInfoLog(id, 512, NULL, infoLog);
             Debug::LogError(format(
-                "ERROR::SHADER::shaderProgram::LINK_FAILED\n{}", infoLog));
+                    "ERROR::SHADER::shaderProgram::LINK_FAILED\n{}", infoLog));
         }
     }
-    
-    onSetTextureLocation();
+
+    // 设置uniform采样器索引
+    auto samplers = doc["samplers"];
+    if (!samplers.isNull())
+    {
+        JsonArrayConst ar = samplers;
+        for (int i = 0; i < ar.size(); ++i)
+        {
+            SetInt(ar[i].as<string>(), i);
+        }
+    }
+}
+
+void ShaderProgram::Use()
+{
+    glUseProgram(id);
 }

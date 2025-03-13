@@ -1,5 +1,8 @@
 {
-    "className": "SkyboxShaderProgram",
-    "vert": "res/shader/skybox_vert.json",
-    "frag": "res/shader/skybox_frag.json"
+  "className": "SkyboxShaderProgram",
+  "vert": "res/shader/skybox_vert.json",
+  "frag": "res/shader/skybox_frag.json",
+  "samplers": [
+    "skybox"
+  ]
 }
