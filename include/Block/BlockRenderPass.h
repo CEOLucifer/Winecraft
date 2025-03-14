@@ -3,6 +3,8 @@
 #include "Render/RenderPass.h"
 #include "Singleton.h"
 #include "Block/Section.h"
+#include <glm/glm.hpp>
+#include <vector>
 
 /// 方块渲染通道
 class BlockRenderPass : public RenderPass

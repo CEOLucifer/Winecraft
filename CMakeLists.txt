@@ -66,11 +66,7 @@ target_include_directories(LearnOpenGL PRIVATE ./include)
 include(FetchContent)
 
 # glfw
-FetchContent_Declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw
-)
-FetchContent_MakeAvailable(glfw)
+find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(LearnOpenGL PRIVATE glfw)
 
 # glad
@@ -82,20 +78,12 @@ target_include_directories(LearnOpenGL PRIVATE dep/stb/include)
 target_sources(LearnOpenGL PRIVATE dep/stb/src/stb_image.cpp)
 
 # glm
-FetchContent_Declare(
-    glm
-    GIT_REPOSITORY https://github.com/g-truc/glm
-)
-FetchContent_MakeAvailable(glm)
-target_link_libraries(LearnOpenGL PRIVATE glm)
+find_package(glm CONFIG REQUIRED)
+target_link_libraries(LearnOpenGL PRIVATE glm::glm)
 
 # assimp
-FetchContent_Declare(
-    assimp
-    GIT_REPOSITORY https://github.com/assimp/assimp
-)
-FetchContent_MakeAvailable(assimp)
-target_link_libraries(LearnOpenGL PRIVATE assimp)
+find_package(assimp CONFIG REQUIRED)
+target_link_libraries(LearnOpenGL PRIVATE assimp::assimp)
 
 # arduinoJson
 FetchContent_Declare(ArduinoJson
@@ -105,21 +93,3 @@ FetchContent_Declare(ArduinoJson
 FetchContent_MakeAvailable(ArduinoJson)
 target_link_libraries(LearnOpenGL PRIVATE ArduinoJson)
 
-# freetype
-#FetchContent_Declare(freetype
-#        GIT_REPOSITORY https://github.com/freetype/freetype
-#)
-#FetchContent_MakeAvailable(freetype)
-#target_link_libraries(LearnOpenGL PRIVATE freetype)
-
-## tgui
-## Set properties that will be used while building TGUI
-#set(BUILD_SHARED_LIBS OFF)      # Determines whether TGUI build a static or dynamic/shared library
-#set(TGUI_BACKEND GLFW_OPENGL3)  # Sets which backend TGUI will use
-#FetchContent_Declare(
-#        TGUI
-#        GIT_REPOSITORY https://github.com/texus/TGUI
-#        GIT_TAG v1.4.0  # Change this to wanted version
-#)
-#FetchContent_MakeAvailable(TGUI)
-#target_link_libraries(LearnOpenGL PRIVATE TGUI::TGUI)

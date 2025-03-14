@@ -4,6 +4,7 @@
 #include <vector>
 #include "Block/Section.h"
 #include <glm/glm.hpp>
+#include <optional>
 
 class BlockSystem : public Singleton<BlockSystem>
 {
