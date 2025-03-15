@@ -63,7 +63,6 @@ void App::StartUser()
 {
     BlockSystem::LoadInstance();
 
-
     // 摄像机
     auto cameraBra = Branch::Create("camera");
     auto camera = cameraBra->AddNode<Camera>();
@@ -79,23 +78,24 @@ void App::StartUser()
 
     auto btnBra = Branch::Create("btnBra");
     auto btn = btnBra->AddNode<Button>();
-    btnBra->Scale = {100, 100, 0};
+    btnBra->Position.x = 300;
+    btnBra->Scale = {100, 60, 0};
 //    btn->OnHovering([]()
 //                    {
 //                        Debug::Log("hovering");
 //                    });
     btn->OnDown([]()
-                    {
-                        Debug::Log("onDown");
-                    });
-
-    btn->OnUp([]()
                 {
-                    Debug::Log("onUp");
+                    Debug::Log("onDown");
                 });
 
+    btn->OnUp([]()
+              {
+                  Debug::Log("onUp");
+              });
+
     auto img = btnBra->AddNode<Image>();
-    img->SetTex(Resource::Load<Texture>("res/texture/container.json"));
+    img->SetTex(Resource::Load<Texture>("res/texture/btn.json"));
 
 
 

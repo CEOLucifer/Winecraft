@@ -11,12 +11,13 @@ class BlockSystem : public Singleton<BlockSystem>
     friend class BlockRenderPass;
 
 public:
-    static constexpr uint32_t Size = 3;
+    static constexpr uint32_t Size = 6;
 
 private:
     std::vector<std::vector<Section>> sections;
 
     glm::i32vec3 systemCoords = {0, 0, 0};
+
 
 public:
     void OnLoad() override;
@@ -39,6 +40,7 @@ public:
     /// 获取指定世界坐标的区块
     std::optional<Block> GetBlock(glm::i32vec3 worldCoords);
 
+
 private:
     /// 初始化sections，设置区块数量
     void initSectionsSize();
@@ -46,6 +48,6 @@ private:
     /// 柏林噪声
     void generateRandom_Berlin();
 
-    /// 双线性插值
-    void generateRandom_Bilinear();
+    /// Value噪声
+    void generateRandom_Value();
 };

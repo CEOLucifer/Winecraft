@@ -10,11 +10,9 @@ void BlockSystem::OnLoad()
 {
     initSectionsSize();
 //    generateRandom_Berlin();
-    generateRandom_Bilinear();
+    generateRandom_Value();
     Object::NewObject<BlockRenderPass>();
 
-    // 测试
-    auto b = GetBlock({96, 96, 96});
 }
 
 void BlockSystem::generateRandom_Berlin()
@@ -112,27 +110,16 @@ void BlockSystem::initSectionsSize()
     }
 }
 
-void BlockSystem::generateRandom_Bilinear()
+void BlockSystem::generateRandom_Value()
 {
-    // 随机四顶点高度
-    float verticeHeight[Size + 1][Size + 1];
-    for (int x = 0; x < Size + 1; ++x)
-    {
-        for (int z = 0; z < Size + 1; ++z)
-        {
-            verticeHeight[x][z] = Mathf::RandomFloatRange(1, Section::Height);
-        }
-    }
-
     for (int xx = 0; xx < Size; ++xx)
     {
         for (int zz = 0; zz < Size; ++zz)
         {
-            // 此晶格的四顶点高度
-            float y1 = verticeHeight[xx][zz + 1];
-            float y2 = verticeHeight[xx + 1][zz + 1];
-            float y3 = verticeHeight[xx][zz];
-            float y4 = verticeHeight[xx + 1][zz];
+            uint32_t y1 = Mathf::GetHeight({xx, zz + 1});
+            uint32_t y2 = Mathf::GetHeight({xx + 1, zz + 1});
+            uint32_t y3 = Mathf::GetHeight({xx, zz});
+            uint32_t y4 = Mathf::GetHeight({xx + 1, zz});
 
             for (int x = 0; x < Section::Size; ++x)
             {
@@ -143,9 +130,9 @@ void BlockSystem::generateRandom_Bilinear()
                     float a = (float) x / Section::Size;
                     float b = (float) z / Section::Size;
 
-                    height = (1 - a) * b * y1 + a * b * y2 + (1 - a) * (1 - b) * y3 + a * (1 - b) * y4;
+                    height = lerp(lerp(y3, y4, Mathf::Fade(a)), lerp(y1, y2, Mathf::Fade(a)), Mathf::Fade(b));
 
-                    for (int y = 0; y < height; ++y)
+                    for (uint32_t y = 0; y < height; ++y)
                     {
                         sections[xx][zz].Blocks[x][y][z] = 1;
                     }
@@ -154,3 +141,5 @@ void BlockSystem::generateRandom_Bilinear()
         }
     }
 }
+
+
