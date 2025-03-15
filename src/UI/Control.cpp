@@ -23,3 +23,9 @@ void Control::SetSize(glm::vec2 value)
         parent->Scale.y = value.y;
     }
 }
+
+glm::vec2 Control::GetPos()
+{
+    Sp<Branch> parent = GetParent().lock();
+    return {parent->Position.x, parent->Position.y};
+}

@@ -2,6 +2,8 @@
 
 #include "GLFW/glfw3.h"
 #include "glm/glm.hpp"
+#include "EMouseButton.h"
+#include "EMouseAction.h"
 
 class GLFWwindow;
 
@@ -17,22 +19,27 @@ private:
     static glm::vec2 curCursorPos;
     static glm::vec2 deltaCursorPos;
 
+    static EMouseAction leftAction;
+    static EMouseAction middleAction;
+    static EMouseAction rightAction;
+
 public:
     static bool GetKey(int key, int type)
     {
         return glfwGetKey(window, key) == type;
     }
 
-    static glm::vec2 GetCursorPos() { return curCursorPos; }
+    static glm::vec2 GetCursorPos()
+    { return curCursorPos; }
 
     static glm::vec2 GetCursorDelta();
 
+    static bool GetMouse(EMouseButton button, EMouseAction action);
+
+    static void ResetMouseActions();
+
 private:
-    static void init(GLFWwindow* value)
-    {
-        window = value;
-        lastCursorPos = curCursorPos = reallyGetCursorPos();
-    }
+    static void init(GLFWwindow* value);
 
     static void record()
     {
@@ -51,6 +58,6 @@ private:
         glfwGetWindowSize(window, &w, &h);
         glfwGetCursorPos(window, &x, &y);
 
-        return glm::vec2((float)x, (float)h - (float)y);
+        return glm::vec2((float) x - (float) w / 2, (float) h - (float) y - (float) h / 2);
     }
 };

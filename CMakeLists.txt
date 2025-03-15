@@ -59,7 +59,10 @@ add_executable(LearnOpenGL
         src/UI/UIRenderPass.cpp
         include/UI/MeshControl.h
         src/UI/MeshControl.cpp
-        src/UI/Image.cpp)
+        src/UI/Image.cpp
+        src/UI/Button.cpp
+        include/EMouseButton.h
+        include/EMouseAction.h)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 

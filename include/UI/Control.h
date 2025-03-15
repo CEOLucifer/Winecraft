@@ -11,4 +11,6 @@ public:
     glm::vec2 GetSize();
 
     void SetSize(glm::vec2 value);
+
+    glm::vec2 GetPos();
 };

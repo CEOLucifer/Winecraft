@@ -20,6 +20,7 @@
 #include "Resource/Resource.h"
 #include "Render/Texture.h"
 #include "UI/UIRenderPass.h"
+#include "UI/Button.h"
 
 using namespace std;
 
@@ -43,8 +44,11 @@ void App::Run()
 
         CoreSystem::Instance()->UpdateAll();
 
+        Input::ResetMouseActions();
+
         // 检查并调用事件
         glfwPollEvents();
+
 
         // 渲染
         RenderSystem::Instance()->Render();
@@ -57,6 +61,9 @@ void App::Run()
 
 void App::StartUser()
 {
+    BlockSystem::LoadInstance();
+
+
     // 摄像机
     auto cameraBra = Branch::Create("camera");
     auto camera = cameraBra->AddNode<Camera>();
@@ -66,14 +73,36 @@ void App::StartUser()
     auto cameraController = cameraBra->AddNode<CameraController>();
     cameraController->camera = camera;
 
-    BlockSystem::LoadInstance();
+    Object::NewObject<UIRenderPass>();
 //    Branch::Create<FPSWatcher>();
 
-    Object::NewObject<UIRenderPass>();
-    auto imgBra = Branch::Create("ImageBra");
-    auto img = imgBra->AddNode<Image>();
+
+    auto btnBra = Branch::Create("btnBra");
+    auto btn = btnBra->AddNode<Button>();
+    btnBra->Scale = {100, 100, 0};
+//    btn->OnHovering([]()
+//                    {
+//                        Debug::Log("hovering");
+//                    });
+    btn->OnDown([]()
+                    {
+                        Debug::Log("onDown");
+                    });
+
+    btn->OnUp([]()
+                {
+                    Debug::Log("onUp");
+                });
+
+    auto img = btnBra->AddNode<Image>();
     img->SetTex(Resource::Load<Texture>("res/texture/container.json"));
-    img->SetSize({100, 100});
+
+
+
+//    auto imgBra = Branch::Create("ImageBra");
+//    auto img = imgBra->AddNode<Image>();
+//    img->SetTex(Resource::Load<Texture>("res/texture/container.json"));
+//    img->SetSize({100, 100});
 
     //    auto mat_LightCube =
     //            Resource::Load<SingleColorMaterial>("res/material/lightCube.json");
