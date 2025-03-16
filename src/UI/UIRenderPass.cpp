@@ -38,6 +38,7 @@ void UIRenderPass::OnObjectCreated()
     RenderPass::OnObjectCreated();
 
     EnableDepthTest = false;
+    EnableBlend = true;
 
     shaderProgram =
             Resource::Load<ShaderProgram>("res/shaderProgram/control.json");

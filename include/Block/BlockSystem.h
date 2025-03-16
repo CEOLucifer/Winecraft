@@ -11,7 +11,7 @@ class BlockSystem : public Singleton<BlockSystem>
     friend class BlockRenderPass;
 
 public:
-    static constexpr uint32_t Size = 6;
+    static constexpr uint32_t Size = 16;
 
 private:
     std::vector<std::vector<Section>> sections;
@@ -50,4 +50,6 @@ private:
 
     /// Value噪声
     void generateRandom_Value();
+
+    void generateRandom_Value2();
 };

@@ -8,7 +8,7 @@
 class Section
 {
 public:
-    static constexpr uint32_t Size = 32;
+    static constexpr uint32_t Size = 16;
     static constexpr uint32_t Height = 32;
 
 public:

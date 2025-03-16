@@ -10,69 +10,59 @@ void BlockSystem::OnLoad()
 {
     initSectionsSize();
 //    generateRandom_Berlin();
-    generateRandom_Value();
+    generateRandom_Value2();
     Object::NewObject<BlockRenderPass>();
 
 }
 
 void BlockSystem::generateRandom_Berlin()
 {
-    // 柏林噪声生成高度
-
-    // 随机梯度向量
-    glm::vec2 grads[6][6];
-    for (int x = 0; x < 6; ++x)
-    {
-        for (int z = 0; z < 6; ++z)
-        {
-            grads[x][z] = Mathf::RandomDir2D();
-        }
-    }
-
     // 梯度向量和距离向量点乘，即高度
-    // (i, j) 是区块坐标
-    for (int i = 0; i < 5; ++i)
+    // (xx, zz) 是区块坐标
+    for (int xx = 0; xx < Size; ++xx)
     {
-        for (int j = 0; j < 5; ++j)
+        for (int zz = 0; zz < Size; ++zz)
         {
             // 梯度向量
-            glm::vec2 grad_1 = grads[i][j];
-            glm::vec2 grad_2 = grads[i + 1][j];
-            glm::vec2 grad_3 = grads[i + 1][j + 1];
-            glm::vec2 grad_4 = grads[i][j + 1];
-
-            // 距离向量。总是选取晶格中点
-            glm::vec2 dist_1 = {0.5, 0.5};
-            glm::vec2 dist_2 = {-0.5, 0.5};
-            glm::vec2 dist_3 = {-0.5, -0.5};
-            glm::vec2 dist_4 = {0.5, -0.5};
-
-            float influence_1 = glm::dot(dist_1, grad_1);
-            float influence_2 = glm::dot(dist_2, grad_2);
-            float influence_3 = glm::dot(dist_3, grad_3);
-            float influence_4 = glm::dot(dist_4, grad_4);
-
+            glm::vec2 grad_1 = Mathf::GetGrad({xx, zz + 1});
+            glm::vec2 grad_2 = Mathf::GetGrad({xx + 1, zz + 1});
+            glm::vec2 grad_3 = Mathf::GetGrad({xx, zz});
+            glm::vec2 grad_4 = Mathf::GetGrad({xx + 1, zz});
 
             // (x, z)是相对区块坐标
-            for (int x = 0; x < 32; ++x)
+            for (int x = 0; x < Section::Size; ++x)
             {
-                for (int z = 0; z < 32; ++z)
+                for (int z = 0; z < Section::Size; ++z)
                 {
-                    float height = 0;
+                    uint32_t height = 0;
 
-                    float a = std::lerp(influence_1, influence_2, (float) x / 32);
-                    float b = std::lerp(influence_3, influence_4, (float) x / 32);
-                    float c = std::lerp(a, b, (float) z / 32);
+                    float xa = (float) x / Section::Size;
+                    float za = (float) z / Section::Size;
 
-                    // 计算高度
-                    height = (c + 0.5f) * 32;
+                    // 距离向量
+                    glm::vec2 dist_1 = {xa, za - 1};
+                    glm::vec2 dist_2 = {xa - 1, za - 1};
+                    glm::vec2 dist_3 = {xa, za};
+                    glm::vec2 dist_4 = {xa - 1, za};
 
-                    height = std::clamp(height, 1.0f, 32.0f);
+                    float influence_1 = glm::dot(grad_1, dist_1);
+                    float influence_2 = glm::dot(grad_2, dist_2);
+                    float influence_3 = glm::dot(grad_3, dist_3);
+                    float influence_4 = glm::dot(grad_4, dist_4);
+
+                    float a = std::lerp(influence_1, influence_2, xa);
+                    float b = std::lerp(influence_3, influence_4, xa);
+                    float c = std::lerp(b, a, za);
+
+                    // 计算高度，并限制在合理范围内
+                    float height_float = abs(c) * Section::Height;
+                    height = static_cast<uint32_t>(height_float);
+
 
                     // 以height填充section
-                    for (int y = 0; y < height; ++y)
+                    for (uint32_t y = 0; y < height; ++y)
                     {
-                        sections[i][j].Blocks[x][y][z] = 1;
+                        sections[xx][zz].Blocks[x][y][z] = 1;
                     }
                 }
             }
@@ -116,6 +106,7 @@ void BlockSystem::generateRandom_Value()
     {
         for (int zz = 0; zz < Size; ++zz)
         {
+            // 振幅
             uint32_t y1 = Mathf::GetHeight({xx, zz + 1});
             uint32_t y2 = Mathf::GetHeight({xx + 1, zz + 1});
             uint32_t y3 = Mathf::GetHeight({xx, zz});
@@ -142,4 +133,32 @@ void BlockSystem::generateRandom_Value()
     }
 }
 
+
+void BlockSystem::generateRandom_Value2()
+{
+    for (int xx = 0; xx < Size; ++xx)
+    {
+        for (int zz = 0; zz < Size; ++zz)
+        {
+            for (int x = 0; x < Section::Size; ++x)
+            {
+                for (int z = 0; z < Section::Size; ++z)
+                {
+                    float height = 0;
+
+                    height += Mathf::Noise(6, 8, 0, {xx * Section::Size + x, zz * Section::Size + z});
+                    height += Mathf::Noise(32, 4, 0, {xx * Section::Size + x, zz * Section::Size + z});
+                    height += Mathf::Noise(3, 1, -2, {xx * Section::Size + x, zz * Section::Size + z});
+                    height += Mathf::Noise(2, 1, -2, {xx * Section::Size + x, zz * Section::Size + z});
+
+
+                    for (uint32_t y = 0; y < height && y < Section::Height; ++y)
+                    {
+                        sections[xx][zz].Blocks[x][y][z] = 1;
+                    }
+                }
+            }
+        }
+    }
+}
 

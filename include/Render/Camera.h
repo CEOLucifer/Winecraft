@@ -13,7 +13,7 @@ private:
     float width = 800;
     float height = 600;
     float near = 0.1f;
-    float far = 100.0f;
+    float far = 1000.0f;
     float fov = 45.0f;
 
     /// @brief 渲染的目标帧缓冲
