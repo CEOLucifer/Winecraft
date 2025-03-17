@@ -11,9 +11,9 @@
 #include "InputSystem.h"
 #include "TimeSystem.h"
 #include "Block/Section.h"
-#include "Test/CameraController.h"
+#include "Common/CameraController.h"
 #include "Block/BlockRenderPass.h"
-#include "Test/FPSWatcher.h"
+#include "Common/FPSWatcher.h"
 #include "Block/BlockSystem.h"
 #include "Mathf.h"
 #include "UI/Image.h"
@@ -67,10 +67,9 @@ void App::StartUser()
     auto cameraBra = Branch::Create("camera");
     auto camera = cameraBra->AddNode<Camera>();
     //    camera->SetClearColor({1, 0, 0});
-    cameraBra->Position = {5, 50, 10};
+    cameraBra->Position = {5, 128, 10};
     cameraBra->Rotation = {-45, -135, 0};
     auto cameraController = cameraBra->AddNode<CameraController>();
-    cameraController->camera = camera;
 
     Object::NewObject<UIRenderPass>();
 //    Branch::Create<FPSWatcher>();

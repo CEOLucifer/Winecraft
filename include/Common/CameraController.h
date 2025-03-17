@@ -13,5 +13,7 @@ public:
     float cursorSpeed = 0.15;
 
 public:
+    void OnAdded() override;
+
     void Update() override;
 };

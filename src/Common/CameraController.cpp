@@ -1,4 +1,4 @@
-#include "Test/CameraController.h"
+#include "Common/CameraController.h"
 #include "Render/Camera.h"
 #include "GLFW/glfw3.h"
 #include "InputSystem.h"
@@ -10,7 +10,12 @@ using namespace std;
 
 void CameraController::Update()
 {
-    glm::vec3 posDelta = {};
+    if (!camera)
+    {
+        return;
+    }
+
+    glm::vec3 posDelta = {0, 0, 0};
 
     auto parent = camera->GetParent().lock();
 
@@ -23,20 +28,25 @@ void CameraController::Update()
     if (Input::GetKey(GLFW_KEY_D, GLFW_PRESS))
         posDelta += parent->GetRight() * cameraSpeed;
     posDelta *= Time::GetDeltaTime();
-    
+
     if (Input::GetKey(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS))
     {
         posDelta *= 3;
     }
 
     parent->Position += posDelta;
-    
+
     glm::vec2 cursorDelta =
-    Input::GetCursorDelta() * cursorSpeed * Time::GetDeltaTime();
+            Input::GetCursorDelta() * cursorSpeed * Time::GetDeltaTime();
     parent->Rotation.x =
-    clamp(parent->Rotation.x + cursorDelta.y, -90.0f, 90.0f);
+            clamp(parent->Rotation.x + cursorDelta.y, -90.0f, 90.0f);
     parent->Rotation.y = parent->Rotation.y - cursorDelta.x;
-    
-    
+
+
     // 滚轮
+}
+
+void CameraController::OnAdded()
+{
+    camera = GetParent().lock()->GetChild<Camera>();
 }

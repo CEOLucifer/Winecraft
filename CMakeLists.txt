@@ -9,7 +9,7 @@ project(LearnOpenGL)
 
 add_executable(LearnOpenGL
         src/App.cpp
-        src/CameraController.cpp
+        src/Common/CameraController.cpp
         src/FileHelper.cpp
         src/InputSystem.cpp
         src/main.cpp
@@ -38,9 +38,9 @@ add_executable(LearnOpenGL
         src/Render/ShaderProgram.cpp
         include/Block/BlockRenderPass.h
         src/Block/BlockRenderPass.cpp
-        include/Test/CameraController.h
-        include/Test/FPSWatcher.h
-        src/Test/FPSWatcher.cpp
+        include/Common/CameraController.h
+        include/Common/FPSWatcher.h
+        src/Common/FPSWatcher.cpp
         include/Block/BlockSystem.h
         src/Block/BlockSystem.cpp
         include/Test/BerlinTest.h
