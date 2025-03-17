@@ -9,16 +9,13 @@ class Section
 {
 public:
     static constexpr uint32_t Size = 16;
-    static constexpr uint32_t Height = 32;
+    static constexpr uint32_t Height = 128;
 
 public:
     std::array<std::array<std::array<Block, Size>, Height>, Size> Blocks;
 
     /// 世界坐标
     glm::vec3 Coords;
-
-    /// 四角顶点生成高度。用于双线性插值，生成地形。
-    float verticeHeights[4];
 
 public:
     void FillWith(Block block);

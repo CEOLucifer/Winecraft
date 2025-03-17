@@ -11,6 +11,8 @@ private:
     static int seed;
 
 public:
+    static void SetSeed(int value);
+
     static int RandomIntRange(int min, int max);
 
     static float Random01();
@@ -22,6 +24,8 @@ public:
     static int Hash21(glm::i32vec2 x);
 
     static glm::i32vec2 Hash22(glm::i32vec2 x);
+
+    static float Hash_2i_1f01(glm::i32vec2 in);
 
     /// 获取指定晶格顶点处的高度
     /// \param coords
@@ -51,11 +55,12 @@ public:
 
     /// 获取指定世界坐标下的y值
     /// \param A 振幅。
-    /// \param lsc 晶格宽度。相当于周期。
+    /// \param lw 晶格宽度。相当于周期。
     /// \param h 整体高度抬升值。
     /// \param cor 世界xz坐标
-    static float Noise(float A, uint32_t lsc, float h, glm::i32vec2 cor);
+    static float Noise(float A, uint32_t lw, float h, glm::i32vec2 cor);
 
 private:
+    /// 初始化，用于配置种子
     static void init();
 };

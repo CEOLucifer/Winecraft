@@ -28,9 +28,8 @@ glm::vec2 Mathf::RandomDir2D()
 
 void Mathf::init()
 {
-    std::srand(std::time(0));
-//    seed = std::rand();
-    seed = 28490;
+//    SetSeed(std::time(0));
+    SetSeed(666666);
     Debug::Log(seed);
 }
 
@@ -106,41 +105,44 @@ float Mathf::Cha(glm::vec2 cor, glm::vec4 ys)
     return res;
 }
 
-float Mathf::Noise(float A, uint32_t lsc, float h, glm::i32vec2 cor)
+float Mathf::Noise(float A, uint32_t lw, float h, glm::i32vec2 cor)
 {
     float res;
 
-    // 大晶格方块宽度
-    uint32_t blbw = lsc * Section::Size;
-
-    // 大晶格内标准化坐标
-    glm::vec2 blnCor = {
-            cor.x % blbw / (float) blbw,
-            cor.y % blbw / (float) blbw
+    // 晶格新坐标
+    glm::i32vec2 q = {
+            cor.x / lw,
+            cor.y / lw
     };
 
-    // 大晶格 晶格坐标
-    glm::i32vec2 blCor = {
-            cor.x / blbw * lsc,
-            cor.y / blbw * lsc
+    // 晶格内标准化坐标
+    glm::vec2 lnCor = {
+            cor.x % lw / (float) lw,
+            cor.y % lw / (float) lw
     };
 
-    // 大晶格四顶点 晶格坐标
-    glm::i32vec2 blfvs[4] = {
-            {blCor.x,       blCor.y + lsc},
-            {blCor.x + lsc, blCor.y + lsc},
-            {blCor.x,       blCor.y},
-            {blCor.x + lsc, blCor.y},
+    // 晶格 世界坐标
+    glm::i32vec2 lCor = {
+            q.x * lw,
+            q.y * lw
+    };
+
+    // 晶格四顶点 世界坐标
+    glm::i32vec2 lfvs[4] = {
+            {lCor.x,      lCor.y + lw},
+            {lCor.x + lw, lCor.y + lw},
+            {lCor.x,      lCor.y},
+            {lCor.x + lw, lCor.y},
     };
 
     // 晶格四顶点高度
     glm::vec4 lfv;
-    lfv[0] = GetY(blfvs[0]);
-    lfv[1] = GetY(blfvs[1]);
-    lfv[2] = GetY(blfvs[2]);
-    lfv[3] = GetY(blfvs[3]);
+    lfv[0] = GetY(lfvs[0]);
+    lfv[1] = GetY(lfvs[1]);
+    lfv[2] = GetY(lfvs[2]);
+    lfv[3] = GetY(lfvs[3]);
 
-    res = Cha(blnCor, lfv);
+    res = Cha(lnCor, lfv);
     res *= A;
     res += h;
     return res;
@@ -148,5 +150,22 @@ float Mathf::Noise(float A, uint32_t lsc, float h, glm::i32vec2 cor)
 
 float Mathf::GetY(glm::i32vec2 cor)
 {
-    return ((float) (Hash21(cor) % 32)) / 32;
+    return Hash_2i_1f01(cor);
+}
+
+void Mathf::SetSeed(int value)
+{
+    seed = value;
+    std::srand(value);
+}
+
+float Mathf::Hash_2i_1f01(glm::i32vec2 in)
+{
+    // 一个简单的哈希算法，将输入组合并使用种子
+    uint32_t hash = static_cast<uint32_t>(in.x) * 73856093;
+    hash ^= static_cast<uint32_t>(in.y) * 19349663;
+    hash ^= static_cast<uint32_t>(seed) * 83492791;
+
+    // 使用哈希值生成一个 0 到 1 之间的浮点数
+    return static_cast<float>(hash % 1000000) / 1000000.0f;
 }
