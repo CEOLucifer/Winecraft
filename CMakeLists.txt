@@ -69,7 +69,8 @@ add_executable(LearnOpenGL
         include/Aggre/List.h
         include/Std/Opt.h
         include/Std/Basic.h
-        include/Aggre/Array.h)
+        include/Aggre/Array.h
+        include/Std/String.h)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 

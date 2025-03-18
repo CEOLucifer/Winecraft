@@ -1,13 +1,12 @@
-﻿#include "../include/FileHelper.h"
+﻿#include "FileHelper.h"
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <string>
 
 using namespace std;
 
-string FileHelper::ReadFile(const string& path)
+String FileHelper::ReadFile(const String& path)
 {
     std::ifstream file(path);
     if (!file.is_open())
