@@ -5,17 +5,18 @@
 #include "Block/Section.h"
 #include <glm/glm.hpp>
 #include <vector>
+#include "Aggre/Vec.h"
 
 /// 方块渲染通道
 class BlockRenderPass : public RenderPass
 {
 private:
-    uint32_t vao = 0;
-    uint32_t vbo = 0;
-    uint32_t ebo = 0;
-    uint32_t instance_vbo = 0;
+    u32 vao = 0;
+    u32 vbo = 0;
+    u32 ebo = 0;
+    u32 instance_vbo = 0;
 
-    std::vector<glm::mat4> aModels;
+    Vec<glm::mat4> aModels;
 
     Sp<ShaderProgram> shaderProgram;
 

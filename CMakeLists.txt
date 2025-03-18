@@ -62,7 +62,14 @@ add_executable(LearnOpenGL
         src/UI/Image.cpp
         src/UI/Button.cpp
         include/EMouseButton.h
-        include/EMouseAction.h)
+        include/EMouseAction.h
+        include/Block/SectionsCenter.h
+        src/Block/SectionsCenter.cpp
+        include/Aggre/Vec.h
+        include/Aggre/List.h
+        include/Std/Opt.h
+        include/Std/Basic.h
+        include/Aggre/Array.h)
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
 

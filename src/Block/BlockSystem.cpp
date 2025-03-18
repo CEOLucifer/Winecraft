@@ -34,7 +34,7 @@ void BlockSystem::generateRandom_Berlin()
             {
                 for (int z = 0; z < Section::Size; ++z)
                 {
-                    uint32_t height = 0;
+                    u32 height = 0;
 
                     float xa = (float) x / Section::Size;
                     float za = (float) z / Section::Size;
@@ -60,7 +60,7 @@ void BlockSystem::generateRandom_Berlin()
 
 
                     // 以height填充section
-                    for (uint32_t y = 0; y < height; ++y)
+                    for (u32 y = 0; y < height; ++y)
                     {
                         sections[xx][zz].Blocks[x][y][z] = 1;
                     }
@@ -107,10 +107,10 @@ void BlockSystem::generateRandom_Value()
         for (int zz = 0; zz < Size; ++zz)
         {
             // 振幅
-            uint32_t y1 = Mathf::GetHeight({xx, zz + 1});
-            uint32_t y2 = Mathf::GetHeight({xx + 1, zz + 1});
-            uint32_t y3 = Mathf::GetHeight({xx, zz});
-            uint32_t y4 = Mathf::GetHeight({xx + 1, zz});
+            u32 y1 = Mathf::GetHeight({xx, zz + 1});
+            u32 y2 = Mathf::GetHeight({xx + 1, zz + 1});
+            u32 y3 = Mathf::GetHeight({xx, zz});
+            u32 y4 = Mathf::GetHeight({xx + 1, zz});
 
             for (int x = 0; x < Section::Size; ++x)
             {
@@ -123,7 +123,7 @@ void BlockSystem::generateRandom_Value()
 
                     height = lerp(lerp(y3, y4, Mathf::Fade(a)), lerp(y1, y2, Mathf::Fade(a)), Mathf::Fade(b));
 
-                    for (uint32_t y = 0; y < height; ++y)
+                    for (u32 y = 0; y < height; ++y)
                     {
                         sections[xx][zz].Blocks[x][y][z] = 1;
                     }
@@ -152,7 +152,7 @@ void BlockSystem::generateRandom_Value2()
                     height += Mathf::Noise(2, 8, -1, {xx * Section::Size + x, zz * Section::Size + z});
 
 
-                    for (uint32_t y = 0; y < height && y < Section::Height; ++y)
+                    for (u32 y = 0; y < height && y < Section::Height; ++y)
                     {
                         sections[xx][zz].Blocks[x][y][z] = 1;
                     }

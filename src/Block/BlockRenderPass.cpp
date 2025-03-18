@@ -12,7 +12,7 @@
 
 using namespace std;
 
-vector<uint32_t> indices = {
+vector<u32> indices = {
         // 前面
         0, 1, 2, 2, 3, 0,
 

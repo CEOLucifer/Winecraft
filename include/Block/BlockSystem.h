@@ -1,29 +1,37 @@
 #pragma once
 
 #include "Singleton.h"
-#include <vector>
+#include "Aggre/Vec.h"
 #include "Block/Section.h"
 #include <glm/glm.hpp>
-#include <optional>
+#include "Typedef.h"
+#include "Std/Opt.h"
+#include "Std/Basic.h"
 
+
+class SectionsCenter;
+
+/// 方块系统。管理区块的存储，生成，区块动态增删等等。
 class BlockSystem : public Singleton<BlockSystem>
 {
     friend class BlockRenderPass;
 
 public:
-    static constexpr uint32_t Size = 3;
+    static constexpr u32 Size = 3;
 
 private:
-    std::vector<std::vector<Section>> sections;
+    Vec<Vec<Section>> sections;
 
     glm::i32vec3 systemCoords = {0, 0, 0};
+
+    Sp<SectionsCenter> sectionsCenter;
 
 
 public:
     void OnLoad() override;
 
     /// 获取区块的长宽数
-    uint32_t GetSize()
+    u32 GetSize()
     {
         return Size;
     }
@@ -38,7 +46,12 @@ public:
     glm::vec3 GetCenterCoords();
 
     /// 获取指定世界坐标的区块
-    std::optional<Block> GetBlock(glm::i32vec3 worldCoords);
+    Opt<Block> GetBlock(glm::i32vec3 worldCoords);
+
+    void SetSectionsCenter(Sp<SectionsCenter> value)
+    {
+        sectionsCenter = value;
+    }
 
 
 private:
@@ -52,4 +65,7 @@ private:
     void generateRandom_Value();
 
     void generateRandom_Value2();
+
+    /// 更新区块，动态加载和卸载区块
+    void updateSections();
 };

@@ -1,18 +1,19 @@
 #pragma once
 
-#include <cstdint>
+#include "Std/Basic.h"
+
 
 /// 方块
 class Block
 {
 public:
     /// 0 表示无方块
-    uint32_t id = 0;
+    u32 id = 0;
 
 public:
     Block() = default;
 
-    Block(int id)
+    Block(u32 id)
     {
         this->id = id;
     }
