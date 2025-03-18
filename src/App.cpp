@@ -67,7 +67,7 @@ void App::StartUser()
     auto cameraBra = Branch::Create("camera");
     auto camera = cameraBra->AddNode<Camera>();
     //    camera->SetClearColor({1, 0, 0});
-    cameraBra->Position = {5, 128, 10};
+    cameraBra->Position = {0, 128, 0};
     cameraBra->Rotation = {-45, -135, 0};
     auto cameraController = cameraBra->AddNode<CameraController>();
 
@@ -79,10 +79,7 @@ void App::StartUser()
     auto btn = btnBra->AddNode<Button>();
     btnBra->Position.x = 300;
     btnBra->Scale = {100, 60, 0};
-//    btn->OnHovering([]()
-//                    {
-//                        Debug::Log("hovering");
-//                    });
+
     btn->OnDown([]()
                 {
                     Debug::Log("onDown");

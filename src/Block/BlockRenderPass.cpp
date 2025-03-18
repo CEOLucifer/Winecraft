@@ -194,7 +194,8 @@ void BlockRenderPass::initInstance_vbo()
                         t.Position =
                                 glm::vec3(system->GetSystemCoords()) // 系统坐标
                                 + glm::vec3(xx * Section::Size, 0, zz * Section::Size) // 区块坐标
-                                + glm::vec3(x * 1, y * 1, z * 1); // 方块坐标
+                                + glm::vec3(x * 1, y * 1, z * 1) // 方块坐标
+                                + glm::vec3(0.5, 0.5, 0.5);
                         aModels.push_back(t.GetModelMat());
                     }
                 }

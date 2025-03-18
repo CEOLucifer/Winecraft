@@ -149,7 +149,7 @@ void BlockSystem::generateRandom_Value2()
                     height += Mathf::Noise(32, 64, 0, {xx * Section::Size + x, zz * Section::Size + z});
                     height += Mathf::Noise(32, 32, 0, {xx * Section::Size + x, zz * Section::Size + z});
 //                    height += Mathf::Noise(3, 4, -2, {xx * Section::Size + x, zz * Section::Size + z});
-//                    height += Mathf::Noise(2, 1, -2, {xx * Section::Size + x, zz * Section::Size + z});
+                    height += Mathf::Noise(2, 8, -1, {xx * Section::Size + x, zz * Section::Size + z});
 
 
                     for (uint32_t y = 0; y < height && y < Section::Height; ++y)
