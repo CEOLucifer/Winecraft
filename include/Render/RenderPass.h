@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Typedef.h"
+#include "Std/SmartPtr.h"
 #include "BlendFunc.h"
 #include "FaceCull.h"
 #include "StencilOp.h"
@@ -8,6 +8,7 @@
 #include <GL/gl.h>
 #include "Resource/Resource.h"
 #include "Core/Object.h"
+#include "Std/Basic.h"
 
 class Camera;
 class ShaderProgram;
@@ -36,13 +37,7 @@ public:
     // 面剔除
     FaceCull FaceCull;
 
-    uint32_t polygonMode = GL_FILL;
-
-    /// @brief 是否启用实例化？
-    bool EnableInstanced = false;
-
-    /// @brief 在启用实例化时，实例化的个数。
-    uint32_t InstanceCount = 1;
+    u32 PolygonMode = GL_FILL;
 
 public:
     void Render(Sp<Camera> camera);

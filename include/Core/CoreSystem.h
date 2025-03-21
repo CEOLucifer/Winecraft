@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Singleton.h"
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 #include <vector>
 
 class Branch;

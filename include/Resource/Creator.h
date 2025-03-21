@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BaseCreator.h"
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 #include "ArduinoJson.h"
 #include "../Core/Object.h"
 

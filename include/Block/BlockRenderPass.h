@@ -5,18 +5,17 @@
 #include "Block/Section.h"
 #include <glm/glm.hpp>
 #include <vector>
-#include "Aggre/Vec.h"
+#include "Std/Vec.h"
 
 /// 方块渲染通道
 class BlockRenderPass : public RenderPass
 {
 private:
     u32 vao = 0;
+    /// 方块顶点vbo
     u32 vbo = 0;
+    /// 方块顶点ebo
     u32 ebo = 0;
-    u32 instance_vbo = 0;
-
-    Vec<glm::mat4> aModels;
 
     Sp<ShaderProgram> shaderProgram;
 
@@ -27,10 +26,6 @@ protected:
     void RenderCustom(Sp<Camera> camera) override;
 
 private:
-
-
-    void initInstance_vbo();
-
 
 private:
     static Sp<BlockRenderPass> instance;

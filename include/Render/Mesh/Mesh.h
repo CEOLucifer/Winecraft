@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 #include "../DrawMode.h"
-#include "../../Typedef.h"
+#include "Std/SmartPtr.h"
 
 class Texture;
 

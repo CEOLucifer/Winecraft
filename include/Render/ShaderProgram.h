@@ -5,7 +5,7 @@
 #include <vector>
 #include "Resource/Resource.h"
 #include "Render/Shader.h"
-#include "Typedef.h"
+#include "Std/SmartPtr.h"
 #include "glm/glm.hpp"
 
 class Renderer;

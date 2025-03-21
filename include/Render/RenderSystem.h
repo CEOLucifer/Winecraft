@@ -3,7 +3,7 @@
 #include "DirectionalLight.h"
 #include "Singleton.h"
 #include "SpotLight.h"
-#include "Typedef.h"
+#include "Std/SmartPtr.h"
 #include "glm/glm.hpp"
 #include <memory>
 #include <vector>

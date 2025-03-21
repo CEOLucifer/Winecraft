@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Typedef.h"
+#include "Std/SmartPtr.h"
 #include "CoreSystem.h"
 #include "Object.h"
 #include <string>

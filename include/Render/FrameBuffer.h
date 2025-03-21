@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 
 
 class Texture;

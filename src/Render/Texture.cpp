@@ -9,6 +9,12 @@
 
 using namespace std;
 
+void Texture::Use(int position, int type)
+{
+    glActiveTexture(position);
+    glBindTexture(type, id);
+}
+
 void Texture::OnCreated(const JsonDocument& doc)
 {
     std::string type = doc["type"];
@@ -34,9 +40,9 @@ void Texture::OnCreated(const JsonDocument& doc)
         // load image, create texture and generate mipmaps
         int width, height, nrChannels;
         stbi_set_flip_vertically_on_load(
-            true); // tell stb_image.h to flip loaded texture's on the y-axis.
+                true); // tell stb_image.h to flip loaded texture's on the y-axis.
         unsigned char* data =
-            stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
+                stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
         if (data)
         {
             // 检查纹理格式
@@ -57,14 +63,14 @@ void Texture::OnCreated(const JsonDocument& doc)
         else
         {
             Debug::LogError(
-                std::format("Failed to load texture, path:{}", path));
+                    std::format("Failed to load texture, path:{}", path));
         }
         stbi_image_free(data);
     }
     else if (type == "cubeMap") // 天空盒
     {
         JsonArrayConst six = doc["six"];
-        
+
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_CUBE_MAP, id);
 
@@ -135,4 +141,5 @@ Sp<Texture> Texture::CreateDepthStencil(int width, int height)
                      GL_UNSIGNED_INT_24_8);
 }
 
-Texture::~Texture() { glDeleteTextures(1, &id); }
+Texture::~Texture()
+{ glDeleteTextures(1, &id); }

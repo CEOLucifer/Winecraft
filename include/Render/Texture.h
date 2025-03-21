@@ -2,7 +2,7 @@
 
 #include "../Resource/Resource.h"
 #include <cstdint>
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 #include <string>
 
 /// @brief 纹理
@@ -25,9 +25,11 @@ private:
 public:
     ~Texture() override;
 
-    uint32_t GetID() { return id; }
+    uint32_t GetID() const { return id; }
 
-    int GetInternalFormat() { return internalFormat; }
+    int GetInternalFormat() const { return internalFormat; }
+
+    void Use(int position, int type);
 
 public:
     void OnCreated(const JsonDocument& doc) override;

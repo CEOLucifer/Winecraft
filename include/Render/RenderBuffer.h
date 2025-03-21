@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 
 /// @brief 渲染缓冲。
 ///

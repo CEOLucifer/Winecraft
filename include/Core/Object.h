@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 
 /// 共享指针托管的对象的类型基类
 class Object

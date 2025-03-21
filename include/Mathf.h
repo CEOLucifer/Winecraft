@@ -46,14 +46,14 @@ public:
 
     /// 获取晶格内标准化y值
     /// \param cor 标准化晶格内坐标
-    /// \param ys 晶格四顶点y值
+    /// \param ys 晶格四顶点标准化y值
     static float Cha(glm::vec2 cor, glm::vec4 ys);
 
-    /// 获取指定晶格顶点的y值
+    /// 获取指定晶格顶点的标准化y值
     /// \param cor
     static float GetY(glm::i32vec2 cor);
 
-    /// 获取指定世界坐标下的y值
+    /// 获取指定世界坐标下的y值。Value噪声。
     /// \param A 振幅。
     /// \param lw 晶格宽度。相当于周期。
     /// \param h 整体高度抬升值。

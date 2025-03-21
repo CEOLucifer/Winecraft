@@ -4,7 +4,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include "Typedef.h"
+#include "Std/SmartPtr.h"
 #include "FileHelper.h"
 #include "Debug/Debug.h"
 #include "Creator.h"

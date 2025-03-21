@@ -2,7 +2,7 @@
 
 #include "glm/glm.hpp"
 #include "../Core/Node.h"
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 
 class FrameBuffer;
 

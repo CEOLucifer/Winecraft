@@ -2,163 +2,84 @@
 #include "Core/Object.h"
 #include "Block/BlockRenderPass.h"
 #include <glm/glm.hpp>
-#include "Mathf.h"
+#include "Block/LatticeRenderCenter.h"
+#include "Core/Branch.h"
 
 using namespace std;
 
 void BlockSystem::OnLoad()
 {
-    initSectionsSize();
-//    generateRandom_Berlin();
-    generateRandom_Value2();
+    // 生成地图
+    getFrontLattice().GenerateRandom({0,0});
+    getFrontLattice().TransferBufferData();
+
+    // 每帧渲染
     Object::NewObject<BlockRenderPass>();
-
 }
 
-void BlockSystem::generateRandom_Berlin()
+Opt<Block> BlockSystem::GetBlock(glm::i32vec3 worldCor)
 {
-    // 梯度向量和距离向量点乘，即高度
-    // (xx, zz) 是区块坐标
-    for (int xx = 0; xx < Size; ++xx)
-    {
-        for (int zz = 0; zz < Size; ++zz)
-        {
-            // 梯度向量
-            glm::vec2 grad_1 = Mathf::GetGrad({xx, zz + 1});
-            glm::vec2 grad_2 = Mathf::GetGrad({xx + 1, zz + 1});
-            glm::vec2 grad_3 = Mathf::GetGrad({xx, zz});
-            glm::vec2 grad_4 = Mathf::GetGrad({xx + 1, zz});
-
-            // (x, z)是相对区块坐标
-            for (int x = 0; x < Section::Size; ++x)
-            {
-                for (int z = 0; z < Section::Size; ++z)
-                {
-                    u32 height = 0;
-
-                    float xa = (float) x / Section::Size;
-                    float za = (float) z / Section::Size;
-
-                    // 距离向量
-                    glm::vec2 dist_1 = {xa, za - 1};
-                    glm::vec2 dist_2 = {xa - 1, za - 1};
-                    glm::vec2 dist_3 = {xa, za};
-                    glm::vec2 dist_4 = {xa - 1, za};
-
-                    float influence_1 = glm::dot(grad_1, dist_1);
-                    float influence_2 = glm::dot(grad_2, dist_2);
-                    float influence_3 = glm::dot(grad_3, dist_3);
-                    float influence_4 = glm::dot(grad_4, dist_4);
-
-                    float a = std::lerp(influence_1, influence_2, xa);
-                    float b = std::lerp(influence_3, influence_4, xa);
-                    float c = std::lerp(b, a, za);
-
-                    // 计算高度，并限制在合理范围内
-                    float height_float = abs(c) * Section::Height;
-                    height = static_cast<uint32_t>(height_float);
-
-
-                    // 以height填充section
-                    for (u32 y = 0; y < height; ++y)
-                    {
-                        sections[xx][zz].Blocks[x][y][z] = 1;
-                    }
-                }
-            }
-        }
-    }
-
-
-}
-
-
-std::optional<Block> BlockSystem::GetBlock(glm::i32vec3 worldCoords)
-{
-    glm::i32vec3 sysCoords = GetSystemCoords();
+    glm::i32vec2 lc = getFrontLattice().GetCor();
 
     // 边界检查
-    if (worldCoords.x < sysCoords.x || worldCoords.x >= sysCoords.x + Size * Section::Size ||
-        worldCoords.z < sysCoords.z || worldCoords.z >= sysCoords.z + Size * Section::Size ||
-        worldCoords.y < 0 || worldCoords.y >= Section::Height)
+    if (worldCor.x < lc.x || worldCor.x >= lc.x + Lattice::Size * Section::Size ||
+        worldCor.z < lc.y || worldCor.z >= lc.y + Lattice::Size * Section::Size ||
+        worldCor.y < 0 || worldCor.y >= Section::Height)
     {
         return nullopt;
     }
 
-    glm::i32vec3 sectionCoords = {(worldCoords.x - sysCoords.x) / Section::Size, 0, (worldCoords.z - sysCoords.z) / Section::Size};
-    glm::i32vec3 blockCoords = {(worldCoords.x - sysCoords.x) % Section::Size, worldCoords.y, (worldCoords.z - sysCoords.z) % Section::Size};
-    return sections[sectionCoords.x][sectionCoords.z].Blocks[blockCoords.x][blockCoords.y][blockCoords.z];
+    glm::i32vec3 sectionCoords = {(worldCor.x - lc.x) / Section::Size, 0, (worldCor.z - lc.y) / Section::Size};
+    glm::i32vec3 blockCoords = {(worldCor.x - lc.x) % Section::Size, worldCor.y, (worldCor.z - lc.y) % Section::Size};
+    return getFrontLattice().Sections[sectionCoords.x][sectionCoords.z]->Blocks[blockCoords.x][blockCoords.y][blockCoords.z];
 }
 
-void BlockSystem::initSectionsSize()
+void BlockSystem::updateLattice()
 {
-    // Size * Size
-    sections.resize(Size);
-    for (auto& each: sections)
-    {
-        each.resize(Size);
-    }
-}
+    // 当前latticeRenderCenter所在区块坐标
+    auto pos = latticeCenter->GetParent().lock()->Position;
+    glm::i32vec2 lrcsc = {pos.x / Section::Size, pos.z / Section::Size};
 
-void BlockSystem::generateRandom_Value()
-{
-    for (int xx = 0; xx < Size; ++xx)
+    auto frontLattice = getFrontLattice();
+
+    // 前端网格 中心区块坐标
+    glm::i32vec2 csc = frontLattice.GetCenterSectionCor();
+
+    // 判断是否相等
+    // 不相等，切换网格
+    if (lrcsc != csc)
     {
-        for (int zz = 0; zz < Size; ++zz)
+        // 更新后端网格
+        Lattice& backLattice = getBackLattice();
+        backLattice.SetCenterSectionCor(lrcsc);
+        glm::i32vec2 blc = backLattice.GetCor();
+        glm::i32vec2 flc = frontLattice.GetCor();
+
+        for (int xx = 0; xx < Lattice::Size; ++xx)
         {
-            // 振幅
-            u32 y1 = Mathf::GetHeight({xx, zz + 1});
-            u32 y2 = Mathf::GetHeight({xx + 1, zz + 1});
-            u32 y3 = Mathf::GetHeight({xx, zz});
-            u32 y4 = Mathf::GetHeight({xx + 1, zz});
-
-            for (int x = 0; x < Section::Size; ++x)
+            for (int zz = 0; zz < Lattice::Size; ++zz)
             {
-                for (int z = 0; z < Section::Size; ++z)
+                // 是否存在于前端网格
+                glm::i32vec2 cor = {blc.x + xx, blc.y + zz};
+                if (flc.x <= cor.x && cor.x < flc.x + Lattice::Size
+                    && flc.y <= cor.y && cor.y < flc.y + Lattice::Size)
                 {
-                    float height;
-
-                    float a = (float) x / Section::Size;
-                    float b = (float) z / Section::Size;
-
-                    height = lerp(lerp(y3, y4, Mathf::Fade(a)), lerp(y1, y2, Mathf::Fade(a)), Mathf::Fade(b));
-
-                    for (u32 y = 0; y < height; ++y)
-                    {
-                        sections[xx][zz].Blocks[x][y][z] = 1;
-                    }
+                    // 存在，赋值过来
+                    glm::i32vec2 existInd = {cor.x - flc.x, cor.y - flc.y};
+                    backLattice.Sections[xx][zz] = frontLattice.Sections[existInd.x][existInd.y];
+                }
+                else
+                {
+                    // 不存在，清空并重新生成
+                    backLattice.Sections[xx][zz]->Clear();
+                    backLattice.Sections[xx][zz]->GenerateRandom(cor);
                 }
             }
         }
+
+        // 交换前后端网格
+        frontLatticeInd = (frontLatticeInd + 1) % 2;
     }
 }
 
-
-void BlockSystem::generateRandom_Value2()
-{
-    for (int xx = 0; xx < Size; ++xx)
-    {
-        for (int zz = 0; zz < Size; ++zz)
-        {
-            for (int x = 0; x < Section::Size; ++x)
-            {
-                for (int z = 0; z < Section::Size; ++z)
-                {
-                    float height = 0;
-
-                    height += Mathf::Noise(32, 64, 0, {xx * Section::Size + x, zz * Section::Size + z});
-                    height += Mathf::Noise(32, 32, 0, {xx * Section::Size + x, zz * Section::Size + z});
-//                    height += Mathf::Noise(3, 4, -2, {xx * Section::Size + x, zz * Section::Size + z});
-                    height += Mathf::Noise(2, 8, -1, {xx * Section::Size + x, zz * Section::Size + z});
-
-
-                    for (u32 y = 0; y < height && y < Section::Height; ++y)
-                    {
-                        sections[xx][zz].Blocks[x][y][z] = 1;
-                    }
-                }
-            }
-        }
-    }
-}
 

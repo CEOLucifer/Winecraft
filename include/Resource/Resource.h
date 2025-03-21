@@ -3,7 +3,7 @@
 #include "ResourceSystem.h"
 #include <string>
 #include "ArduinoJson.h"
-#include "../Typedef.h"
+#include "Std/SmartPtr.h"
 
 /// @brief 资源。用于表示外部文件系统的资源。
 class Resource : public Object
