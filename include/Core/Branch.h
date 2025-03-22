@@ -1,10 +1,10 @@
 #pragma once
 
-#include <list>
 #include "Node.h"
 #include "Transform.h"
 #include "Std/SmartPtr.h"
 #include "glm/glm.hpp"
+#include "Std/List.h"
 
 /// @brief 分支
 ///
@@ -16,10 +16,10 @@ class Branch : public Node, public Transform
 
 private:
     // 继承Node而不继承Branch的子结点
-    std::list<Sp<Node>> childNodes;
+    List<Sp<Node>> childNodes;
 
     // 继承Branch的子结点。用于父子空间变换。
-    std::list<Sp<Branch>> childBranches;
+    List<Sp<Branch>> childBranches;
 
 
 public:
@@ -62,22 +62,26 @@ public:
         return node;
     }
 
+    /// 添加一个子结点。类似Unity的AddComponent。
+    /// \tparam T
+    /// \param _name
+    /// \return
     template<typename T>
     requires std::is_base_of_v<Node, T>
-    Sp<T> AddNode(std::string _name = "")
+    Sp<T> AddNode(String _name = "")
     {
-        Sp<T> newNode = Node::_createRaw<T>(_name);
+        Sp<T> newNode = Node::_newRawNode<T>(_name);
         newNode->SetParent(CastTo<Branch>());
         newNode->OnAdded();
         return newNode;
     }
 
-    const std::list<Sp<Node>>& GetChildNodes()
+    const List<Sp<Node>>& GetChildNodes()
     {
         return childNodes;
     }
 
-    const std::list<Sp<Branch>>& GetChildBranches()
+    const List<Sp<Branch>>& GetChildBranches()
     {
         return childBranches;
     }
@@ -92,9 +96,9 @@ public:
     /// \return
     template<typename T>
     requires std::is_base_of_v<Branch, T>
-    static Sp<T> Create(std::string _name = "")
+    static Sp<T> NewBranch(String _name = "")
     {
-        Sp<T> This = _createRaw<T>(_name);
+        Sp<T> This = _newRawNode<T>(_name);
         This->SetParent(CoreSystem::Instance()->root);
         return This;
     }
@@ -102,8 +106,8 @@ public:
     /// 创建空Branch对象
     /// \param _name
     /// \return
-    static Sp<Branch> Create(std::string _name = "")
+    static Sp<Branch> NewBranch(String _name = "")
     {
-        return Create<Branch>(_name);
+        return NewBranch<Branch>(_name);
     }
 };

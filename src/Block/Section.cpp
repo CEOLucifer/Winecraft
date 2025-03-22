@@ -2,7 +2,6 @@
 #include "Block/Section.h"
 #include "Mathf.h"
 #include "Core/Transform.h"
-#include "Singleton.h"
 #include "Block/BlockSystem.h"
 
 Section::Section()
@@ -37,18 +36,17 @@ Sp<Section> Section::Create()
     return This;
 }
 
-void Section::GenerateRandom(glm::i32vec2 sectionCor)
+void Section::GenerateBlocks(glm::i32vec2 swc)
 {
-    cor = sectionCor;
-    generateRandom_Value(sectionCor);
+    this->swc = swc;
+    Clear();
+    generateRandom_Value(swc);
 }
 
-void Section::generateRandom_Value(glm::i32vec2 sectionCor)
+void Section::generateRandom_Value(glm::i32vec2 swc)
 {
-    cor = sectionCor;
-
-    u32 xx = sectionCor.x;
-    u32 zz = sectionCor.y;
+    u32 xx = swc.x;
+    u32 zz = swc.y;
     for (int x = 0; x < Section::Size; ++x)
     {
         for (int z = 0; z < Section::Size; ++z)
@@ -69,14 +67,12 @@ void Section::generateRandom_Value(glm::i32vec2 sectionCor)
     }
 }
 
-void Section::generateRandom_Berlin(glm::i32vec2 sectionCor)
+void Section::generateRandom_Berlin(glm::i32vec2 swc)
 {
-    cor = sectionCor;
     // 梯度向量和距离向量点乘，即高度
 
-
-    u32 xx = sectionCor.x;
-    u32 zz = sectionCor.y;
+    u32 xx = swc.x;
+    u32 zz = swc.y;
 
     // 梯度向量
     glm::vec2 grad_1 = Mathf::GetGrad({xx, zz + 1});
@@ -141,40 +137,46 @@ void Section::TransferBufferData()
                 {
                     isRender = false;
                 }
-                else
-                {
-                    // 上下左右前后都有方块，continue
-                    auto system = BlockSystem::Instance();
-                    int xc = cor.x * Section::Size;
-                    int zc = cor.y * Section::Size;
-                    auto up = system->GetBlock({xc + x, y + 1, zc + z});
-                    auto down = system->GetBlock({xc + x, y - 1, zc + z});
-                    auto left = system->GetBlock({xc + x - 1, y, zc + z});
-                    auto right = system->GetBlock({xc + x + 1, y, zc + z});
-                    auto forward = system->GetBlock({xc + x, y, zc + z + 1});
-                    auto back = system->GetBlock({xc + x, y, zc + z - 1});
-
-                    if (up && (*up).id != 0 &&
-                        down && (*down).id != 0 &&
-                        left && (*left).id != 0 &&
-                        right && (*right).id != 0 &&
-                        forward && (*forward).id != 0 &&
-                        back && (*back).id != 0)
-                    {
-                        isRender = false;
-                    }
-                }
+//                else
+//                {
+//                    // 上下左右前后都有方块，continue
+//                    auto system = BlockSystem::Instance();
+//                    int xc = swc.x * Section::Size;
+//                    int zc = swc.y * Section::Size;
+//                    auto up = system->GetBlock({xc + x, y + 1, zc + z});
+//                    auto down = system->GetBlock({xc + x, y - 1, zc + z});
+//                    auto left = system->GetBlock({xc + x - 1, y, zc + z});
+//                    auto right = system->GetBlock({xc + x + 1, y, zc + z});
+//                    auto forward = system->GetBlock({xc + x, y, zc + z + 1});
+//                    auto back = system->GetBlock({xc + x, y, zc + z - 1});
+//
+//                    if (up && (*up).id != 0 &&
+//                        down && (*down).id != 0 &&
+//                        left && (*left).id != 0 &&
+//                        right && (*right).id != 0 &&
+//                        forward && (*forward).id != 0 &&
+//                        back && (*back).id != 0)
+//                    {
+//                        isRender = false;
+//                    }
+//                }
 
                 if (isRender)
                 {
                     // 添加一个此方块的aModel
                     Transform t;
                     t.Position =
-                            glm::vec3(cor.x * Section::Size, 0, cor.y * Section::Size) // 区块相对世界的坐标
+                            glm::vec3(swc.x * Section::GetSize(), 0, swc.y * Section::GetSize()) // 区块的区块世界的坐标
                             + glm::vec3(x * 1, y * 1, z * 1) // 方块相对区块坐标
                             + glm::vec3(0.5, 0.5, 0.5);
                     model = t.GetModelMat();
                     aModels.push_back(model);
+
+                    // ！！！巨坑：如上:
+                    //
+                    //          glm::vec3(swc.x * (int)Section::GetSize(), 0, swc.y * (int)Section::GetSize())
+                    //
+                    // int和u32类型相乘，必须把u32强转为int，否则默认是int强转u32。如果int是负数，则会将其变成很大的u32！还是不要用u32了！
                 }
             }
         }
@@ -183,4 +185,10 @@ void Section::TransferBufferData()
     glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
     glBufferData(GL_ARRAY_BUFFER, aModels.size() * sizeof(glm::mat4), aModels.data(), GL_STATIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void Section::Refresh(glm::i32vec2 swc)
+{
+    GenerateBlocks(swc);
+    TransferBufferData();
 }

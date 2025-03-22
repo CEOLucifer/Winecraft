@@ -20,7 +20,7 @@ private:
     Sp<ShaderProgram> shaderProgram;
 
 public:
-    void OnObjectCreated() override;
+    void OnNewObject() override;
 
 protected:
     void RenderCustom(Sp<Camera> camera) override;

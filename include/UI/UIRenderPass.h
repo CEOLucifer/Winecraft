@@ -25,7 +25,7 @@ private:
 public:
     void RenderCustom(Sp<Camera> camera) override;
 
-    void OnObjectCreated() override;
+    void OnNewObject() override;
 
 private:
     static Sp<UIRenderPass> instance;

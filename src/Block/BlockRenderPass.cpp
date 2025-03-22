@@ -68,9 +68,9 @@ Vec<u32> indices = {
         20, 21, 22, 22, 23, 20
 };
 
-void BlockRenderPass::OnObjectCreated()
+void BlockRenderPass::OnNewObject()
 {
-    RenderPass::OnObjectCreated();
+    RenderPass::OnNewObject();
 
     instance = CastTo<BlockRenderPass>();
 
@@ -132,13 +132,13 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
     auto texCube = Resource::Load<Texture>("res/texture/grass_block.json");
     texCube->Use(GL_TEXTURE0, GL_TEXTURE_CUBE_MAP);
 
-    Lattice& lattice = BlockSystem::Instance()->getFrontLattice();
+    Lattice& lattice = BlockSystem::Instance()->GetLattice();
     // 渲染每个区块
     for (u32 xx = 0; xx < Lattice::Size; ++xx)
     {
         for (u32 zz = 0; zz < Lattice::Size; ++zz)
         {
-            Sp<Section> section = lattice.Sections[xx][zz];
+            Sp<Section> section = lattice.GetSections()[xx][zz];
             // 绑定区块的VBO，然后绘制
             glBindBuffer(GL_ARRAY_BUFFER, section->GetaModelsVbo());
             // aModel 属性，实例化数组

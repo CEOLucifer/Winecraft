@@ -111,8 +111,8 @@ float Mathf::Noise(float A, uint32_t lw, float h, glm::i32vec2 cor)
 
     // 晶格新坐标
     glm::i32vec2 q = {
-            cor.x / lw,
-            cor.y / lw
+            floor(cor.x / lw),
+            floor(cor.y / lw)
     };
 
     // 晶格内标准化坐标

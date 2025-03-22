@@ -13,7 +13,7 @@ public:
     virtual ~Object() = default;
 
     /// 由子类重写
-    virtual void OnObjectCreated()
+    virtual void OnNewObject()
     {}
 
     /// 销毁此对象
@@ -49,7 +49,7 @@ public:
     {
         Sp<T> This(new T);
         This->thisWeak = This;
-        This->OnObjectCreated();
+        This->OnNewObject();
         return This;
     }
 };

@@ -33,9 +33,9 @@ void UIRenderPass::RenderCustom(Sp<Camera> camera)
     }
 }
 
-void UIRenderPass::OnObjectCreated()
+void UIRenderPass::OnNewObject()
 {
-    RenderPass::OnObjectCreated();
+    RenderPass::OnNewObject();
 
     EnableDepthTest = false;
     EnableBlend = true;

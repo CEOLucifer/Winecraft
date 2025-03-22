@@ -64,8 +64,8 @@ void RenderPass::Render(Sp<Camera> camera)
     RenderCustom(camera);
 }
 
-void RenderPass::OnObjectCreated()
+void RenderPass::OnNewObject()
 {
-    Object::OnObjectCreated();
+    Object::OnNewObject();
     RenderSystem::Instance()->Add(CastTo<RenderPass>());
 }

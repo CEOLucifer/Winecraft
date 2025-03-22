@@ -42,7 +42,7 @@ public:
 public:
     void Render(Sp<Camera> camera);
 
-    void OnObjectCreated() override;
+    void OnNewObject() override;
 
 protected:
     virtual void RenderCustom(Sp<Camera> camera)

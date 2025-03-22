@@ -8,38 +8,55 @@ class Lattice
 {
 public:
     // 区块的长宽数，规定：奇数。
-    static constexpr u32 Size = 31;
-
-public:
-    Vec<Vec<Sp<Section>>> Sections;
+    static constexpr i32 Size = 7;
 
 private:
-    glm::i32vec2 cor = {0, 0};
+    Vec<Vec<Sp<Section>>> sections;
+
+    /// 坐标。单位：区块；相对：世界
+    glm::i32vec2 swc = {0, 0};
+
+    bool isInited = false;
 
 public:
     Lattice();
 
+    /// 初始化，必须先由外部调用，然后才能调用Refresh
+    /// \param swc
+    void Init(glm::i32vec2 swc);
+
     glm::i32vec2 GetCenterSectionCor()
     {
-        return {cor.x + Lattice::Size / 2, cor.y + Lattice::Size / 2};
+        return {swc.x + Lattice::Size / 2, swc.y + Lattice::Size / 2};
     }
 
-    void SetCenterSectionCor(glm::i32vec2 value)
+    glm::i32vec2 Get_swc()
     {
-        cor = {value.x - Size / 2, value.y - Size / 2};
+        return swc;
     }
 
-    void GenerateRandom(glm::i32vec2 cor);
-
-    void TransferBufferData();
-
-    glm::i32vec2 GetCor()
+    void Set_swc(glm::i32vec2 value)
     {
-        return cor;
+        swc = value;
     }
 
-    void SetCor(glm::i32vec2 value)
+    /// 刷新网格，动态加载和卸载区块。必须在Init之后调用。
+    /// \param swc 网格的区块世界坐标
+    void Refresh(glm::i32vec2 swc);
+
+    void RefreshCenter(glm::i32vec2 center_swc);
+
+    Vec<Vec<Sp<Section>>>& GetSections()
     {
-        cor = value;
+        return sections;
+    };
+
+    bool IsInited();
+
+
+public:
+    static constexpr i32 GetSize()
+    {
+        return Size;
     }
 };

@@ -23,7 +23,7 @@ void CoreSystem::UpdateAll()
 }
 
 void CoreSystem::OnLoad()
-{ root = Branch::Create("root"); }
+{ root = Branch::NewBranch("root"); }
 
 void CoreSystem::_processAddingNodes()
 {

@@ -21,6 +21,7 @@
 #include "Render/Texture.h"
 #include "UI/UIRenderPass.h"
 #include "UI/Button.h"
+#include "Block/LatticeRenderCenter.h"
 
 using namespace std;
 
@@ -30,6 +31,7 @@ void App::Run()
     RenderSystem::LoadInstance();
     GLFWwindow* window = RenderSystem::Instance()->GetWindow();
     ResourceSystem::LoadInstance();
+    BlockSystem::LoadInstance();
     Input::init(window);
     Time::init();
     Mathf::init();
@@ -45,6 +47,7 @@ void App::Run()
         CoreSystem::Instance()->UpdateAll();
 
         Input::ResetMouseActions();
+        BlockSystem::Instance()->Update();
 
         // 检查并调用事件
         glfwPollEvents();
@@ -54,6 +57,7 @@ void App::Run()
         RenderSystem::Instance()->Render();
     }
 
+    BlockSystem::UnloadInstance();
     ResourceSystem::UnloadInstance();
     RenderSystem::UnloadInstance();
     CoreSystem::UnloadInstance();
@@ -61,21 +65,22 @@ void App::Run()
 
 void App::StartUser()
 {
-    BlockSystem::LoadInstance();
 
     // 摄像机
-    auto cameraBra = Branch::Create("camera");
+    auto cameraBra = Branch::NewBranch("camera");
     auto camera = cameraBra->AddNode<Camera>();
     //    camera->SetClearColor({1, 0, 0});
-    cameraBra->Position = {0, 128, 0};
+    cameraBra->Position = {50, 96, 50};
     cameraBra->Rotation = {-45, -135, 0};
     auto cameraController = cameraBra->AddNode<CameraController>();
+
+    cameraBra->AddNode<LatticeRenderCenter>();
 
     Object::NewObject<UIRenderPass>();
 //    Branch::Create<FPSWatcher>();
 
 
-    auto btnBra = Branch::Create("btnBra");
+    auto btnBra = Branch::NewBranch("btnBra");
     auto btn = btnBra->AddNode<Button>();
     btnBra->Position.x = 300;
     btnBra->Scale = {100, 60, 0};
