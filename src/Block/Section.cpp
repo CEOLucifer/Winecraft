@@ -183,7 +183,7 @@ void Section::TransferBufferData()
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
-    glBufferData(GL_ARRAY_BUFFER, aModels.size() * sizeof(glm::mat4), aModels.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, aModels.size() * sizeof(glm::mat4), aModels.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 

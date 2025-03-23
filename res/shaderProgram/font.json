@@ -1,0 +1,8 @@
+{
+  "className": "ShaderProgram",
+  "vert": "res/shader/font_vert.json",
+  "frag": "res/shader/font_frag.json",
+  "samplers": [
+    "text"
+  ]
+}

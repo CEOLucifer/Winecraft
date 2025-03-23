@@ -74,6 +74,12 @@ add_executable(LearnOpenGL
         include/Block/Lattice.h
         src/Block/Lattice.cpp
         include/Block/BlockData.h
+        include/ThirdParty/ft.h
+        include/Font/Font.h
+        src/Font/Font.cpp
+        include/Font/Character.h
+        include/Std/Map.h
+        src/Font/Character.cpp
 )
 
 target_include_directories(LearnOpenGL PRIVATE ./include)
@@ -108,3 +114,7 @@ FetchContent_Declare(ArduinoJson
 FetchContent_MakeAvailable(ArduinoJson)
 target_link_libraries(LearnOpenGL PRIVATE ArduinoJson)
 
+# freetype
+find_package(Freetype REQUIRED)
+target_include_directories(LearnOpenGL PRIVATE ${FREETYPE_INCLUDE_DIRS})
+target_link_libraries(LearnOpenGL PRIVATE ${FREETYPE_LIBRARIES})

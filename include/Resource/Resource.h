@@ -1,9 +1,9 @@
 #pragma once
 
 #include "ResourceSystem.h"
-#include <string>
 #include "ArduinoJson.h"
 #include "Std/SmartPtr.h"
+#include "Std/String.h"
 
 /// @brief 资源。用于表示外部文件系统的资源。
 class Resource : public Object
@@ -12,10 +12,10 @@ class Resource : public Object
 
 private:
     /// @brief 资源的路径。用作ResourceSystem中的缓存键。
-    std::string path;
+    String path;
 
 public:
-    const std::string& GetPath()
+    const String& GetPath()
     { return path; }
 
     virtual void OnCreated(const JsonDocument& doc)
@@ -24,7 +24,7 @@ public:
 public:
     template<typename T>
     requires std::is_base_of_v<Resource, T>
-    static Sp<T> Load(std::string path)
+    static Sp<T> Load(String path)
     {
         return ResourceSystem::Instance()->Load<T>(path);
     }

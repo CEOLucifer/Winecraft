@@ -1,0 +1,5 @@
+{
+  "className": "Shader",
+  "type": "vert",
+  "path": "shader/font.vert"
+}
