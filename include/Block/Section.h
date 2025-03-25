@@ -22,6 +22,11 @@ private:
     /// 存储方块的model
     Vec<glm::mat4> aModels = {};
 
+    u32 aTexIndsVbo = 0;
+
+    /// 存储方块的texInd
+    Vec<u32> aTexInds = {};
+
     /// 区块世界坐标
     glm::i32vec2 swc = {};
 
@@ -51,6 +56,11 @@ public:
     Vec<glm::mat4>& GetaModels()
     {
         return aModels;
+    }
+
+    u32 GetaTexIndsVbo()
+    {
+        return aTexIndsVbo;
     }
 
     /// 生成方块和显存数据

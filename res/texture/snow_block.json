@@ -1,0 +1,12 @@
+{
+    "className": "Texture",
+    "type": "cubeMap",
+    "six": [
+        "img/block/grass_block_snow.png",
+        "img/block/grass_block_snow.png",
+        "img/block/snow.png",
+        "img/block/dirt.png",
+        "img/block/grass_block_snow.png",
+        "img/block/grass_block_snow.png"
+    ]
+}

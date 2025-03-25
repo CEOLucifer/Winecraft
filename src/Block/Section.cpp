@@ -6,14 +6,19 @@
 
 Section::Section()
 {
-    glGenBuffers(1, &aModelsVbo);
     u32 size = Section::Size * Section::Size * Section::Height;
+
+    glGenBuffers(1, &aModelsVbo);
     aModels.reserve(size);
+
+    glGenBuffers(1, &aTexIndsVbo);
+    aTexInds.reserve(size);
 }
 
 Section::~Section()
 {
     glDeleteBuffers(1, &aModelsVbo);
+    glDeleteBuffers(1, &aTexIndsVbo);
 }
 
 void Section::FillWith(Block block)
@@ -30,11 +35,6 @@ void Section::FillWith(Block block)
     }
 }
 
-Sp<Section> Section::Create()
-{
-    Sp<Section> This(new Section);
-    return This;
-}
 
 void Section::GenerateBlocks(glm::i32vec2 swc)
 {
@@ -122,6 +122,8 @@ void Section::generateRandom_Berlin(glm::i32vec2 swc)
 void Section::TransferBufferData()
 {
     aModels.clear();
+    aTexInds.clear();
+
     // 把每个方块的model传入
     for (int x = 0; x < Section::Size; ++x)
     {
@@ -133,7 +135,7 @@ void Section::TransferBufferData()
                 bool isRender = true;
 
                 // 没有方块，continue
-                if (Blocks[x][y][z].id == 0)
+                if (Blocks[x][y][z] == 0)
                 {
                     isRender = false;
                 }
@@ -177,6 +179,9 @@ void Section::TransferBufferData()
                     //          glm::vec3(swc.x * (int)Section::GetSize(), 0, swc.y * (int)Section::GetSize())
                     //
                     // int和u32类型相乘，必须把u32强转为int，否则默认是int强转u32。如果int是负数，则会将其变成很大的u32！还是不要用u32了！
+
+                    u32 id = Blocks[x][y][z];
+                    aTexInds.push_back(Blocks[x][y][z]);
                 }
             }
         }
@@ -184,6 +189,12 @@ void Section::TransferBufferData()
 
     glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
     glBufferData(GL_ARRAY_BUFFER, aModels.size() * sizeof(glm::mat4), aModels.data(), GL_DYNAMIC_DRAW);
+
+    // aTexIndsVbo
+    glBindBuffer(GL_ARRAY_BUFFER, aTexIndsVbo);
+    glBufferData(GL_ARRAY_BUFFER, aTexInds.size() * sizeof(u32), aTexInds.data(), GL_DYNAMIC_DRAW);
+
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -191,4 +202,11 @@ void Section::Refresh(glm::i32vec2 swc)
 {
     GenerateBlocks(swc);
     TransferBufferData();
+}
+
+
+Sp<Section> Section::Create()
+{
+    Sp<Section> This(new Section);
+    return This;
 }

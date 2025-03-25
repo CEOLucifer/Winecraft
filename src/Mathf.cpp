@@ -105,20 +105,20 @@ float Mathf::Cha(glm::vec2 cor, glm::vec4 ys)
     return res;
 }
 
-float Mathf::Noise(float A, uint32_t lw, float h, glm::i32vec2 cor)
+float Mathf::Noise(float A, uint32_t lw, float h, glm::i32vec2 bwc)
 {
     float res;
 
     // 晶格新坐标
     glm::i32vec2 q = {
-            floor(cor.x / lw),
-            floor(cor.y / lw)
+            floor(bwc.x / lw),
+            floor(bwc.y / lw)
     };
 
     // 晶格内标准化坐标
     glm::vec2 lnCor = {
-            cor.x % lw / (float) lw,
-            cor.y % lw / (float) lw
+            bwc.x % lw / (float) lw,
+            bwc.y % lw / (float) lw
     };
 
     // 晶格 世界坐标

@@ -82,6 +82,15 @@ void BlockRenderPass::OnNewObject()
 
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+    glEnableVertexAttribArray(4);
+    glEnableVertexAttribArray(5);
+    glEnableVertexAttribArray(6);
+    glEnableVertexAttribArray(7);
+
 
     glGenBuffers(1, &vbo);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -93,15 +102,12 @@ void BlockRenderPass::OnNewObject()
     // 位置属性
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (void*) (offsetof(Vertex, Position)));
-    glEnableVertexAttribArray(0);
     // 法线属性
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (void*) (offsetof(Vertex, Normal)));
-    glEnableVertexAttribArray(1);
     // 纹理属性
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (void*) (offsetof(Vertex, TexCoord)));
-    glEnableVertexAttribArray(2);
 
     // todo : !!!纹理属性其实没必要，以后删
 
@@ -113,12 +119,16 @@ void BlockRenderPass::OnNewObject()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(u32),
                  indices.data(), GL_STATIC_DRAW);
 
-    shaderProgram =
-            Resource::Load<ShaderProgram>("res/shaderProgram/block.json");
-
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    shaderProgram =
+            Resource::Load<ShaderProgram>("res/shaderProgram/block.json");
+    for (i32 i = 0; i < 10; ++i)
+    {
+        shaderProgram->SetInt(std::format("uTexCubes[{}]", i), i);
+    }
 }
 
 void BlockRenderPass::RenderCustom(Sp<Camera> camera)
@@ -127,10 +137,14 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
 
     shaderProgram->Use();
     shaderProgram->SetMat4("uView", camera->GetParent().lock()->GetViewMat());
-    shaderProgram->SetMat4("uProjection", camera->GetProjectionMat());
+    shaderProgram->SetMat4("uProj", camera->GetProjectionMat());
 
-    auto texCube = Resource::Load<Texture>("res/texture/grass_block.json");
-    texCube->Use(GL_TEXTURE0, GL_TEXTURE_CUBE_MAP);
+    // 方块纹理
+    auto texGrassBlock = Resource::Load<Texture>("res/texture/grass_block.json");
+    texGrassBlock->Use(GL_TEXTURE0, GL_TEXTURE_CUBE_MAP);
+
+    auto texSnowBlock = Resource::Load<Texture>("res/texture/snow_block.json");
+    texSnowBlock->Use(GL_TEXTURE1, GL_TEXTURE_CUBE_MAP);
 
     Lattice& lattice = BlockSystem::Instance()->GetLattice();
     // 渲染每个区块
@@ -139,22 +153,23 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
         for (u32 zz = 0; zz < Lattice::Size; ++zz)
         {
             Sp<Section> section = lattice.GetSections()[xx][zz];
-            // 绑定区块的VBO，然后绘制
-            glBindBuffer(GL_ARRAY_BUFFER, section->GetaModelsVbo());
             // aModel 属性，实例化数组
+            glBindBuffer(GL_ARRAY_BUFFER, section->GetaModelsVbo());
             GLsizei vec4Size = sizeof(glm::vec4);
-            glEnableVertexAttribArray(3);
             glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) 0);
-            glEnableVertexAttribArray(4);
             glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (1 * vec4Size));
-            glEnableVertexAttribArray(5);
             glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (2 * vec4Size));
-            glEnableVertexAttribArray(6);
             glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (3 * vec4Size));
             glVertexAttribDivisor(3, 1);
             glVertexAttribDivisor(4, 1);
             glVertexAttribDivisor(5, 1);
             glVertexAttribDivisor(6, 1);
+            // aTexInds 属性，实例化数组
+            glBindBuffer(GL_ARRAY_BUFFER, section->GetaTexIndsVbo());
+            glVertexAttribIPointer(7, 1, GL_UNSIGNED_INT, sizeof(u32), (void*) (0));
+            glVertexAttribDivisor(7, 1);
+
+            // !!!设置glsl整数类型要用glVertexAttribIPointer，而不是glVertexAttribPointer。
 
             glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0, section->GetaModels().size());
         }

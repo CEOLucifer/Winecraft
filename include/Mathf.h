@@ -57,8 +57,8 @@ public:
     /// \param A 振幅。
     /// \param lw 晶格宽度。相当于周期。
     /// \param h 整体高度抬升值。
-    /// \param cor 世界xz坐标
-    static float Noise(float A, uint32_t lw, float h, glm::i32vec2 cor);
+    /// \param bwc 世界xz坐标
+    static float Noise(float A, uint32_t lw, float h, glm::i32vec2 bwc);
 
 private:
     /// 初始化，用于配置种子

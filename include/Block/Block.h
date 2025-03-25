@@ -17,4 +17,9 @@ public:
     {
         this->id = id;
     }
+
+    operator u32()
+    {
+        return id;
+    }
 };
