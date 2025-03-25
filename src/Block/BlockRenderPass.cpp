@@ -146,6 +146,12 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
     auto texSnowBlock = Resource::Load<Texture>("res/texture/snow_block.json");
     texSnowBlock->Use(GL_TEXTURE1, GL_TEXTURE_CUBE_MAP);
 
+    auto texStone = Resource::Load<Texture>("res/texture/stone.json");
+    texStone->Use(GL_TEXTURE2, GL_TEXTURE_CUBE_MAP);
+
+    auto texDirt = Resource::Load<Texture>("res/texture/Dirt.json");
+    texDirt->Use(GL_TEXTURE3, GL_TEXTURE_CUBE_MAP);
+
     Lattice& lattice = BlockSystem::Instance()->GetLattice();
     // 渲染每个区块
     for (u32 xx = 0; xx < Lattice::Size; ++xx)

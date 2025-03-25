@@ -9,7 +9,7 @@ class CameraController : public Node
 {
 public:
     Sp<Camera> camera;
-    float cameraSpeed = 5;
+    float cameraSpeed = 10;
     float cursorSpeed = 0.15;
 
 public:

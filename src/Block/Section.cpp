@@ -45,23 +45,57 @@ void Section::GenerateBlocks(glm::i32vec2 swc)
 
 void Section::generateRandom_Value(glm::i32vec2 swc)
 {
+    // 这个函数处理区块的随机生成
+
     u32 xx = swc.x;
     u32 zz = swc.y;
     for (int x = 0; x < Section::Size; ++x)
     {
         for (int z = 0; z < Section::Size; ++z)
         {
-            float height = 0;
+            glm::i32vec2 bwc = {xx * Section::Size + x, zz * Section::Size + z};
+
+
+            // 高度
+            u32 height = 0;
+            float fHeight = 0;
 
             // 分形噪声：叠加不同振幅和周期的噪声。
-            height += Mathf::Noise(32, 64, 0, {xx * Section::Size + x, zz * Section::Size + z});
-            height += Mathf::Noise(32, 32, 0, {xx * Section::Size + x, zz * Section::Size + z});
+            fHeight += Mathf::Noise(32, 64, 0, bwc);
+            fHeight += Mathf::Noise(32, 32, 0, bwc);
 //            height += Mathf::Noise(2, 4, -1, {xx * Section::Size + x, zz * Section::Size + z});
-            height += Mathf::Noise(2, 8, -1, {xx * Section::Size + x, zz * Section::Size + z});
+            fHeight += Mathf::Noise(2, 8, -1, bwc);
+
+            height = fHeight;
 
             for (u32 y = 0; y < height && y < Section::Height; ++y)
             {
-                Blocks[x][y][z] = 1;
+                if (y == height - 1)
+                {
+                    // 表层
+
+                    // 生态系统。目前只影响表层
+                    float temperature = Mathf::Noise(1, 256, 0, bwc);
+                    if (temperature < 0.5)
+                    {
+                        Blocks[x][y][z] = 2;
+                    }
+                    else
+                    {
+                        Blocks[x][y][z] = 1;
+                    }
+
+                }
+                else if (height - y > 5)
+                {
+                    // 泥层
+                    Blocks[x][y][z] = 3;
+                }
+                else
+                {
+                    // 岩层
+                    Blocks[x][y][z] = 4;
+                }
             }
         }
     }
