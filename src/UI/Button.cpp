@@ -19,7 +19,7 @@ void Button::Update()
         {
             TriggerOnDown();
         }
-        else if(Input::GetMouse(EMouseButton::Left, EMouseAction::Up))
+        else if (Input::GetMouse(EMouseButton::Left, EMouseAction::Up))
         {
             TriggerOnUp();
         }

@@ -3,12 +3,12 @@
 #include "Singleton.h"
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include "Std/SmartPtr.h"
 #include "FileHelper.h"
 #include "Debug/Debug.h"
 #include "Creator.h"
 #include "ArduinoJson.h"
+#include "Std/Map.h"
 
 class Resource;
 
@@ -21,11 +21,11 @@ class ResourceSystem : public Singleton<ResourceSystem>
 private:
     /// @brief 资源的缓存map。
     ///
-    std::unordered_map<std::string, Sp<Resource>> resMap;
+    Map<String, Sp<Resource>> resMap;
 
     /// @brief
     /// 存储类名到对应的Creator的映射。这样通过json文件中的className找到对应Creator。
-    std::unordered_map<std::string, Up<BaseCreator>> creatorMap;
+    Map<String, Up<BaseCreator>> creatorMap;
 
 public:
     void OnLoad() override;
@@ -34,7 +34,7 @@ public:
     ///
     /// @param path
     /// @return Sp<Resource>
-    Sp<Resource> Get(const std::string& path)
+    Sp<Resource> Get(const String& path)
     {
         if (resMap.contains(path))
         {
@@ -52,7 +52,7 @@ public:
 
     template <typename T>
         requires std::is_base_of_v<Resource, T>
-    void RegisterResource(const std::string& name)
+    void RegisterResource(const String& name)
     {
         Up<Creator<T>> newLoader(new Creator<T>);
         creatorMap.insert({name, std::move(newLoader)});
@@ -64,7 +64,7 @@ public:
     /// \return
     template <typename T>
         requires std::is_base_of_v<Resource, T>
-    Sp<T> Load(const std::string& path)
+    Sp<T> Load(const String& path)
     {
         // 尝试从缓存中获取
         auto _res = std::dynamic_pointer_cast<T>(Get(path));
@@ -77,10 +77,10 @@ public:
         else
         {
             // 新建
-            std::string str = FileHelper::ReadFile(path);
+            String str = FileHelper::ReadFile(path);
             JsonDocument doc;
             deserializeJson(doc, str);
-            std::string className = doc["className"];
+            String className = doc["className"];
 
             if (!creatorMap.contains(className))
             {

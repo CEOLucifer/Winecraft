@@ -62,7 +62,7 @@ ShaderProgram::~ShaderProgram()
 { glDeleteProgram(id); }
 
 
-void ShaderProgram::OnCreated(const JsonDocument& doc)
+void ShaderProgram::OnResourceCreation(const JsonDocument& doc)
 {
     auto vertShader = Resource::Load<Shader>(doc["vert"]);
     auto fragShader = Resource::Load<Shader>(doc["frag"]);

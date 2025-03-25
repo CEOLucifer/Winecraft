@@ -57,8 +57,8 @@ add_executable(LearnOpenGL
         include/UI/UIRenderPass.h
         src/UI/Canvas.cpp
         src/UI/UIRenderPass.cpp
-        include/UI/MeshControl.h
-        src/UI/MeshControl.cpp
+        include/UI/ControlMesh.h
+        src/UI/ControlMesh.cpp
         src/UI/Image.cpp
         src/UI/Button.cpp
         include/EMouseButton.h
@@ -79,7 +79,11 @@ add_executable(LearnOpenGL
         src/Font/Font.cpp
         include/Font/Character.h
         include/Std/Map.h
-        src/Font/Character.cpp
+        include/Render/Color.h
+        src/UI/Label.cpp
+        src/Render/Color.cpp
+        include/UI/FontMesh.h
+        src/UI/FontMesh.cpp
 )
 
 target_include_directories(LearnOpenGL PRIVATE ./include)

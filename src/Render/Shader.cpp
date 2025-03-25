@@ -6,7 +6,7 @@ using namespace std;
 
 Shader::~Shader() { glDeleteShader(id); }
 
-void Shader::OnCreated(const JsonDocument& doc)
+void Shader::OnResourceCreation(const JsonDocument& doc)
 {
     string path = doc["path"];
 

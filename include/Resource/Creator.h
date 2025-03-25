@@ -16,7 +16,7 @@ public:
     Sp<T> _createNew(const JsonDocument& doc)
     {
         Sp<T> res = Object::NewObject<T>();
-        res->OnCreated(doc);
+        res->OnResourceCreation(doc);
         return res;
     }
 };

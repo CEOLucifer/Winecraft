@@ -1,11 +1,11 @@
 #include <glad/glad.h>
-#include "UI/MeshControl.h"
+#include "UI/ControlMesh.h"
 #include <vector>
 #include "Render/Vertex2.h"
 
 using namespace std;
 
-MeshControl::MeshControl()
+ControlMesh::ControlMesh()
 {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -37,19 +37,25 @@ MeshControl::MeshControl()
     glGenBuffers(1, &ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
     // 将索引数据从内存送到显存
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t),
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(u32),
                  indices.data(), GL_STATIC_DRAW);
 
 }
 
-MeshControl::~MeshControl()
+ControlMesh::~ControlMesh()
 {
     glDeleteBuffers(1, &ebo);
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
 }
 
-void MeshControl::Use()
+void ControlMesh::Use()
 {
     glBindVertexArray(vao);
+}
+
+Sp<ControlMesh> ControlMesh::Create()
+{
+    Sp<ControlMesh> This(new ControlMesh);
+    return This;
 }

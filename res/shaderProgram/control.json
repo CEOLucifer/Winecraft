@@ -3,6 +3,6 @@
   "vert": "res/shader/control_vert.json",
   "frag": "res/shader/control_frag.json",
   "samplers": [
-    "tex"
+    "uTex"
   ]
 }

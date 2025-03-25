@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "TimeSystem.h"
 #include "Core/Branch.h"
+#include "Debug/Debug.h"
 
 using namespace std;
 
@@ -44,6 +45,9 @@ void CameraController::Update()
 
 
     // 滚轮
+
+    // 测试
+//    Debug::Log(Input::GetCursorPos());
 }
 
 void CameraController::OnAdded()

@@ -2,42 +2,47 @@
 
 
 #include "Render/RenderPass.h"
-#include "MeshControl.h"
 #include "Std/Vec.h"
 
 class Canvas;
+class ControlMesh;
 class Image;
 class ShaderProgram;
+class Label;
+class FontMesh;
+
 
 /// 处理UI渲染逻辑
 class UIRenderPass : public RenderPass
 {
     friend class Canvas;
     friend class Image;
+    friend class Label;
 
 private:
     Sp<Canvas> canvas;
 
-    MeshControl mesh;
-
+    // Image相关
+    Sp<ControlMesh> controlMesh;
     Vec<Sp<Image>> imageVec;
-
     Sp<ShaderProgram> shaderProgram;
 
     // 文本相关
-    u32 vao;
-    u32 vbo;
+    Sp<FontMesh> fontMesh;
     Sp<ShaderProgram> textShaderProgram;
+    Vec<Sp<Label>> labelVec;
 
 public:
     void RenderCustom(Sp<Camera> camera) override;
 
     void OnNewObject() override;
 
-    void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color);
-
 private:
     void initText();
+
+    void renderImages();
+
+    void renderLabels();
 
 private:
     static Sp<UIRenderPass> instance;

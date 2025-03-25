@@ -22,6 +22,7 @@
 #include "UI/UIRenderPass.h"
 #include "UI/Button.h"
 #include "Block/LatticeRenderCenter.h"
+#include "UI/Label.h"
 
 using namespace std;
 
@@ -73,17 +74,22 @@ void App::StartUser()
     cameraBra->Position = {50, 96, 50};
     cameraBra->Rotation = {-45, -135, 0};
     auto cameraController = cameraBra->AddNode<CameraController>();
-
     cameraBra->AddNode<LatticeRenderCenter>();
+
+
+//    auto lrcBra = Branch::NewBranch("lrcBra");
+//    lrcBra->AddNode<LatticeRenderCenter>();
+
 
     Object::NewObject<UIRenderPass>();
 //    Branch::Create<FPSWatcher>();
 
 
+    // 按钮
     auto btnBra = Branch::NewBranch("btnBra");
     auto btn = btnBra->AddNode<Button>();
-    btnBra->Position.x = 300;
-    btnBra->Scale = {100, 60, 0};
+    btnBra->Position = {300, 300 , 0};
+    btn->SetSize({100, 60});
 
     btn->OnDown([]()
                 {
@@ -98,6 +104,12 @@ void App::StartUser()
     auto img = btnBra->AddNode<Image>();
     img->SetTex(Resource::Load<Texture>("res/texture/btn.json"));
 
+
+    // 标签
+    auto labBra = Branch::NewBranch("labBra");
+    auto lab = labBra->AddNode<Label>();
+    lab->SetColor(Color::Yellow);
+    labBra->AddNode<FPSWatcher>();
 
 
 //    auto imgBra = Branch::Create("ImageBra");

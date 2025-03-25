@@ -21,14 +21,5 @@ public:
 
     /// 原点距下一个字形原点的距离
     i32 Advance;
-
-public:
-    ~Character();
-
-public:
-    static Map<u8, Character> Characters;
-
-public:
-    static void LoadCharacters();
 };
 

@@ -30,7 +30,7 @@ void Mathf::init()
 {
 //    SetSeed(std::time(0));
     SetSeed(666666);
-    Debug::Log(seed);
+    Debug::Log(std::format("init seed: {}", seed));
 }
 
 int Mathf::Hash21(glm::i32vec2 x)

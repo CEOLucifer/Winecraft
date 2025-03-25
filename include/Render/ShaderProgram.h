@@ -20,7 +20,7 @@ public:
 
     u32 GetID() const { return id; }
 
-    void OnCreated(const JsonDocument& doc) override;
+    void OnResourceCreation(const JsonDocument& doc) override;
 
     void Use();
 

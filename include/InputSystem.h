@@ -58,6 +58,6 @@ private:
         glfwGetWindowSize(window, &w, &h);
         glfwGetCursorPos(window, &x, &y);
 
-        return {(float) x - (float) w / 2, (float) h - (float) y - (float) h / 2};
+        return {x, h - y};
     }
 };

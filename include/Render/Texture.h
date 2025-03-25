@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../Resource/Resource.h"
-#include <cstdint>
+#include "Resource/Resource.h"
+#include "Std/Basic.h"
 #include "Std/SmartPtr.h"
-#include <string>
+#include "Std/String.h"
 
 /// @brief 纹理
 ///
@@ -12,11 +12,11 @@ class Texture : public Resource
 private:
     /// @brief opengl id
     ///
-    uint32_t id;
+    u32 id;
 
     /// @brief 类型。表明这个纹理是漫反射还是镜面反射等等纹理。暂时无用。
     ///
-    std::string type;
+    String type;
 
     int internalFormat;
 
@@ -25,14 +25,14 @@ private:
 public:
     ~Texture() override;
 
-    uint32_t GetID() const { return id; }
+    u32 GetID() const { return id; }
 
     int GetInternalFormat() const { return internalFormat; }
 
     void Use(int position, int type);
 
 public:
-    void OnCreated(const JsonDocument& doc) override;
+    void OnResourceCreation(const JsonDocument& doc) override;
 
 
 public:

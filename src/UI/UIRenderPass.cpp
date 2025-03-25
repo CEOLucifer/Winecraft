@@ -7,36 +7,15 @@
 #include "Render/RenderSystem.h"
 #include "Render/Texture.h"
 #include "Font/Character.h"
+#include "UI/Label.h"
+#include "UI/FontMesh.h"
+#include "UI/ControlMesh.h"
+#include "Render/Vertex2.h"
 
 void UIRenderPass::RenderCustom(Sp<Camera> camera)
 {
-    mesh.Use();
-    shaderProgram->Use();
-
-    glm::vec2 viewportSize = RenderSystem::Instance()->GetWindowSize();
-    // 遍历每个Image
-    for (auto each: imageVec)
-    {
-        glActiveTexture(GL_TEXTURE0);
-        if (each->GetTex())
-        {
-            glBindTexture(GL_TEXTURE_2D, each->GetTex()->GetID());
-        }
-
-        Sp<Branch> branch = each->GetParent().lock();
-        Transform t = *branch;
-        t.Position.x /= viewportSize.x / 2;
-        t.Position.y /= viewportSize.y / 2;
-        t.Scale.x /= viewportSize.x / 2;
-        t.Scale.y /= viewportSize.y / 2;
-
-        shaderProgram->SetMat4("uModel", t.GetModelMat());
-        glDrawElements(GL_TRIANGLES, mesh.indices.size(), GL_UNSIGNED_INT, 0);
-    }
-
-    // 测试：文本渲染
-    RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-    RenderText("(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+    renderImages();
+    renderLabels();
 }
 
 void UIRenderPass::OnNewObject()
@@ -46,77 +25,99 @@ void UIRenderPass::OnNewObject()
     EnableDepthTest = false;
     EnableBlend = true;
 
-    shaderProgram =
-            Resource::Load<ShaderProgram>("res/shaderProgram/control.json");
 
     instance = CastTo<UIRenderPass>();
+
+    controlMesh = ControlMesh::Create();
+    shaderProgram =
+            Resource::Load<ShaderProgram>("res/shaderProgram/control.json");
 
     initText();
 }
 
-void UIRenderPass::RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, glm::vec3 color)
+void UIRenderPass::initText()
+{
+    textShaderProgram = Resource::Load<ShaderProgram>("res/shaderProgram/font.json");
+    fontMesh = FontMesh::Create();
+}
+
+void UIRenderPass::renderImages()
+{
+    controlMesh->Use();
+    shaderProgram->Use();
+    glm::vec2 viewportSize = RenderSystem::Instance()->GetWindowSize();
+    shaderProgram->SetMat4("uProj", glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y));
+    // 遍历每个Image
+    for (auto image: imageVec)
+    {
+        glActiveTexture(GL_TEXTURE0);
+        if (image->GetTex())
+        {
+            glBindTexture(GL_TEXTURE_2D, image->GetTex()->GetID());
+        }
+
+        Sp<Branch> branch = image->GetParent().lock();
+        Transform t = *branch;
+        shaderProgram->SetMat4("uModel", t.GetModelMat());
+        shaderProgram->SetVec4("uColor", image->GetColor());
+        glDrawElements(GL_TRIANGLES, controlMesh->GetIndiceCount(), GL_UNSIGNED_INT, 0);
+    }
+}
+
+void UIRenderPass::renderLabels()
 {
     // 激活对应的渲染状态
+    fontMesh->Use();
     textShaderProgram->Use();
-    textShaderProgram->SetVec3("textColor", color);
-
     glActiveTexture(GL_TEXTURE0);
-    glBindVertexArray(vao);
+    glm::vec2 viewportSize = RenderSystem::Instance()->GetWindowSize();
+    textShaderProgram->SetMat4("uProj", glm::ortho(0.0f, viewportSize.x, 0.0f, viewportSize.y));
 
-    // 遍历文本中所有的字符
-    std::string::const_iterator c;
-    for (c = text.begin(); c != text.end(); c++)
+    for (auto label: labelVec)
     {
-        Character ch = Character::Characters[*c];
+        textShaderProgram->SetVec4("uColor", label->GetColor());
+        String& text = label->GetText();
+        Sp<Font> font = label->GetFont();
+        f32 fontSize = label->GetFontSize();
+        glm::vec2 labPos = label->GetPos();
 
-        GLfloat xpos = x + ch.Bearing.x * scale;
-        GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+        glm::vec2 pos = {0, 0};
 
-        GLfloat w = ch.Size.x * scale;
-        GLfloat h = ch.Size.y * scale;
-        // 对每个字符更新VBO
-        GLfloat vertices[6][4] = {
-                {xpos,     ypos + h, 0.0, 0.0},
-                {xpos,     ypos,     0.0, 1.0},
-                {xpos + w, ypos,     1.0, 1.0},
+        // 遍历文本中所有的字符，逐个渲染字符。
+        for (auto c = text.begin(); c != text.end(); c++)
+        {
+            Character& ch = font->GetCharacter(*c);
 
-                {xpos,     ypos + h, 0.0, 0.0},
-                {xpos + w, ypos,     1.0, 1.0},
-                {xpos + w, ypos + h, 1.0, 0.0}
-        };
-        // 在四边形上绘制字形纹理
-        glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-        // 更新VBO内存的内容
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        // 绘制四边形
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        // 更新位置到下一个字形的原点，注意单位是1/64像素
-        x += (ch.Advance >> 6) * scale; // 位偏移6个单位来获取单位为像素的值 (2^6 = 64)
+            f32 xpos = pos.x + ch.Bearing.x * fontSize;
+            f32 ypos = pos.y - (ch.Size.y - ch.Bearing.y) * fontSize;
+
+            f32 w = ch.Size.x * fontSize;
+            f32 h = ch.Size.y * fontSize;
+
+            // 字符的顶点坐标
+            Vertex2 vertices[6] = {
+                    {labPos + glm::vec2{xpos, ypos + h},     {0.0, 0.0}},
+                    {labPos + glm::vec2{xpos, ypos},         {0.0, 1.0}},
+                    {labPos + glm::vec2{xpos + w, ypos},     {1.0, 1.0}},
+                    {labPos + glm::vec2{xpos, ypos + h},     {0.0, 0.0}},
+                    {labPos + glm::vec2{xpos + w, ypos},     {1.0, 1.0}},
+                    {labPos + glm::vec2{xpos + w, ypos + h}, {1.0, 0.0}}
+            };
+
+            // Render glyph texture over quad
+            glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+            // Update content of VBO memory
+            glBindBuffer(GL_ARRAY_BUFFER, fontMesh->GetVbo());
+            glBufferSubData(GL_ARRAY_BUFFER, 0, 6 * sizeof(Vertex2), vertices); // Be sure to use glBufferSubData and not glBufferData
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            // Render quad
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+            // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+            pos.x += (ch.Advance >> 6) * fontSize; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+        }
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-
-void UIRenderPass::initText()
-{
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    textShaderProgram = Resource::Load<ShaderProgram>("res/shaderProgram/font.json");
-    glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
-    textShaderProgram->SetMat4("projection", projection);
-
-    Character::LoadCharacters();
 }
 
 Sp<UIRenderPass> UIRenderPass::instance = nullptr;

@@ -16,5 +16,5 @@ public:
 
     uint32_t GetID() { return id; }
 
-    void OnCreated(const JsonDocument& doc) override;
+    void OnResourceCreation(const JsonDocument& doc) override;
 };

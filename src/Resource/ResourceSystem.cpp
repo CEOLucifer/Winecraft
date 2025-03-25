@@ -2,6 +2,7 @@
 #include "Render/Texture.h"
 #include "Render/Shader.h"
 #include "Render/ShaderProgram.h"
+#include "Font/Font.h"
 
 void ResourceSystem::Cache(std::shared_ptr<Resource> res)
 {
@@ -16,6 +17,8 @@ void ResourceSystem::RegisterAllResources()
     // ShaderProgram
     RegisterResource<ShaderProgram>("ShaderProgram");
     RegisterResource<Shader>("Shader");
+
+    RegisterResource<Font>("Font");
 }
 
 void ResourceSystem::OnLoad() { RegisterAllResources(); }

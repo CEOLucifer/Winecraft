@@ -18,7 +18,7 @@ public:
     const String& GetPath()
     { return path; }
 
-    virtual void OnCreated(const JsonDocument& doc)
+    virtual void OnResourceCreation(const JsonDocument& doc)
     {}
 
 public:

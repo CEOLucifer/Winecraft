@@ -15,7 +15,7 @@ void Texture::Use(int position, int type)
     glBindTexture(type, id);
 }
 
-void Texture::OnCreated(const JsonDocument& doc)
+void Texture::OnResourceCreation(const JsonDocument& doc)
 {
     std::string type = doc["type"];
 

@@ -1,11 +1,13 @@
 #version 330 core
-out vec4 FragColor;
+in vec2 bTexCor;
 
-in vec2 bTexCoords;
+out vec4 cColor;
 
-uniform sampler2D tex;
+uniform sampler2D uTex;
+uniform vec4 uColor;
 
 void main()
-{ 
-    FragColor = texture(tex, bTexCoords);
+{
+    vec4 sampled = texture(uTex, bTexCor);
+    cColor = uColor * sampled;
 }
