@@ -17,6 +17,8 @@ public:
     Array<Array<Array<Block, Size>, Height>, Size> Blocks = {};
 
 private:
+    u32 vao = 0;
+
     u32 aModelsVbo = 0;
 
     /// 存储方块的model
@@ -34,6 +36,11 @@ public:
     Section();
 
     ~Section();
+
+    u32 GetVao()
+    {
+        return vao;
+    }
 
     void FillWith(Block block);
 
@@ -79,7 +86,16 @@ private:
     /// 柏林噪声
     void generateRandom_Berlin(glm::i32vec2 swc);
 
+private:
+    static u32 blockVerticeVbo;
+    static u32 blockVerticeEbo;
+    static Vec<u32> indices;
+
 public:
+    static void Load();
+
+    static void Unload();
+
     static Sp<Section> Create();
 
     static constexpr i32 GetSize()
@@ -90,5 +106,10 @@ public:
     static constexpr i32 GetHeight()
     {
         return Height;
+    }
+
+    static Vec<u32>& GetIndices()
+    {
+        return indices;
     }
 };

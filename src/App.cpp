@@ -32,6 +32,7 @@ void App::Run()
     RenderSystem::LoadInstance();
     GLFWwindow* window = RenderSystem::Instance()->GetWindow();
     ResourceSystem::LoadInstance();
+    Section::Load();
     BlockSystem::LoadInstance();
     Input::init(window);
     Time::init();
@@ -59,6 +60,7 @@ void App::Run()
     }
 
     BlockSystem::UnloadInstance();
+    Section::Unload();
     ResourceSystem::UnloadInstance();
     RenderSystem::UnloadInstance();
     CoreSystem::UnloadInstance();

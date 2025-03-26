@@ -11,12 +11,6 @@
 class BlockRenderPass : public RenderPass
 {
 private:
-    u32 vao = 0;
-    /// 方块顶点vbo
-    u32 vbo = 0;
-    /// 方块顶点ebo
-    u32 ebo = 0;
-
     Sp<ShaderProgram> shaderProgram;
 
 public:
