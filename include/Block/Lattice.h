@@ -53,6 +53,8 @@ public:
 
     bool IsInited();
 
+    /// 刷新每个区块的BufferData
+    void FreshBufferData();
 
 public:
     static constexpr i32 GetSize()

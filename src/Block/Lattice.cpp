@@ -23,9 +23,10 @@ void Lattice::Init(glm::i32vec2 swc)
     {
         for (int zz = 0; zz < Lattice::Size; ++zz)
         {
-            sections[xx][zz]->Refresh({swc.x + xx, swc.y + zz});
+            sections[xx][zz]->GenerateBlocks({swc.x + xx, swc.y + zz});
         }
     }
+    FreshBufferData();
 
     isInited = true;
 }
@@ -45,7 +46,7 @@ void Lattice::Refresh(glm::i32vec2 swc)
 
     glm::i32vec2 old_swc = this->swc;
 
-    // 收集blankSections
+    // 收集blankSections：不会出现在新网格中的原区块
     Vec<Sp<Section>> blankSections;
     for (int xa = 0; xa < Lattice::GetSize(); ++xa)
     {
@@ -81,13 +82,14 @@ void Lattice::Refresh(glm::i32vec2 swc)
                 // 不在，从blankSections中借一个
                 backend[xa][za] = blankSections.back();
                 blankSections.pop_back();
-                backend[xa][za]->Refresh({swc.x + xa, swc.y + za});
+                backend[xa][za]->GenerateBlocks({swc.x + xa, swc.y + za});
             }
         }
     }
 
     sections = std::move(backend);
     this->swc = swc;
+    FreshBufferData();
 }
 
 void Lattice::RefreshCenter(glm::i32vec2 center_swc)
@@ -99,5 +101,16 @@ void Lattice::RefreshCenter(glm::i32vec2 center_swc)
 bool Lattice::IsInited()
 {
     return isInited;
+}
+
+void Lattice::FreshBufferData()
+{
+    for (int xx = 0; xx < Lattice::Size; ++xx)
+    {
+        for (int zz = 0; zz < Lattice::Size; ++zz)
+        {
+            sections[xx][zz]->FreshBufferData();
+        }
+    }
 }
 

@@ -52,8 +52,8 @@ public:
     /// 生成方块数据
     void GenerateBlocks(glm::i32vec2 swc);
 
-    /// 根据当前方块数据，输送数据到显存
-    void TransferBufferData();
+    /// 根据当前方块数据，更新BufferData
+    void FreshBufferData();
 
     u32 GetaModelsVbo()
     {
@@ -69,10 +69,6 @@ public:
     {
         return aTexIndsVbo;
     }
-
-    /// 生成方块和显存数据
-    /// \param swc
-    void Refresh(glm::i32vec2 swc);
 
     glm::i32vec2 Get_swc()
     {

@@ -76,11 +76,11 @@ void App::StartUser()
     cameraBra->Position = {50, 96, 50};
     cameraBra->Rotation = {-45, -135, 0};
     auto cameraController = cameraBra->AddNode<CameraController>();
-//    cameraBra->AddNode<LatticeRenderCenter>();
+    cameraBra->AddNode<LatticeRenderCenter>();
 
 
-    auto lrcBra = Branch::NewBranch("lrcBra");
-    lrcBra->AddNode<LatticeRenderCenter>();
+//    auto lrcBra = Branch::NewBranch("lrcBra");
+//    lrcBra->AddNode<LatticeRenderCenter>();
 
 
     Object::NewObject<UIRenderPass>();

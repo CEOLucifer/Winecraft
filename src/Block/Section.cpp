@@ -93,7 +93,7 @@ void Section::generateRandom_Value(glm::i32vec2 swc)
 
             // 分形噪声：叠加不同振幅和周期的噪声。
             fHeight += Mathf::Noise(32, 64, 0, bwc);
-            fHeight += Mathf::Noise(32, 32, 0, bwc);
+            fHeight += Mathf::Noise(18, 32, 0, bwc);
 //            height += Mathf::Noise(2, 4, -1, {xx * Section::Size + x, zz * Section::Size + z});
             fHeight += Mathf::Noise(2, 8, -1, bwc);
 
@@ -184,7 +184,7 @@ void Section::generateRandom_Berlin(glm::i32vec2 swc)
     }
 }
 
-void Section::TransferBufferData()
+void Section::FreshBufferData()
 {
     aModels.clear();
     aTexInds.clear();
@@ -197,36 +197,37 @@ void Section::TransferBufferData()
             for (int z = 0; z < Section::Size; ++z)
             {
                 glm::mat4 model;
-                bool isRender = true;
 
+                // 判断方块是否应该被渲染
+                bool isRender = true;
                 // 没有方块，continue
                 if (Blocks[x][y][z] == 0)
                 {
                     isRender = false;
                 }
-//                else
-//                {
-//                    // 上下左右前后都有方块，continue
-//                    auto system = BlockSystem::Instance();
-//                    int xc = swc.x * Section::Size;
-//                    int zc = swc.y * Section::Size;
-//                    auto up = system->GetBlock({xc + x, y + 1, zc + z});
-//                    auto down = system->GetBlock({xc + x, y - 1, zc + z});
-//                    auto left = system->GetBlock({xc + x - 1, y, zc + z});
-//                    auto right = system->GetBlock({xc + x + 1, y, zc + z});
-//                    auto forward = system->GetBlock({xc + x, y, zc + z + 1});
-//                    auto back = system->GetBlock({xc + x, y, zc + z - 1});
-//
-//                    if (up && (*up).id != 0 &&
-//                        down && (*down).id != 0 &&
-//                        left && (*left).id != 0 &&
-//                        right && (*right).id != 0 &&
-//                        forward && (*forward).id != 0 &&
-//                        back && (*back).id != 0)
-//                    {
-//                        isRender = false;
-//                    }
-//                }
+                else
+                {
+                    // 上下左右前后都有方块，continue
+                    auto system = BlockSystem::Instance();
+                    int xc = swc.x * Section::Size;
+                    int zc = swc.y * Section::Size;
+                    auto up = system->GetBlock({xc + x, y + 1, zc + z});
+                    auto down = system->GetBlock({xc + x, y - 1, zc + z});
+                    auto left = system->GetBlock({xc + x - 1, y, zc + z});
+                    auto right = system->GetBlock({xc + x + 1, y, zc + z});
+                    auto forward = system->GetBlock({xc + x, y, zc + z + 1});
+                    auto back = system->GetBlock({xc + x, y, zc + z - 1});
+
+                    if (up && (*up).id != 0 &&
+                        down && (*down).id != 0 &&
+                        left && (*left).id != 0 &&
+                        right && (*right).id != 0 &&
+                        forward && (*forward).id != 0 &&
+                        back && (*back).id != 0)
+                    {
+                        isRender = false;
+                    }
+                }
 
                 if (isRender)
                 {
@@ -270,20 +271,12 @@ void Section::TransferBufferData()
     glBindBuffer(GL_ARRAY_BUFFER, aTexIndsVbo);
     glBufferData(GL_ARRAY_BUFFER, aTexInds.size() * sizeof(u32), aTexInds.data(), GL_DYNAMIC_DRAW);
     // aTexInds 属性，实例化数组
-    glBindBuffer(GL_ARRAY_BUFFER, aTexIndsVbo);
     glVertexAttribIPointer(7, 1, GL_UNSIGNED_INT, sizeof(u32), (void*) (0));
     glVertexAttribDivisor(7, 1);
     // !!!设置glsl整数类型要用glVertexAttribIPointer，而不是glVertexAttribPointer。
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
-
-void Section::Refresh(glm::i32vec2 swc)
-{
-    GenerateBlocks(swc);
-    TransferBufferData();
-}
-
 
 Vec<Vertex> vertices = {
         // 前面
