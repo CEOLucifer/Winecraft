@@ -6,6 +6,8 @@
 #include "Std/SmartPtr.h"
 #include "Std/Vec.h"
 
+class Lattice;
+
 /// 区块
 class Section
 {
@@ -37,6 +39,9 @@ public:
 
     ~Section();
 
+    /// 初始化opengl相关
+    void InitOpenGL();
+
     u32 GetVao()
     {
         return vao;
@@ -53,7 +58,7 @@ public:
     void GenerateBlocks(glm::i32vec2 swc);
 
     /// 根据当前方块数据，更新BufferData
-    void FreshBufferData();
+    void FreshBufferData(Lattice& lattice);
 
     u32 GetaModelsVbo()
     {
@@ -74,6 +79,10 @@ public:
     {
         return swc;
     }
+
+    void SaveSection();
+
+    void LoadSection();
 
 private:
     /// Value噪声

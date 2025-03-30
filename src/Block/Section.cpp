@@ -7,6 +7,17 @@
 
 Section::Section()
 {
+}
+
+Section::~Section()
+{
+    glDeleteBuffers(1, &aModelsVbo);
+    glDeleteBuffers(1, &aTexIndsVbo);
+    glDeleteVertexArrays(1, &vao);
+}
+
+void Section::InitOpenGL()
+{
     u32 size = Section::Size * Section::Size * Section::Height;
 
     glGenVertexArrays(1, &vao);
@@ -43,13 +54,6 @@ Section::Section()
 
     glGenBuffers(1, &aTexIndsVbo);
     aTexInds.reserve(size);
-}
-
-Section::~Section()
-{
-    glDeleteBuffers(1, &aModelsVbo);
-    glDeleteBuffers(1, &aTexIndsVbo);
-    glDeleteVertexArrays(1, &vao);
 }
 
 void Section::FillWith(Block block)
@@ -92,9 +96,8 @@ void Section::generateRandom_Value(glm::i32vec2 swc)
             float fHeight = 0;
 
             // 分形噪声：叠加不同振幅和周期的噪声。
-            fHeight += Mathf::Noise(32, 64, 0, bwc);
+            fHeight += Mathf::Noise(32, 64, 10, bwc);
             fHeight += Mathf::Noise(18, 32, 0, bwc);
-//            height += Mathf::Noise(2, 4, -1, {xx * Section::Size + x, zz * Section::Size + z});
             fHeight += Mathf::Noise(2, 8, -1, bwc);
 
             height = fHeight;
@@ -107,15 +110,18 @@ void Section::generateRandom_Value(glm::i32vec2 swc)
 
                     // 生态系统。目前只影响表层
                     float temperature = Mathf::Noise(1, 256, 0, bwc);
-                    if (temperature < 0.5)
+                    if (temperature < 0.3)
                     {
                         Blocks[x][y][z] = 2;
                     }
-                    else
+                    else if (0.3 <= temperature && temperature < 0.7)
                     {
                         Blocks[x][y][z] = 1;
                     }
-
+                    else
+                    {
+                        Blocks[x][y][z] = 5;
+                    }
                 }
                 else if (height - y > 5)
                 {
@@ -184,7 +190,7 @@ void Section::generateRandom_Berlin(glm::i32vec2 swc)
     }
 }
 
-void Section::FreshBufferData()
+void Section::FreshBufferData(Lattice& lattice)
 {
     aModels.clear();
     aTexInds.clear();
@@ -208,15 +214,14 @@ void Section::FreshBufferData()
                 else
                 {
                     // 上下左右前后都有方块，continue
-                    auto system = BlockSystem::Instance();
-                    int xc = swc.x * Section::Size;
-                    int zc = swc.y * Section::Size;
-                    auto up = system->GetBlock({xc + x, y + 1, zc + z});
-                    auto down = system->GetBlock({xc + x, y - 1, zc + z});
-                    auto left = system->GetBlock({xc + x - 1, y, zc + z});
-                    auto right = system->GetBlock({xc + x + 1, y, zc + z});
-                    auto forward = system->GetBlock({xc + x, y, zc + z + 1});
-                    auto back = system->GetBlock({xc + x, y, zc + z - 1});
+                    int bwcX = swc.x * Section::Size;
+                    int bwcY = swc.y * Section::Size;
+                    auto up = lattice.GetBlock({bwcX + x, y + 1, bwcY + z});
+                    auto down = lattice.GetBlock({bwcX + x, y - 1, bwcY + z});
+                    auto left = lattice.GetBlock({bwcX + x - 1, y, bwcY + z});
+                    auto right = lattice.GetBlock({bwcX + x + 1, y, bwcY + z});
+                    auto forward = lattice.GetBlock({bwcX + x, y, bwcY + z + 1});
+                    auto back = lattice.GetBlock({bwcX + x, y, bwcY + z - 1});
 
                     if (up && (*up).id != 0 &&
                         down && (*down).id != 0 &&
@@ -246,7 +251,6 @@ void Section::FreshBufferData()
                     //
                     // int和u32类型相乘，必须把u32强转为int，否则默认是int强转u32。如果int是负数，则会将其变成很大的u32！还是不要用u32了！
 
-                    u32 id = Blocks[x][y][z];
                     aTexInds.push_back(Blocks[x][y][z]);
                 }
             }

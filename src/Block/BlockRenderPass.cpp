@@ -11,7 +11,6 @@
 using namespace std;
 
 
-
 void BlockRenderPass::OnNewObject()
 {
     RenderPass::OnNewObject();
@@ -48,14 +47,17 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
     auto texStone = Resource::Load<Texture>("res/texture/stone.json");
     texStone->Use(GL_TEXTURE2, GL_TEXTURE_CUBE_MAP);
 
-    auto texDirt = Resource::Load<Texture>("res/texture/Dirt.json");
+    auto texDirt = Resource::Load<Texture>("res/texture/dirt.json");
     texDirt->Use(GL_TEXTURE3, GL_TEXTURE_CUBE_MAP);
+
+    auto texSand = Resource::Load<Texture>("res/texture/sand.json");
+    texSand->Use(GL_TEXTURE4, GL_TEXTURE_CUBE_MAP);
 
     Lattice& lattice = BlockSystem::Instance()->GetLattice();
     // 渲染每个区块
-    for (u32 xx = 0; xx < Lattice::Size; ++xx)
+    for (u32 xx = 1; xx < lattice.GetFullSize() - 1; ++xx)
     {
-        for (u32 zz = 0; zz < Lattice::Size; ++zz)
+        for (u32 zz = 1; zz < lattice.GetFullSize() - 1; ++zz)
         {
             Sp<Section> section = lattice.GetSections()[xx][zz];
             glBindVertexArray(section->GetVao());
