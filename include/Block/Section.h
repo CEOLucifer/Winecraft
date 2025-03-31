@@ -5,11 +5,12 @@
 #include <glm/glm.hpp>
 #include "Std/SmartPtr.h"
 #include "Std/Vec.h"
+#include "Core/Object.h"
 
 class Lattice;
 
 /// 区块
-class Section
+class Section : public Object
 {
 public:
     static constexpr i32 Size = 16;
@@ -41,6 +42,8 @@ public:
 
     /// 初始化opengl相关
     void InitOpenGL();
+
+    void ClearOpenGL();
 
     u32 GetVao()
     {
@@ -100,8 +103,6 @@ public:
     static void Load();
 
     static void Unload();
-
-    static Sp<Section> Create();
 
     static constexpr i32 GetSize()
     {

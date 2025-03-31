@@ -16,13 +16,10 @@ private:
     /// 坐标。单位：区块。相对：世界
     glm::i32vec2 swc = {0, 0};
 
-    bool isInited = false;
-
 public:
     /// 初始化，必须先由外部调用，然后才能调用Refresh
     /// \param renderSize 规定：奇数
-    /// \param swc
-    void Init(u32 renderSize, glm::i32vec2 swc);
+    void Init(u32 renderSize);
 
     glm::i32vec2 GetCenterSectionCor()
     {
@@ -51,8 +48,6 @@ public:
     {
         return sections;
     };
-
-    bool IsInited();
 
     /// 刷新所有渲染区块的BufferData
     void FreshBufferData();

@@ -11,9 +11,7 @@ Section::Section()
 
 Section::~Section()
 {
-    glDeleteBuffers(1, &aModelsVbo);
-    glDeleteBuffers(1, &aTexIndsVbo);
-    glDeleteVertexArrays(1, &vao);
+    ClearOpenGL();
 }
 
 void Section::InitOpenGL()
@@ -56,6 +54,13 @@ void Section::InitOpenGL()
     aTexInds.reserve(size);
 }
 
+void Section::ClearOpenGL()
+{
+    glDeleteBuffers(1, &aModelsVbo);
+    glDeleteBuffers(1, &aTexIndsVbo);
+    glDeleteVertexArrays(1, &vao);
+}
+
 void Section::FillWith(Block block)
 {
     for (int x = 0; x < Size; ++x)
@@ -76,6 +81,8 @@ void Section::GenerateBlocks(glm::i32vec2 swc)
     this->swc = swc;
     Clear();
     generateRandom_Value(swc);
+
+    BlockSystem::Instance()->CacheSection(CastTo<Section>());
 }
 
 void Section::generateRandom_Value(glm::i32vec2 swc)
@@ -361,11 +368,4 @@ void Section::Unload()
 {
     glDeleteBuffers(1, &blockVerticeEbo);
     glDeleteBuffers(1, &blockVerticeVbo);
-}
-
-
-Sp<Section> Section::Create()
-{
-    Sp<Section> This(new Section);
-    return This;
 }

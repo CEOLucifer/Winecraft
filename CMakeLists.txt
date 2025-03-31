@@ -84,6 +84,7 @@ add_executable(LearnOpenGL
         src/Render/Color.cpp
         include/UI/FontMesh.h
         src/UI/FontMesh.cpp
+        include/Std/Hash.h
 )
 
 target_include_directories(LearnOpenGL PRIVATE ./include)

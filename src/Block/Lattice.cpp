@@ -1,100 +1,63 @@
 #include "Block/Lattice.h"
 #include "Debug/Debug.h"
 #include "Block/LatticeRenderCenter.h"
+#include "Block/BlockSystem.h"
 
 using namespace std;
 
-void Lattice::Init(u32 renderSize, glm::i32vec2 swc)
+void Lattice::Init(u32 renderSize)
 {
     if ((renderSize & 1) == 0)
     {
         Debug::LogError("renderSize必须是奇数");
     }
 
-    // 创建空Sections
+    // 用nullptr填充Sections
     u32 fullSize = renderSize + 2;
     sections.resize(fullSize);
-    for (auto& each: sections)
+    for (i32 xx = 0; xx < fullSize; ++xx)
     {
-        each.resize(fullSize);
-        for (auto& section: each)
+        sections[xx].resize(fullSize);
+        for (i32 zz = 0; zz < fullSize; ++zz)
         {
-            section = Section::Create();
-            section->InitOpenGL();
+            sections[xx][zz] = Object::NewObject<Section>();
         }
     }
-
-    this->swc = swc;
-    for (u32 xx = 0; xx < GetFullSize(); ++xx)
-    {
-        for (u32 zz = 0; zz < GetFullSize(); ++zz)
-        {
-            sections[xx][zz]->GenerateBlocks({swc.x + xx, swc.y + zz});
-        }
-    }
-    FreshBufferData();
-
-    isInited = true;
 }
 
 void Lattice::Refresh(glm::i32vec2 swc)
 {
-    if (!isInited)
-    {
-        Debug::LogError("Lattice must be init before refresh!");
-        return;
-    }
-
     if (this->swc == swc)
     {
         return;
     }
 
+    this->swc = swc;
+
     glm::i32vec2 old_swc = this->swc;
 
-    // 收集blankSections：不会出现在新网格中的原区块
-    Vec<Sp<Section>> blankSections;
-    for (int xa = 0; xa < GetFullSize(); ++xa)
-    {
-        for (int za = 0; za < GetFullSize(); ++za)
-        {
-            // 新网格中的坐标
-            glm::i32vec2 slc = {old_swc.x + xa - swc.x, old_swc.y + za - swc.y};
-            // 不在新网格中，添加到blandSections
-            if (slc.x < 0 || slc.x >= GetFullSize() ||
-                slc.y < 0 || slc.y >= GetFullSize())
-            {
-                blankSections.push_back(sections[xa][za]);
-            }
-        }
-    }
-
     // 填充backend
-    Vec backend(GetFullSize(), Vec(GetFullSize(), Sp<Section>()));
-    for (int xa = 0; xa < GetFullSize(); ++xa)
+    for (i32 xx = 0; xx < GetFullSize(); ++xx)
     {
-        for (int za = 0; za < GetFullSize(); ++za)
+        for (i32 zz = 0; zz < GetFullSize(); ++zz)
         {
-            // 旧网格中的坐标
-            glm::i32vec2 slc = {swc.x + xa - old_swc.x, swc.y + za - old_swc.y};
-            if (0 <= slc.x && slc.x < GetFullSize() &&
-                0 <= slc.y && slc.y < GetFullSize())
+            glm::i32vec2 sswc = swc + glm::i32vec2{xx, zz};
+            // 从缓存中查找
+            Sp<Section> cache = BlockSystem::Instance()->GetSectionCache(sswc);
+            if (cache)
             {
-                // 在旧网格中，赋值过来
-                backend[xa][za] = sections[slc.x][slc.y];
+                sections[xx][zz] = cache;
             }
             else
             {
-                // 不在，从blankSections中借一个
-                backend[xa][za] = blankSections.back();
-                blankSections.pop_back();
-                backend[xa][za]->GenerateBlocks({swc.x + xa, swc.y + za});
+                // 生成新区块
+                sections[xx][zz] = Section::NewObject<Section>();
+                sections[xx][zz]->InitOpenGL();
+                sections[xx][zz]->GenerateBlocks({swc.x + xx, swc.y + zz});
             }
         }
     }
 
-    sections = std::move(backend);
-    this->swc = swc;
     FreshBufferData();
 }
 
@@ -102,11 +65,6 @@ void Lattice::RefreshCenter(glm::i32vec2 center_swc)
 {
     glm::i32vec2 swc = {center_swc.x - GetFullSize() / 2, center_swc.y - GetFullSize() / 2};
     Refresh(swc);
-}
-
-bool Lattice::IsInited()
-{
-    return isInited;
 }
 
 void Lattice::FreshBufferData()

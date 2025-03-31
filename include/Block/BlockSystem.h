@@ -8,6 +8,8 @@
 #include "Std/Opt.h"
 #include "Std/Basic.h"
 #include "Lattice.h"
+#include "Std/Map.h"
+#include "Std/Hash.h"
 
 class LatticeRenderCenter;
 
@@ -21,7 +23,8 @@ private:
 
     Sp<LatticeRenderCenter> latticeRenderCenter;
 
-    Vec<Sp<Section>> sectionCaches;
+    /// 区块缓存
+    Map<glm::i32vec2, Sp<Section>> sectionCaches;
 
 
 public:
@@ -35,4 +38,16 @@ public:
     }
 
     void Update();
+
+    void CacheSection(Sp<Section> section);
+
+    /// 获取区块缓存。指定的坐标的区块是已生成好的，但是OpenGL相关未初始化。
+    /// \param swc
+    /// \return
+    Sp<Section> GetSectionCache(glm::i32vec2 swc);
+
+    bool IsCachedSection(glm::i32vec2 swc)
+    {
+        return GetSectionCache(swc) != nullptr;
+    }
 };
