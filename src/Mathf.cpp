@@ -169,3 +169,11 @@ float Mathf::Hash_2i_1f01(glm::i32vec2 in)
     // 使用哈希值生成一个 0 到 1 之间的浮点数
     return static_cast<float>(hash % 1000000) / 1000000.0f;
 }
+
+f32 Mathf::Bezier(f32 t, f32 p0, f32 p1, f32 p2, f32 p3)
+{
+    return p0 * (1 - t) * (1 - t) * (1 - t) +
+           3 * p1 * t * (1 - t) * (1 - t) +
+           3 * p2 * t * t * (1 - t) +
+           p3 * t * t * t;
+}

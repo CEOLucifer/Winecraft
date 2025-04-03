@@ -23,6 +23,7 @@
 #include "UI/Button.h"
 #include "Block/LatticeRenderCenter.h"
 #include "UI/Label.h"
+#include "Test/TestNode.h"
 
 using namespace std;
 
@@ -112,6 +113,9 @@ void App::StartUser()
     auto lab = labBra->AddNode<Label>();
     lab->SetColor(Color::Yellow);
     labBra->AddNode<FPSWatcher>();
+    labBra->Position.y = 10;
+
+    Branch::NewBranch<TestNode>("TestNode");
 
 
 //    auto imgBra = Branch::Create("ImageBra");

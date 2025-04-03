@@ -1,9 +1,10 @@
 #include <glad/glad.h>
 #include "Block/Section.h"
-#include "Mathf.h"
 #include "Core/Transform.h"
 #include "Block/BlockSystem.h"
 #include "Render/Vertex.h"
+#include "Block/StructureGenerator.h"
+#include "Block/WorldInfo.h"
 
 Section::Section()
 {
@@ -14,8 +15,21 @@ Section::~Section()
     ClearOpenGL();
 }
 
+void Section::Set_swc(i32vec2 value)
+{
+    BlockSystem::Instance()->RemoveSectionCache(swc);
+    swc = value;
+    BlockSystem::Instance()->CacheSection(CastTo<Section>());
+}
+
+
 void Section::InitOpenGL()
 {
+    if (isOpenGLInited)
+    {
+        return;
+    }
+
     u32 size = Section::Size * Section::Size * Section::Height;
 
     glGenVertexArrays(1, &vao);
@@ -29,6 +43,8 @@ void Section::InitOpenGL()
     glEnableVertexAttribArray(6);
     glEnableVertexAttribArray(7);
 
+
+    // 方块顶点vbbo
     glBindBuffer(GL_ARRAY_BUFFER, blockVerticeVbo);
     // 注：以下必须在vertices绑定正常数据之后才能调用。实际上是在设置当前的vao。
     // 位置属性
@@ -46,19 +62,65 @@ void Section::InitOpenGL()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, blockVerticeEbo);
     // 只要以上这一行，就能将ebo绑定到vao了。
 
-    // 创建其它vbo
-    glGenBuffers(1, &aModelsVbo);
-    aModels.reserve(size);
 
-    glGenBuffers(1, &aTexIndsVbo);
+
+    // 创建其它vbo
+
+    // aModels
+    aModels.reserve(size);
+    glGenBuffers(1, &aModelsVbo);
+    // aModel 属性，实例化数组
+    glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
+    glBufferData(GL_ARRAY_BUFFER, size * sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW);
+    GLsizei vec4Size = sizeof(glm::vec4);
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) 0);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (1 * vec4Size));
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (2 * vec4Size));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (3 * vec4Size));
+    glVertexAttribDivisor(3, 1);
+    glVertexAttribDivisor(4, 1);
+    glVertexAttribDivisor(5, 1);
+    glVertexAttribDivisor(6, 1);
+
+
+
+
+    // aTexInds
     aTexInds.reserve(size);
+    glGenBuffers(1, &aTexIndsVbo);
+    glBindBuffer(GL_ARRAY_BUFFER, aTexIndsVbo);
+    glBufferData(GL_ARRAY_BUFFER, size * sizeof(u32), nullptr, GL_DYNAMIC_DRAW);
+    // aTexInds 属性，实例化数组
+    glVertexAttribIPointer(7, 1, GL_UNSIGNED_INT, sizeof(u32), (void*) (0));
+    glVertexAttribDivisor(7, 1);
+    // !!!设置glsl整数类型要用glVertexAttribIPointer，而不是glVertexAttribPointer。
+
+
+
+
+
+
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+    isOpenGLInited = true;
 }
 
 void Section::ClearOpenGL()
 {
+    if (!isOpenGLInited)
+    {
+        return;
+    }
+
     glDeleteBuffers(1, &aModelsVbo);
     glDeleteBuffers(1, &aTexIndsVbo);
     glDeleteVertexArrays(1, &vao);
+
+    isOpenGLInited = false;
 }
 
 void Section::FillWith(Block block)
@@ -75,39 +137,42 @@ void Section::FillWith(Block block)
     }
 }
 
-
-void Section::GenerateBlocks(glm::i32vec2 swc)
+void Section::GenerateTree()
 {
-    this->swc = swc;
-    Clear();
-    generateRandom_Value(swc);
+    for (i32 x = 0; x < Size; ++x)
+    {
+        for (i32 z = 0; z < Size; ++z)
+        {
+            i32vec2 bwc = {swc.x * Size + x, swc.y * Size + z};
+            f32 temperature = WorldInfo::GetTemperature(bwc);
 
-    BlockSystem::Instance()->CacheSection(CastTo<Section>());
+            if (0.3 <= temperature && temperature < 0.7)
+            {
+                // 树
+                f32 treeRate = WorldInfo::GetTreeRate(bwc);
+                if (treeRate < 0.005)
+                {
+                    StructureGenerator::CreateTree({bwc.x, WorldInfo::GetHeight(bwc), bwc.y});
+                }
+            }
+        }
+    }
 }
 
-void Section::generateRandom_Value(glm::i32vec2 swc)
+void Section::GenerateBase()
 {
     // 这个函数处理区块的随机生成
 
     u32 xx = swc.x;
     u32 zz = swc.y;
-    for (int x = 0; x < Section::Size; ++x)
+    for (i32 x = 0; x < Section::Size; ++x)
     {
-        for (int z = 0; z < Section::Size; ++z)
+        for (i32 z = 0; z < Section::Size; ++z)
         {
             glm::i32vec2 bwc = {xx * Section::Size + x, zz * Section::Size + z};
 
-
             // 高度
-            u32 height = 0;
-            float fHeight = 0;
-
-            // 分形噪声：叠加不同振幅和周期的噪声。
-            fHeight += Mathf::Noise(32, 64, 10, bwc);
-            fHeight += Mathf::Noise(18, 32, 0, bwc);
-            fHeight += Mathf::Noise(2, 8, -1, bwc);
-
-            height = fHeight;
+            u32 height = WorldInfo::GetHeight(bwc);
 
             for (u32 y = 0; y < height && y < Section::Height; ++y)
             {
@@ -116,17 +181,23 @@ void Section::generateRandom_Value(glm::i32vec2 swc)
                     // 表层
 
                     // 生态系统。目前只影响表层
-                    float temperature = Mathf::Noise(1, 256, 0, bwc);
+                    // 温度
+                    f32 temperature = WorldInfo::GetTemperature(bwc);
                     if (temperature < 0.3)
                     {
+                        // 雪地
                         Blocks[x][y][z] = 2;
                     }
                     else if (0.3 <= temperature && temperature < 0.7)
                     {
+                        // 草原
                         Blocks[x][y][z] = 1;
+
+
                     }
                     else
                     {
+                        // 沙漠
                         Blocks[x][y][z] = 5;
                     }
                 }
@@ -143,92 +214,50 @@ void Section::generateRandom_Value(glm::i32vec2 swc)
             }
         }
     }
+
 }
 
-void Section::generateRandom_Berlin(glm::i32vec2 swc)
+void Section::GenerateFull()
 {
-    // 梯度向量和距离向量点乘，即高度
-
-    u32 xx = swc.x;
-    u32 zz = swc.y;
-
-    // 梯度向量
-    glm::vec2 grad_1 = Mathf::GetGrad({xx, zz + 1});
-    glm::vec2 grad_2 = Mathf::GetGrad({xx + 1, zz + 1});
-    glm::vec2 grad_3 = Mathf::GetGrad({xx, zz});
-    glm::vec2 grad_4 = Mathf::GetGrad({xx + 1, zz});
-
-    // (x, z)是相对区块坐标
-    for (int x = 0; x < Section::Size; ++x)
-    {
-        for (int z = 0; z < Section::Size; ++z)
-        {
-            u32 height = 0;
-
-            float xa = (float) x / Section::Size;
-            float za = (float) z / Section::Size;
-
-            // 距离向量
-            glm::vec2 dist_1 = {xa, za - 1};
-            glm::vec2 dist_2 = {xa - 1, za - 1};
-            glm::vec2 dist_3 = {xa, za};
-            glm::vec2 dist_4 = {xa - 1, za};
-
-            float influence_1 = glm::dot(grad_1, dist_1);
-            float influence_2 = glm::dot(grad_2, dist_2);
-            float influence_3 = glm::dot(grad_3, dist_3);
-            float influence_4 = glm::dot(grad_4, dist_4);
-
-            float a = std::lerp(influence_1, influence_2, xa);
-            float b = std::lerp(influence_3, influence_4, xa);
-            float c = std::lerp(b, a, za);
-
-            // 计算高度，并限制在合理范围内
-            float height_float = abs(c) * Section::Height;
-            height = static_cast<uint32_t>(height_float);
-
-
-            // 以height填充section
-            for (u32 y = 0; y < height; ++y)
-            {
-                Blocks[x][y][z] = 1;
-            }
-        }
-    }
+    GenerateBase();
+    GenerateTree();
+    isFull = true;
 }
 
-void Section::FreshBufferData(Lattice& lattice)
+void Section::FreshBufferData()
 {
     aModels.clear();
     aTexInds.clear();
 
     // 把每个方块的model传入
-    for (int x = 0; x < Section::Size; ++x)
+    for (i32 x = 0; x < Section::Size; ++x)
     {
-        for (int y = 0; y < Section::Height; ++y)
+        for (i32 y = 0; y < Section::Height; ++y)
         {
-            for (int z = 0; z < Section::Size; ++z)
+            for (i32 z = 0; z < Section::Size; ++z)
             {
+//                i32 ind = x * Section::Height * Section::Size + y * Section::Size + z;
+
                 glm::mat4 model;
 
                 // 判断方块是否应该被渲染
-                bool isRender = true;
+                u32 isRender = 1;
                 // 没有方块，continue
                 if (Blocks[x][y][z] == 0)
                 {
-                    isRender = false;
+                    isRender = 0;
                 }
                 else
                 {
                     // 上下左右前后都有方块，continue
                     int bwcX = swc.x * Section::Size;
                     int bwcY = swc.y * Section::Size;
-                    auto up = lattice.GetBlock({bwcX + x, y + 1, bwcY + z});
-                    auto down = lattice.GetBlock({bwcX + x, y - 1, bwcY + z});
-                    auto left = lattice.GetBlock({bwcX + x - 1, y, bwcY + z});
-                    auto right = lattice.GetBlock({bwcX + x + 1, y, bwcY + z});
-                    auto forward = lattice.GetBlock({bwcX + x, y, bwcY + z + 1});
-                    auto back = lattice.GetBlock({bwcX + x, y, bwcY + z - 1});
+                    auto up = BlockSystem::Instance()->GetBlock({bwcX + x, y + 1, bwcY + z});
+                    auto down = BlockSystem::Instance()->GetBlock({bwcX + x, y - 1, bwcY + z});
+                    auto left = BlockSystem::Instance()->GetBlock({bwcX + x - 1, y, bwcY + z});
+                    auto right = BlockSystem::Instance()->GetBlock({bwcX + x + 1, y, bwcY + z});
+                    auto forward = BlockSystem::Instance()->GetBlock({bwcX + x, y, bwcY + z + 1});
+                    auto back = BlockSystem::Instance()->GetBlock({bwcX + x, y, bwcY + z - 1});
 
                     if (up && (*up).id != 0 &&
                         down && (*down).id != 0 &&
@@ -237,11 +266,11 @@ void Section::FreshBufferData(Lattice& lattice)
                         forward && (*forward).id != 0 &&
                         back && (*back).id != 0)
                     {
-                        isRender = false;
+                        isRender = 0;
                     }
                 }
 
-                if (isRender)
+                if (isRender == 1)
                 {
                     // 添加一个此方块的aModel
                     Transform t;
@@ -250,6 +279,7 @@ void Section::FreshBufferData(Lattice& lattice)
                             + glm::vec3(x * 1, y * 1, z * 1) // 方块相对区块坐标
                             + glm::vec3(0.5, 0.5, 0.5);
                     model = t.GetModelMat();
+//                    aModels[ind] = model;
                     aModels.push_back(model);
 
                     // ！！！巨坑：如上:
@@ -258,6 +288,7 @@ void Section::FreshBufferData(Lattice& lattice)
                     //
                     // int和u32类型相乘，必须把u32强转为int，否则默认是int强转u32。如果int是负数，则会将其变成很大的u32！还是不要用u32了！
 
+//                    aTexInds[ind] = Blocks[x][y][z];
                     aTexInds.push_back(Blocks[x][y][z]);
                 }
             }
@@ -265,28 +296,19 @@ void Section::FreshBufferData(Lattice& lattice)
     }
 
     glBindVertexArray(vao);
-    // aModel 属性，实例化数组
-    glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
-    glBufferData(GL_ARRAY_BUFFER, aModels.size() * sizeof(glm::mat4), aModels.data(), GL_DYNAMIC_DRAW);
-    GLsizei vec4Size = sizeof(glm::vec4);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) 0);
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (1 * vec4Size));
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (2 * vec4Size));
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (3 * vec4Size));
-    glVertexAttribDivisor(3, 1);
-    glVertexAttribDivisor(4, 1);
-    glVertexAttribDivisor(5, 1);
-    glVertexAttribDivisor(6, 1);
 
-    // aTexIndsVbo
+    // aModels
+    glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, aModels.size() * sizeof(glm::mat4), aModels.data());
+
+    // aTexInds
     glBindBuffer(GL_ARRAY_BUFFER, aTexIndsVbo);
-    glBufferData(GL_ARRAY_BUFFER, aTexInds.size() * sizeof(u32), aTexInds.data(), GL_DYNAMIC_DRAW);
-    // aTexInds 属性，实例化数组
-    glVertexAttribIPointer(7, 1, GL_UNSIGNED_INT, sizeof(u32), (void*) (0));
-    glVertexAttribDivisor(7, 1);
-    // !!!设置glsl整数类型要用glVertexAttribIPointer，而不是glVertexAttribPointer。
+    glBufferSubData(GL_ARRAY_BUFFER, 0, aTexInds.size() * sizeof(u32), aTexInds.data());
+
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    isFreshBufferData = true;
 }
 
 Vec<Vertex> vertices = {
@@ -369,3 +391,4 @@ void Section::Unload()
     glDeleteBuffers(1, &blockVerticeEbo);
     glDeleteBuffers(1, &blockVerticeVbo);
 }
+

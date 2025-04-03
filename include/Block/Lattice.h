@@ -3,6 +3,7 @@
 #include "Std/Vec.h"
 #include "Section.h"
 #include "Std/Opt.h"
+#include "Std/Math.h"
 
 class BlockSystem;
 class LatticeRenderCenter;
@@ -61,9 +62,6 @@ public:
     {
         return sections.size() - 2;
     }
-
-    /// 获取指定世界坐标的区块
-    Opt<Block> GetBlock(glm::i32vec3 bwc);
 
     void Update(LatticeRenderCenter& lrc);
 };

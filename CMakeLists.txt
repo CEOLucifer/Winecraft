@@ -85,6 +85,13 @@ add_executable(LearnOpenGL
         include/UI/FontMesh.h
         src/UI/FontMesh.cpp
         include/Std/Hash.h
+        include/Std/Math.h
+        include/Block/StructureGenerator.h
+        src/Block/StructureGenerator.cpp
+        include/Test/TestNode.h
+        src/Test/TestNode.cpp
+        include/Block/WorldInfo.h
+        src/Block/WorldInfo.cpp
 )
 
 target_include_directories(LearnOpenGL PRIVATE ./include)

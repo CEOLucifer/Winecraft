@@ -1,0 +1,12 @@
+{
+    "className": "Texture",
+    "type": "cubeMap",
+    "six": [
+        "img/block/oak_leaves.png",
+        "img/block/oak_leaves.png",
+        "img/block/oak_leaves.png",
+        "img/block/oak_leaves.png",
+        "img/block/oak_leaves.png",
+        "img/block/oak_leaves.png"
+    ]
+}

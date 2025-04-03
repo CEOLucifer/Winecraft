@@ -24,13 +24,18 @@ private:
     Sp<LatticeRenderCenter> latticeRenderCenter;
 
     /// 区块缓存
-    Map<glm::i32vec2, Sp<Section>> sectionCaches;
+    Map<i32vec2, Sp<Section>> sectionCaches;
 
 
 public:
     void OnLoad() override;
 
     void SetLatticeRenderCenter(Sp<LatticeRenderCenter> value);
+
+    Sp<LatticeRenderCenter> GetLatticeRenderCenter()
+    {
+        return latticeRenderCenter;
+    }
 
     Lattice& GetLattice()
     {
@@ -50,4 +55,11 @@ public:
     {
         return GetSectionCache(swc) != nullptr;
     }
+
+    void RemoveSectionCache(i32vec2 swc);
+
+    /// 获取指定世界坐标的区块
+    Opt<Block> GetBlock(glm::i32vec3 bwc);
+
+    void SetBlock(Block block, i32vec3 bwc);
 };

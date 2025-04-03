@@ -6,6 +6,7 @@
 #include "Std/SmartPtr.h"
 #include "Std/Vec.h"
 #include "Core/Object.h"
+#include "Std/Math.h"
 
 class Lattice;
 
@@ -20,6 +21,55 @@ public:
     Array<Array<Array<Block, Size>, Height>, Size> Blocks = {};
 
 private:
+    /// 区块世界坐标
+    i32vec2 swc = {0, 0};
+
+public:
+    Section();
+
+    ~Section();
+
+    i32vec2 Get_swc()
+    {
+        return swc;
+    }
+
+    /// ！！！通过调用此函数设置区块世界坐标，才能调用生成函数
+    void Set_swc(i32vec2 value);
+
+
+#pragma region 生成
+private:
+    bool isFull = false;
+
+public:
+    void FillWith(Block block);
+
+    void Clear()
+    {
+        FillWith(0);
+    }
+
+    bool GetIsFull()
+    {
+        return isFull;
+    }
+
+    // 以下函数，是按照阶段顺序编写。
+
+    /// 生成基本地形。基于Value噪声。
+    void GenerateBase();
+
+    /// 生成树木
+    void GenerateTree();
+
+    void GenerateFull();
+
+#pragma endregion
+
+
+#pragma region 渲染
+private:
     u32 vao = 0;
 
     u32 aModelsVbo = 0;
@@ -32,15 +82,12 @@ private:
     /// 存储方块的texInd
     Vec<u32> aTexInds = {};
 
-    /// 区块世界坐标
-    glm::i32vec2 swc = {};
+    bool isOpenGLInited = false;
+
+    bool isFreshBufferData = false;
 
 public:
-    Section();
-
-    ~Section();
-
-    /// 初始化opengl相关
+    /// 初始化opengl相关。！！！需要在new Section后调用。
     void InitOpenGL();
 
     void ClearOpenGL();
@@ -50,18 +97,9 @@ public:
         return vao;
     }
 
-    void FillWith(Block block);
-
-    void Clear()
-    {
-        FillWith(0);
-    }
-
-    /// 生成方块数据
-    void GenerateBlocks(glm::i32vec2 swc);
-
     /// 根据当前方块数据，更新BufferData
-    void FreshBufferData(Lattice& lattice);
+    void FreshBufferData();
+
 
     u32 GetaModelsVbo()
     {
@@ -78,21 +116,15 @@ public:
         return aTexIndsVbo;
     }
 
-    glm::i32vec2 Get_swc()
+    bool GetIsOpenGLInited()
     {
-        return swc;
+        return isOpenGLInited;
     }
 
-    void SaveSection();
-
-    void LoadSection();
-
-private:
-    /// Value噪声
-    void generateRandom_Value(glm::i32vec2 swc);
-
-    /// 柏林噪声
-    void generateRandom_Berlin(glm::i32vec2 swc);
+    bool GetIsFreshBufferData()
+    {
+        return isFreshBufferData;
+    }
 
 private:
     static u32 blockVerticeVbo;
@@ -103,6 +135,19 @@ public:
     static void Load();
 
     static void Unload();
+
+#pragma endregion
+
+
+#pragma region 序列化
+#pragma endregion
+
+
+public:
+    static Sp<Section> NewSection()
+    {
+        return Object::NewObject<Section>();
+    }
 
     static constexpr i32 GetSize()
     {

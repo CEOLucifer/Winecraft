@@ -9,14 +9,19 @@
 #include <vector>
 
 class Renderer;
+
 class Camera;
+
 class GLFWwindow;
+
 class Material;
+
 class RenderPass;
 
 class RenderSystem : public Singleton<RenderSystem>
 {
     friend class Camera;
+
     friend class Renderer;
 
 private:
@@ -30,7 +35,7 @@ private:
 
     /// @brief 点光源
     Sp<SpotLight> spotLight;
-    
+
     /// @brief 定向光
     Sp<DirectionalLight> directionalLight;
 
@@ -39,15 +44,18 @@ public:
 
     void OnUnload() override;
 
-    void onFrameBufferResize(GLFWwindow *window, int w, int h);
+    void onFrameBufferResize(GLFWwindow* window, int w, int h);
 
-    GLFWwindow* GetWindow() { return window; }
+    GLFWwindow* GetWindow()
+    { return window; }
 
     glm::vec2 GetWindowSize();
 
-    void SetSpotLight(Sp<SpotLight> value) { spotLight = value; }
+    void SetSpotLight(Sp<SpotLight> value)
+    { spotLight = value; }
 
-    Sp<SpotLight> GetSpotLight() { return spotLight; }
+    Sp<SpotLight> GetSpotLight()
+    { return spotLight; }
 
     void SetDirectionalLight(Sp<DirectionalLight> value)
     {
@@ -78,7 +86,8 @@ public:
         }
     }
 
-    void AddCamera(Sp<Camera> camera) { cameraVec.push_back(camera); }
+    void AddCamera(Sp<Camera> camera)
+    { cameraVec.push_back(camera); }
 
     void RemoveCamera(Sp<Camera> camera)
     {
@@ -90,5 +99,14 @@ public:
                 break;
             }
         }
+    }
+
+    Sp<Camera> GetFirstCamera()
+    {
+        if (cameraVec.size() > 0)
+        {
+            return cameraVec[0];
+        }
+        return nullptr;
     }
 };

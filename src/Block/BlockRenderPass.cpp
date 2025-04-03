@@ -53,6 +53,12 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
     auto texSand = Resource::Load<Texture>("res/texture/sand.json");
     texSand->Use(GL_TEXTURE4, GL_TEXTURE_CUBE_MAP);
 
+    auto texOakLog = Resource::Load<Texture>("res/texture/oak_log.json");
+    texOakLog->Use(GL_TEXTURE5, GL_TEXTURE_CUBE_MAP);
+
+    auto texOakLeaves = Resource::Load<Texture>("res/texture/oak_leaves.json");
+    texOakLeaves->Use(GL_TEXTURE6, GL_TEXTURE_CUBE_MAP);
+
     Lattice& lattice = BlockSystem::Instance()->GetLattice();
     // 渲染每个区块
     for (u32 xx = 1; xx < lattice.GetFullSize() - 1; ++xx)
@@ -60,8 +66,10 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
         for (u32 zz = 1; zz < lattice.GetFullSize() - 1; ++zz)
         {
             Sp<Section> section = lattice.GetSections()[xx][zz];
+            u32 indiceCnt = Section::GetIndices().size();
+            u32 instanceCnt = section->GetaModels().size();
             glBindVertexArray(section->GetVao());
-            glDrawElementsInstanced(GL_TRIANGLES, section->GetIndices().size(), GL_UNSIGNED_INT, 0, section->GetaModels().size());
+            glDrawElementsInstanced(GL_TRIANGLES, indiceCnt, GL_UNSIGNED_INT, nullptr, instanceCnt);
         }
     }
     glBindVertexArray(0);
