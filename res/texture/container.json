@@ -1,5 +1,5 @@
 {
     "className": "Texture",
-    "type": "normal",
+    "target": "2D",
     "path": "res/container.png"
 }

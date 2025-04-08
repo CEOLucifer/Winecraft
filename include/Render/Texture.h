@@ -1,5 +1,6 @@
 #pragma once
 
+#include <glad/glad.h>
 #include "Resource/Resource.h"
 #include "Std/Basic.h"
 #include "Std/SmartPtr.h"
@@ -14,13 +15,12 @@ private:
     ///
     u32 id;
 
-    /// @brief 类型。表明这个纹理是漫反射还是镜面反射等等纹理。暂时无用。
-    ///
-    String type;
+    /// GL_TEXTURE_2D、GL_TEXTURE_CUBE_MAP
+    GLenum target;
 
-    int internalFormat;
+    GLenum internalFormat;
 
-    int format;
+    GLenum format;
 
 public:
     ~Texture() override;
@@ -46,7 +46,7 @@ public:
     /// @param width
     /// @param height
     /// @return Sp<Texture>
-    static Sp<Texture> CreateRaw(int internalFormat, int format, int width,
+    static Sp<Texture> CreateRaw(GLenum internalFormat, GLenum format, int width,
                                  int height, int type);
 
     static Sp<Texture> CreateRGBA(int width, int height);

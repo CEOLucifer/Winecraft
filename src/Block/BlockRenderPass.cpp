@@ -21,6 +21,8 @@ void BlockRenderPass::OnNewObject()
     FaceCull.CullFace = GL_BACK;
     FaceCull.FrontFace = GL_CCW;
 
+    EnableBlend = true;
+
 //    polygonMode = GL_LINE;
 
     shaderProgram =

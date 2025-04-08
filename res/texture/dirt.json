@@ -1,6 +1,6 @@
 {
     "className": "Texture",
-    "type": "cubeMap",
+    "target": "cubeMap",
     "six": [
         "img/block/dirt.png",
         "img/block/dirt.png",

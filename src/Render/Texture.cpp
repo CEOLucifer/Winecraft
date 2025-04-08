@@ -1,13 +1,9 @@
+#include <glad/glad.h>
 #include "Render/Texture.h"
-#include "ArduinoJson/Array/JsonArrayConst.hpp"
-#include "glad/glad.h"
 #include "stb/stb_image.h"
 #include <string>
-#include "Debug/Debug.h"
 #include "ArduinoJson.h"
 #include <format>
-
-using namespace std;
 
 void Texture::Use(int position, int type)
 {
@@ -17,12 +13,12 @@ void Texture::Use(int position, int type)
 
 void Texture::OnResourceCreation(const JsonDocument& doc)
 {
-    std::string type = doc["type"];
+    String targetStr = doc["target"];
 
 
-    if (type == "normal") // 普通
+    if (targetStr == "2D") // 2D纹理
     {
-        std::string path = doc["path"];
+        String path = doc["path"];
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
 
@@ -46,13 +42,14 @@ void Texture::OnResourceCreation(const JsonDocument& doc)
         if (data)
         {
             // 检查纹理格式
-            GLenum format;
+            // 通过原文件的通道数，判断纹理的格式
             if (nrChannels == 1)
                 format = GL_RED;
             else if (nrChannels == 3)
                 format = GL_RGB;
             else if (nrChannels == 4)
                 format = GL_RGBA;
+
 
             glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
                          GL_UNSIGNED_BYTE, data);
@@ -66,8 +63,11 @@ void Texture::OnResourceCreation(const JsonDocument& doc)
                     std::format("Failed to load texture, path:{}", path));
         }
         stbi_image_free(data);
+        target = GL_TEXTURE_2D;
+        internalFormat = format;
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
-    else if (type == "cubeMap") // 天空盒
+    else if (targetStr == "cubeMap") // 天空盒
     {
         JsonArrayConst six = doc["six"];
 
@@ -81,11 +81,10 @@ void Texture::OnResourceCreation(const JsonDocument& doc)
         unsigned char* data;
         for (unsigned int i = 0; i < six.size(); i++)
         {
-            data = stbi_load(six[i].as<string>().c_str(), &width, &height,
+            data = stbi_load(six[i].as<String>().c_str(), &width, &height,
                              &nrChannels, 0);
 
             // 检查纹理格式
-            GLenum format;
             if (nrChannels == 1)
                 format = GL_RED;
             else if (nrChannels == 3)
@@ -93,9 +92,12 @@ void Texture::OnResourceCreation(const JsonDocument& doc)
             else if (nrChannels == 4)
                 format = GL_RGBA;
 
-            // 注：interalformat是程序中表示的格式；而format是图片文件的真实格式，必须正确。
-            // internalformat可以和format不一样，但是在cubeMap中，六张图片的internalformat必须一致，否则采样是全黑的。
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width,
+
+            // ！！！！！！！！！！
+            // interalformat是程序中表示的格式；而format是图片文件的真实格式，必须正确。
+            // internalformat可以和format不一样。
+            // 在cubeMap中，六张图片的internalformat必须一致，否则采样是全黑的。在这里设置为GL_RGBA。
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, width,
                          height, 0, format, GL_UNSIGNED_BYTE, data);
         }
 
@@ -108,11 +110,15 @@ void Texture::OnResourceCreation(const JsonDocument& doc)
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R,
                         GL_CLAMP_TO_EDGE);
 
+        target = GL_TEXTURE_CUBE_MAP;
+        internalFormat = format;
         Debug::Log(std::format("cube map texture created"));
+        glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
     }
+
 }
 
-Sp<Texture> Texture::CreateRaw(int internalFormat, int format, int width,
+Sp<Texture> Texture::CreateRaw(GLenum internalFormat, GLenum format, int width,
                                int height, int type)
 {
     Sp<Texture> This(new Texture);
@@ -127,6 +133,8 @@ Sp<Texture> Texture::CreateRaw(int internalFormat, int format, int width,
 
     This->internalFormat = internalFormat;
     This->format = format;
+
+    glBindTexture(GL_TEXTURE_2D, 0);
     return This;
 }
 

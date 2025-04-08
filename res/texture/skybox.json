@@ -1,6 +1,6 @@
 {
     "className": "Texture",
-    "type": "cubeMap",
+    "target": "cubeMap",
     "six": [
         "res/skybox/right.jpg",
         "res/skybox/left.jpg",

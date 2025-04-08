@@ -89,23 +89,23 @@ void App::StartUser()
 
 
     // 按钮
-    auto btnBra = Branch::NewBranch("btnBra");
-    auto btn = btnBra->AddNode<Button>();
-    btnBra->Position = {300, 300 , 0};
-    btn->SetSize({100, 60});
-
-    btn->OnDown([]()
-                {
-                    Debug::Log("onDown");
-                });
-
-    btn->OnUp([]()
-              {
-                  Debug::Log("onUp");
-              });
-
-    auto img = btnBra->AddNode<Image>();
-    img->SetTex(Resource::Load<Texture>("res/texture/btn.json"));
+//    auto btnBra = Branch::NewBranch("btnBra");
+//    auto btn = btnBra->AddNode<Button>();
+//    btnBra->Position = {300, 300 , 0};
+//    btn->SetSize({100, 60});
+//
+//    btn->OnDown([]()
+//                {
+//                    Debug::Log("onDown");
+//                });
+//
+//    btn->OnUp([]()
+//              {
+//                  Debug::Log("onUp");
+//              });
+//
+//    auto img = btnBra->AddNode<Image>();
+//    img->SetTex(Resource::Load<Texture>("res/texture/btn.json"));
 
 
     // 标签

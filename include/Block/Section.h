@@ -82,6 +82,10 @@ private:
     /// 存储方块的texInd
     Vec<u32> aTexInds = {};
 
+    u32 aDataVbo = 0;
+
+    Vec<vec4> aDatas = {};
+
     bool isOpenGLInited = false;
 
     bool isFreshBufferData = false;
