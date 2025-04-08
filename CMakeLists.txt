@@ -5,118 +5,36 @@ set(CMAKE_CXX_COMPILER clang++)
 
 set(CMAKE_CXX_STANDARD 23)
 
-project(LearnOpenGL)
+project(Winecraft)
 
-add_executable(LearnOpenGL
-        src/App.cpp
-        src/Common/CameraController.cpp
-        src/FileHelper.cpp
-        src/InputSystem.cpp
-        src/main.cpp
-        src/TimeSystem.cpp
-        src/Resource/ResourceSystem.cpp
-        src/Render/Camera.cpp
-        src/Render/DirectionalLight.cpp
-        src/Render/FrameBuffer.cpp
-        src/Render/Model.cpp
-        src/Render/RenderBuffer.cpp
-        src/Render/RenderPass.cpp
-        src/Render/RenderSystem.cpp
-        src/Render/SpotLight.cpp
-        src/Render/Texture.cpp
-        src/Render/Mesh/Mesh.cpp
-        src/Render/Mesh/Mesh1.cpp
-        src/Render/Mesh/Mesh2.cpp
-        src/Render/Mesh/Mesh3.cpp
-        src/Render/Mesh/Mesh_2D_Point.cpp
-        src/Core/Branch.cpp
-        src/Core/CoreSystem.cpp
-        src/Core/Node.cpp
-        src/Core/Transform.cpp
-        src/Block/Section.cpp
-        src/Render/Shader.cpp
-        src/Render/ShaderProgram.cpp
-        include/Block/BlockRenderPass.h
-        src/Block/BlockRenderPass.cpp
-        include/Common/CameraController.h
-        include/Common/FPSWatcher.h
-        src/Common/FPSWatcher.cpp
-        include/Block/BlockSystem.h
-        src/Block/BlockSystem.cpp
-        include/Test/BerlinTest.h
-        include/Mathf.h
-        src/Mathf.cpp
-        include/Creature/Creature.h
-        include/Creature/Player.h
-        include/UI/Control.h
-        src/UI/Control.cpp
-        include/UI/Image.h
-        include/UI/Label.h
-        include/UI/Button.h
-        include/UI/Canvas.h
-        include/UI/UIRenderPass.h
-        src/UI/Canvas.cpp
-        src/UI/UIRenderPass.cpp
-        include/UI/ControlMesh.h
-        src/UI/ControlMesh.cpp
-        src/UI/Image.cpp
-        src/UI/Button.cpp
-        include/EMouseButton.h
-        include/EMouseAction.h
-        include/Block/LatticeRenderCenter.h
-        src/Block/LatticeRenderCenter.cpp
-        include/Std/Vec.h
-        include/Std/List.h
-        include/Std/Opt.h
-        include/Std/Basic.h
-        include/Std/Array.h
-        include/Std/String.h
-        include/Block/Lattice.h
-        src/Block/Lattice.cpp
-        include/Block/BlockData.h
-        include/ThirdParty/ft.h
-        include/Font/Font.h
-        src/Font/Font.cpp
-        include/Font/Character.h
-        include/Std/Map.h
-        include/Render/Color.h
-        src/UI/Label.cpp
-        src/Render/Color.cpp
-        include/UI/FontMesh.h
-        src/UI/FontMesh.cpp
-        include/Std/Hash.h
-        include/Std/Math.h
-        include/Block/StructureGenerator.h
-        src/Block/StructureGenerator.cpp
-        include/Test/TestNode.h
-        src/Test/TestNode.cpp
-        include/Block/WorldInfo.h
-        src/Block/WorldInfo.cpp
-)
+add_executable(Winecraft)
 
-target_include_directories(LearnOpenGL PRIVATE ./include)
+target_include_directories(Winecraft PRIVATE ./include)
+
+file(GLOB_RECURSE CPPS src/*.cpp)
+target_sources(Winecraft PRIVATE ${CPPS})
 
 include(FetchContent)
 
 # glfw
 find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(LearnOpenGL PRIVATE glfw)
+target_link_libraries(Winecraft PRIVATE glfw)
 
 # glad
-target_include_directories(LearnOpenGL PRIVATE dep/glad/include)
-target_sources(LearnOpenGL PRIVATE dep/glad/src/glad.c)
+target_include_directories(Winecraft PRIVATE dep/glad/include)
+target_sources(Winecraft PRIVATE dep/glad/src/glad.c)
 
 # stb
-target_include_directories(LearnOpenGL PRIVATE dep/stb/include)
-target_sources(LearnOpenGL PRIVATE dep/stb/src/stb_image.cpp)
+target_include_directories(Winecraft PRIVATE dep/stb/include)
+target_sources(Winecraft PRIVATE dep/stb/src/stb_image.cpp)
 
 # glm
 find_package(glm CONFIG REQUIRED)
-target_link_libraries(LearnOpenGL PRIVATE glm::glm)
+target_link_libraries(Winecraft PRIVATE glm::glm)
 
 # assimp
 find_package(assimp CONFIG REQUIRED)
-target_link_libraries(LearnOpenGL PRIVATE assimp::assimp)
+target_link_libraries(Winecraft PRIVATE assimp::assimp)
 
 # arduinoJson
 FetchContent_Declare(ArduinoJson
@@ -124,9 +42,9 @@ FetchContent_Declare(ArduinoJson
     GIT_TAG        v7.3.0
 )
 FetchContent_MakeAvailable(ArduinoJson)
-target_link_libraries(LearnOpenGL PRIVATE ArduinoJson)
+target_link_libraries(Winecraft PRIVATE ArduinoJson)
 
 # freetype
 find_package(Freetype REQUIRED)
-target_include_directories(LearnOpenGL PRIVATE ${FREETYPE_INCLUDE_DIRS})
-target_link_libraries(LearnOpenGL PRIVATE ${FREETYPE_LIBRARIES})
+target_include_directories(Winecraft PRIVATE ${FREETYPE_INCLUDE_DIRS})
+target_link_libraries(Winecraft PRIVATE ${FREETYPE_LIBRARIES})
