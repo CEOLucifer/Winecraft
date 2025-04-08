@@ -130,6 +130,13 @@ public:
         return isFreshBufferData;
     }
 
+    /// 用于刷新区块渲染数据
+    /// \param value
+    void SetIsFreshBufferData(bool value)
+    {
+        isFreshBufferData = value;
+    }
+
 private:
     static u32 blockVerticeVbo;
     static u32 blockVerticeEbo;

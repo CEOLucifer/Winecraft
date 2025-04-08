@@ -145,4 +145,5 @@ void BlockSystem::SetBlock(Block block, i32vec3 bwc)
     }
 
     section->Blocks[bsc.x][bwc.y][bsc.y] = block;
+    section->SetIsFreshBufferData(false);
 }
