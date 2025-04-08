@@ -26,3 +26,8 @@ f32 WorldInfo::GetTreeRate(i32vec2 bwc)
 {
     return Mathf::Hash_2i_1f01(bwc);
 }
+
+f32 WorldInfo::GetCactusRate(i32vec2 bwc)
+{
+    return Mathf::Hash_2i_1f01(bwc);
+}

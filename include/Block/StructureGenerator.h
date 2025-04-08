@@ -14,4 +14,6 @@ public:
     /// 生成树木。在指定位置。
     /// \param bwc
     static void CreateTree(i32vec3 bwc);
+
+    static void CreateCactus(i32vec3 bwc);
 };

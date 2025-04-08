@@ -155,6 +155,15 @@ void Section::GenerateTree()
                     StructureGenerator::CreateTree({bwc.x, WorldInfo::GetHeight(bwc), bwc.y});
                 }
             }
+            else if (temperature >= 0.7)
+            {
+                // 仙人掌
+                f32 rate = WorldInfo::GetCactusRate(bwc);
+                if (rate < 0.002)
+                {
+                    StructureGenerator::CreateCactus({bwc.x, WorldInfo::GetHeight(bwc), bwc.y});
+                }
+            }
         }
     }
 }

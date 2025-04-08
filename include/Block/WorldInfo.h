@@ -11,4 +11,6 @@ public:
     static f32 GetTemperature(i32vec2 bwc);
 
     static f32 GetTreeRate(i32vec2 bwc);
+
+    static f32 GetCactusRate(i32vec2 bwc);
 };

@@ -61,6 +61,9 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
     auto texOakLeaves = Resource::Load<Texture>("res/texture/oak_leaves.json");
     texOakLeaves->Use(GL_TEXTURE6, GL_TEXTURE_CUBE_MAP);
 
+    auto texCactus = Resource::Load<Texture>("res/texture/cactus.json");
+    texCactus->Use(GL_TEXTURE7, GL_TEXTURE_CUBE_MAP);
+
     Lattice& lattice = BlockSystem::Instance()->GetLattice();
     // 渲染每个区块
     for (u32 xx = 1; xx < lattice.GetFullSize() - 1; ++xx)

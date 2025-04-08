@@ -1,0 +1,12 @@
+{
+    "className": "Texture",
+    "target": "cubeMap",
+    "six": [
+        "img/block/cactus_side.png",
+        "img/block/cactus_side.png",
+        "img/block/cactus_top.png",
+        "img/block/cactus_bottom.png",
+        "img/block/cactus_side.png",
+        "img/block/cactus_side.png"
+    ]
+}

@@ -41,3 +41,13 @@ void StructureGenerator::CreateTree(i32vec3 bwc)
         }
     }
 }
+
+void StructureGenerator::CreateCactus(i32vec3 bwc)
+{
+    i32 height = 3;
+
+    for (i32 y = 0; y < height; ++y)
+    {
+        BlockSystem::Instance()->SetBlock(8, i32vec3{0, y, 0} + bwc);
+    }
+}
