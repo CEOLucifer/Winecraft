@@ -2,6 +2,12 @@
 #include "Render/RenderPass.h"
 #include "Render/RenderSystem.h"
 
+void RenderPass::SetRenderOrder(i32 value)
+{
+    renderOrder = value;
+    RenderSystem::Instance()->SortRenderOrder();
+}
+
 void RenderPass::Render(Sp<Camera> camera)
 {
     // 模板测试

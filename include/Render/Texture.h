@@ -29,7 +29,7 @@ public:
 
     int GetInternalFormat() const { return internalFormat; }
 
-    void Use(int position, int type);
+    void Use(u32 position);
 
 public:
     void OnResourceCreation(const JsonDocument& doc) override;

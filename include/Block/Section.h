@@ -137,16 +137,6 @@ public:
         isFreshBufferData = value;
     }
 
-private:
-    static u32 blockVerticeVbo;
-    static u32 blockVerticeEbo;
-    static Vec<u32> indices;
-
-public:
-    static void Load();
-
-    static void Unload();
-
 #pragma endregion
 
 
@@ -168,10 +158,5 @@ public:
     static constexpr i32 GetHeight()
     {
         return Height;
-    }
-
-    static Vec<u32>& GetIndices()
-    {
-        return indices;
     }
 };

@@ -5,6 +5,8 @@
 #include <format>
 #include <algorithm>
 #include "Render/Camera.h"
+#include "Render/RenderPass.h"
+
 
 using namespace std;
 
@@ -26,7 +28,7 @@ void RenderSystem::OnLoad()
     glfwSetWindowUserPointer(window, this);
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
     {
         Debug::LogError("Failed to initialize GLAD");
         return;
@@ -37,26 +39,27 @@ void RenderSystem::OnLoad()
 
     // 事件监听
     glfwSetFramebufferSizeCallback(
-        window,
-        [](auto window, int w, int h)
-        {
-            auto renderSystem = (RenderSystem*)glfwGetWindowUserPointer(window);
-            renderSystem->onFrameBufferResize(window, w, h);
-        });
+            window,
+            [](auto window, int w, int h)
+            {
+                auto renderSystem = (RenderSystem*) glfwGetWindowUserPointer(window);
+                renderSystem->onFrameBufferResize(window, w, h);
+            });
 
     // 查询顶点着色器的顶点属性上限
     int nrAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     Debug::Log(
-        format("Maximum nr of vertex attributes supported: {}", nrAttributes));
+            format("Maximum nr of vertex attributes supported: {}", nrAttributes));
 }
 
-void RenderSystem::OnUnload() { glfwTerminate(); }
+void RenderSystem::OnUnload()
+{ glfwTerminate(); }
 
 void RenderSystem::Render()
 {
     // 调用每个摄像机的Render
-    for (auto each : cameraVec)
+    for (auto each: cameraVec)
     {
         each->Render();
     }
@@ -75,4 +78,12 @@ glm::vec2 RenderSystem::GetWindowSize()
     int h;
     glfwGetWindowSize(window, &w, &h);
     return {w, h};
+}
+
+void RenderSystem::SortRenderOrder()
+{
+    ranges::sort(renderPassVec, [](Sp<RenderPass> a, Sp<RenderPass> b) -> bool
+    {
+        return a->GetRenderOrder() < b->GetRenderOrder();
+    });
 }

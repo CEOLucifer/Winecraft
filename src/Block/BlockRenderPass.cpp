@@ -7,6 +7,7 @@
 #include "Render/Texture.h"
 #include "Render/Vertex.h"
 #include "Block/BlockSystem.h"
+#include "Common/CubeMesh.h"
 
 using namespace std;
 
@@ -41,28 +42,28 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
 
     // 方块纹理
     auto texGrassBlock = Resource::Load<Texture>("res/texture/grass_block.json");
-    texGrassBlock->Use(GL_TEXTURE0, GL_TEXTURE_CUBE_MAP);
+    texGrassBlock->Use(GL_TEXTURE0);
 
     auto texSnowBlock = Resource::Load<Texture>("res/texture/snow_block.json");
-    texSnowBlock->Use(GL_TEXTURE1, GL_TEXTURE_CUBE_MAP);
+    texSnowBlock->Use(GL_TEXTURE1);
 
     auto texStone = Resource::Load<Texture>("res/texture/stone.json");
-    texStone->Use(GL_TEXTURE2, GL_TEXTURE_CUBE_MAP);
+    texStone->Use(GL_TEXTURE2);
 
     auto texDirt = Resource::Load<Texture>("res/texture/dirt.json");
-    texDirt->Use(GL_TEXTURE3, GL_TEXTURE_CUBE_MAP);
+    texDirt->Use(GL_TEXTURE3);
 
     auto texSand = Resource::Load<Texture>("res/texture/sand.json");
-    texSand->Use(GL_TEXTURE4, GL_TEXTURE_CUBE_MAP);
+    texSand->Use(GL_TEXTURE4);
 
     auto texOakLog = Resource::Load<Texture>("res/texture/oak_log.json");
-    texOakLog->Use(GL_TEXTURE5, GL_TEXTURE_CUBE_MAP);
+    texOakLog->Use(GL_TEXTURE5);
 
     auto texOakLeaves = Resource::Load<Texture>("res/texture/oak_leaves.json");
-    texOakLeaves->Use(GL_TEXTURE6, GL_TEXTURE_CUBE_MAP);
+    texOakLeaves->Use(GL_TEXTURE6);
 
     auto texCactus = Resource::Load<Texture>("res/texture/cactus.json");
-    texCactus->Use(GL_TEXTURE7, GL_TEXTURE_CUBE_MAP);
+    texCactus->Use(GL_TEXTURE7);
 
     Lattice& lattice = BlockSystem::Instance()->GetLattice();
     // 渲染每个区块
@@ -71,7 +72,7 @@ void BlockRenderPass::RenderCustom(Sp<Camera> camera)
         for (u32 zz = 1; zz < lattice.GetFullSize() - 1; ++zz)
         {
             Sp<Section> section = lattice.GetSections()[xx][zz];
-            u32 indiceCnt = Section::GetIndices().size();
+            u32 indiceCnt = CubeMesh::GetIndicesCnt();
             u32 instanceCnt = section->GetaModels().size();
             glBindVertexArray(section->GetVao());
             glDrawElementsInstanced(GL_TRIANGLES, indiceCnt, GL_UNSIGNED_INT, nullptr, instanceCnt);

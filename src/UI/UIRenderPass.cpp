@@ -50,10 +50,9 @@ void UIRenderPass::renderImages()
     // 遍历每个Image
     for (auto image: imageVec)
     {
-        glActiveTexture(GL_TEXTURE0);
         if (image->GetTex())
         {
-            glBindTexture(GL_TEXTURE_2D, image->GetTex()->GetID());
+            image->GetTex()->Use(GL_TEXTURE0);
         }
 
         Sp<Branch> branch = image->GetParent().lock();

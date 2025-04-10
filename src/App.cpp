@@ -24,6 +24,7 @@
 #include "Block/LatticeRenderCenter.h"
 #include "UI/Label.h"
 #include "Test/TestNode.h"
+#include "Common/SkyboxRenderPass.h"
 
 using namespace std;
 
@@ -33,7 +34,6 @@ void App::Run()
     RenderSystem::LoadInstance();
     GLFWwindow* window = RenderSystem::Instance()->GetWindow();
     ResourceSystem::LoadInstance();
-    Section::Load();
     BlockSystem::LoadInstance();
     Input::init(window);
     Time::init();
@@ -61,7 +61,6 @@ void App::Run()
     }
 
     BlockSystem::UnloadInstance();
-    Section::Unload();
     ResourceSystem::UnloadInstance();
     RenderSystem::UnloadInstance();
     CoreSystem::UnloadInstance();
@@ -69,7 +68,6 @@ void App::Run()
 
 void App::StartUser()
 {
-
     // 摄像机
     auto cameraBra = Branch::NewBranch("camera");
     auto camera = cameraBra->AddNode<Camera>();
@@ -217,9 +215,9 @@ void App::StartUser()
     // cube->SetMaterial(mat_FrameBuffer);
 
     // 天空盒
-    // auto skyboxObj = Branch::Create("skybox");
-    // auto skybox = skyboxObj->AddNode<Skybox>();
-
+    SkyboxRenderPass::LoadInstance();
+    SkyboxRenderPass::Instance()->SetRenderOrder(-1000);
+    auto skyboxObj = Node::NewNode<Skybox>("skybox");
 
 
     // Image

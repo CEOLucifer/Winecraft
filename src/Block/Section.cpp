@@ -5,6 +5,7 @@
 #include "Render/Vertex.h"
 #include "Block/StructureGenerator.h"
 #include "Block/WorldInfo.h"
+#include "Common/CubeMesh.h"
 
 Section::Section()
 {
@@ -44,8 +45,8 @@ void Section::InitOpenGL()
     glEnableVertexAttribArray(7);
 
 
-    // 方块顶点vbbo
-    glBindBuffer(GL_ARRAY_BUFFER, blockVerticeVbo);
+    // 方块顶点vbo
+    glBindBuffer(GL_ARRAY_BUFFER, CubeMesh::GetInstance()->GetVbo());
     // 注：以下必须在vertices绑定正常数据之后才能调用。实际上是在设置当前的vao。
     // 位置属性
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
@@ -59,7 +60,7 @@ void Section::InitOpenGL()
     // todo : !!!纹理属性其实没必要，以后删
 
     // ebo
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, blockVerticeEbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, CubeMesh::GetInstance()->GetEbo());
     // 只要以上这一行，就能将ebo绑定到vao了。
 
 
@@ -318,86 +319,5 @@ void Section::FreshBufferData()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     isFreshBufferData = true;
-}
-
-Vec<Vertex> vertices = {
-        // 前面
-        {{-0.5f, -0.5f, 0.5f},  {0.0f,  0.0f,  1.0f},  {0.0f, 0.0f}},
-        {{0.5f,  -0.5f, 0.5f},  {0.0f,  0.0f,  1.0f},  {1.0f, 0.0f}},
-        {{0.5f,  0.5f,  0.5f},  {0.0f,  0.0f,  1.0f},  {1.0f, 1.0f}},
-        {{-0.5f, 0.5f,  0.5f},  {0.0f,  0.0f,  1.0f},  {0.0f, 1.0f}},
-
-        // 后面
-        {{-0.5f, -0.5f, -0.5f}, {0.0f,  0.0f,  -1.0f}, {1.0f, 0.0f}},
-        {{0.5f,  -0.5f, -0.5f}, {0.0f,  0.0f,  -1.0f}, {0.0f, 0.0f}},
-        {{0.5f,  0.5f,  -0.5f}, {0.0f,  0.0f,  -1.0f}, {0.0f, 1.0f}},
-        {{-0.5f, 0.5f,  -0.5f}, {0.0f,  0.0f,  -1.0f}, {1.0f, 1.0f}},
-
-        // 顶面
-        {{-0.5f, 0.5f,  -0.5f}, {0.0f,  1.0f,  0.0f},  {0.0f, 1.0f}},
-        {{0.5f,  0.5f,  -0.5f}, {0.0f,  1.0f,  0.0f},  {1.0f, 1.0f}},
-        {{0.5f,  0.5f,  0.5f},  {0.0f,  1.0f,  0.0f},  {1.0f, 0.0f}},
-        {{-0.5f, 0.5f,  0.5f},  {0.0f,  1.0f,  0.0f},  {0.0f, 0.0f}},
-
-        // 底面
-        {{-0.5f, -0.5f, -0.5f}, {0.0f,  -1.0f, 0.0f},  {0.0f, 1.0f}},
-        {{0.5f,  -0.5f, -0.5f}, {0.0f,  -1.0f, 0.0f},  {1.0f, 1.0f}},
-        {{0.5f,  -0.5f, 0.5f},  {0.0f,  -1.0f, 0.0f},  {1.0f, 0.0f}},
-        {{-0.5f, -0.5f, 0.5f},  {0.0f,  -1.0f, 0.0f},  {0.0f, 0.0f}},
-
-        // 右面
-        {{0.5f,  -0.5f, -0.5f}, {1.0f,  0.0f,  0.0f},  {1.0f, 0.0f}},
-        {{0.5f,  0.5f,  -0.5f}, {1.0f,  0.0f,  0.0f},  {1.0f, 1.0f}},
-        {{0.5f,  0.5f,  0.5f},  {1.0f,  0.0f,  0.0f},  {0.0f, 1.0f}},
-        {{0.5f,  -0.5f, 0.5f},  {1.0f,  0.0f,  0.0f},  {0.0f, 0.0f}},
-
-        // 左面
-        {{-0.5f, -0.5f, -0.5f}, {-1.0f, 0.0f,  0.0f},  {0.0f, 0.0f}},
-        {{-0.5f, 0.5f,  -0.5f}, {-1.0f, 0.0f,  0.0f},  {0.0f, 1.0f}},
-        {{-0.5f, 0.5f,  0.5f},  {-1.0f, 0.0f,  0.0f},  {1.0f, 1.0f}},
-        {{-0.5f, -0.5f, 0.5f},  {-1.0f, 0.0f,  0.0f},  {1.0f, 0.0f}}
-};
-
-u32 Section::blockVerticeVbo = 0;
-u32 Section::blockVerticeEbo = 0;
-Vec<u32> Section::indices = {
-        // 前面
-        0, 1, 2, 2, 3, 0,
-
-        // 后面
-        4, 6, 5, 6, 4, 7,
-
-        // 顶面
-        8, 10, 9, 10, 8, 11,
-
-        // 底面
-        12, 13, 14, 14, 15, 12,
-
-        // 右面
-        16, 17, 18, 18, 19, 16,
-
-        // 左面
-        20, 22, 21, 22, 20, 23
-};
-
-void Section::Load()
-{
-    glGenBuffers(1, &blockVerticeVbo);
-    glBindBuffer(GL_ARRAY_BUFFER, blockVerticeVbo);
-    // 将顶点数据从内存送到显存
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
-                 vertices.data(), GL_STATIC_DRAW);
-
-    glGenBuffers(1, &blockVerticeEbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, blockVerticeEbo);
-    // 将索引数据从内存送到显存
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(u32),
-                 indices.data(), GL_STATIC_DRAW);
-}
-
-void Section::Unload()
-{
-    glDeleteBuffers(1, &blockVerticeEbo);
-    glDeleteBuffers(1, &blockVerticeVbo);
 }
 

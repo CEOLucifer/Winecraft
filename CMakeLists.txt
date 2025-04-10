@@ -14,6 +14,9 @@ target_include_directories(Winecraft PRIVATE ./include)
 file(GLOB_RECURSE CPPS src/*.cpp)
 target_sources(Winecraft PRIVATE ${CPPS})
 
+file(GLOB_RECURSE HEADERS include/*.h)
+target_sources(Winecraft PRIVATE ${HEADERS})
+
 include(FetchContent)
 
 # glfw

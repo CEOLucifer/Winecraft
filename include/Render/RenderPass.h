@@ -11,6 +11,7 @@
 #include "Std/Basic.h"
 
 class Camera;
+
 class ShaderProgram;
 
 /// 渲染通道。用于处理某种完整的渲染过程。
@@ -39,10 +40,18 @@ public:
 
     u32 PolygonMode = GL_FILL;
 
+private:
+    i32 renderOrder = 0;
+
 public:
     void Render(Sp<Camera> camera);
 
     void OnNewObject() override;
+
+    void SetRenderOrder(i32 value);
+
+    i32 GetRenderOrder()
+    { return renderOrder; }
 
 protected:
     virtual void RenderCustom(Sp<Camera> camera)

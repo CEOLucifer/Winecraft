@@ -5,10 +5,10 @@
 #include "ArduinoJson.h"
 #include <format>
 
-void Texture::Use(int position, int type)
+void Texture::Use(u32 position)
 {
     glActiveTexture(position);
-    glBindTexture(type, id);
+    glBindTexture(target, id);
 }
 
 void Texture::OnResourceCreation(const JsonDocument& doc)

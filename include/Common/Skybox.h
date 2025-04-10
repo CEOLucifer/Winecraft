@@ -1,14 +1,25 @@
 #pragma once
 
-#include "../Core/Node.h"
+#include "Core/Node.h"
 
-class Renderer;
+class Texture;
 
+/// 天空盒节点
 class Skybox : public Node
 {
 private:
-    Sp<Renderer> renderer;
+    Sp<Texture> skyboxCubeMap;
 
 public:
-    void OnAdded() override;
+    void Awake() override;
+
+    void SetCubeMap(Sp<Texture> value)
+    {
+        skyboxCubeMap = value;
+    }
+
+    Sp<Texture> GetCubeMap()
+    {
+        return skyboxCubeMap;
+    }
 };

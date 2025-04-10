@@ -1,8 +1,8 @@
 {
-  "className": "SkyboxShaderProgram",
+  "className": "ShaderProgram",
   "vert": "res/shader/skybox_vert.json",
   "frag": "res/shader/skybox_frag.json",
   "samplers": [
-    "skybox"
+    "uTex"
   ]
 }

@@ -72,6 +72,7 @@ public:
     void Add(Sp<RenderPass> renderPass)
     {
         renderPassVec.push_back(renderPass);
+        SortRenderOrder();
     }
 
     void Remove(Sp<RenderPass> renderPass)
@@ -109,4 +110,6 @@ public:
         }
         return nullptr;
     }
+
+    void SortRenderOrder();
 };
