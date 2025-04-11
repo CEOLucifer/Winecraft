@@ -16,27 +16,34 @@ void CameraController::Update()
         return;
     }
 
-    glm::vec3 posDelta = {0, 0, 0};
-
     auto parent = camera->GetParent().lock();
 
-    if (Input::GetKey(GLFW_KEY_W, GLFW_PRESS))
-        posDelta += cameraSpeed * parent->GetForward();
-    if (Input::GetKey(GLFW_KEY_S, GLFW_PRESS))
-        posDelta += -cameraSpeed * parent->GetForward();
-    if (Input::GetKey(GLFW_KEY_A, GLFW_PRESS))
-        posDelta += -parent->GetRight() * cameraSpeed;
-    if (Input::GetKey(GLFW_KEY_D, GLFW_PRESS))
-        posDelta += parent->GetRight() * cameraSpeed;
-    posDelta *= Time::GetDeltaTime();
-
-    if (Input::GetKey(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS))
+    // 移动
+    if (isEnableMove)
     {
-        posDelta *= 3;
+        glm::vec3 posDelta = {0, 0, 0};
+
+        if (Input::GetKey(GLFW_KEY_W, GLFW_PRESS))
+            posDelta += cameraSpeed * parent->GetForward();
+        if (Input::GetKey(GLFW_KEY_S, GLFW_PRESS))
+            posDelta += -cameraSpeed * parent->GetForward();
+        if (Input::GetKey(GLFW_KEY_A, GLFW_PRESS))
+            posDelta += -parent->GetRight() * cameraSpeed;
+        if (Input::GetKey(GLFW_KEY_D, GLFW_PRESS))
+            posDelta += parent->GetRight() * cameraSpeed;
+        posDelta *= Time::GetDeltaTime();
+
+        if (Input::GetKey(GLFW_KEY_LEFT_SHIFT, GLFW_PRESS))
+        {
+            posDelta *= 3;
+        }
+
+        parent->Position += posDelta;
     }
 
-    parent->Position += posDelta;
 
+
+    // 旋转
     glm::vec2 cursorDelta =
             Input::GetCursorDelta() * cursorSpeed * Time::GetDeltaTime();
     parent->Rotation.x =

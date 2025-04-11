@@ -22,9 +22,9 @@ void BlockSystem::SetLatticeRenderCenter(Sp<LatticeRenderCenter> value)
 
 
     // 测试
-    SetBlock(2, {0, 0, 0});
-    StructureGenerator::CreateTree({53, 80, 53});
-    StructureGenerator::CreateTree({54, 80, 53});
+//    SetBlock(2, {0, 0, 0});
+//    StructureGenerator::CreateTree({53, 80, 53});
+//    StructureGenerator::CreateTree({54, 80, 53});
 }
 
 void BlockSystem::Update()

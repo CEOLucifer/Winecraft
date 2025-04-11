@@ -12,8 +12,16 @@ public:
     float cameraSpeed = 10;
     float cursorSpeed = 0.15;
 
+private:
+    bool isEnableMove = true;
+
 public:
     void OnAdded() override;
 
     void Update() override;
+
+    void SetIsEnableMove(bool value)
+    {
+        isEnableMove = value;
+    }
 };

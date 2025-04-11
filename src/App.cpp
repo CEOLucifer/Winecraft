@@ -25,6 +25,9 @@
 #include "UI/Label.h"
 #include "Test/TestNode.h"
 #include "Common/SkyboxRenderPass.h"
+#include "Creature/Player.h"
+#include "Common/Rigidbody.h"
+#include "Game/GameSystem.h"
 
 using namespace std;
 
@@ -68,15 +71,17 @@ void App::Run()
 
 void App::StartUser()
 {
-    // 摄像机
-    auto cameraBra = Branch::NewBranch("camera");
-    auto camera = cameraBra->AddNode<Camera>();
-    //    camera->SetClearColor({1, 0, 0});
-    cameraBra->Position = {50, 96, 50};
-    cameraBra->Rotation = {-45, -135, 0};
-    auto cameraController = cameraBra->AddNode<CameraController>();
-    cameraBra->AddNode<LatticeRenderCenter>();
+    Node::NewNode<GameSystem>("gameSystem");
 
+    // 摄像机
+//    cameraBra->Position = {50, 96, 50};
+//    cameraBra->Rotation = {-45, -135, 0};
+//    auto cameraController = cameraBra->AddNode<CameraController>();
+//    cameraBra->AddNode<LatticeRenderCenter>();
+
+    // 玩家
+    Sp<Player> player = Branch::NewBranch<Player>("player");
+    player->SetPosition({0, 100, 0});
 
 //    auto lrcBra = Branch::NewBranch("lrcBra");
 //    lrcBra->AddNode<LatticeRenderCenter>();

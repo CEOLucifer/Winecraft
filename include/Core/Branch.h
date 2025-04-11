@@ -5,6 +5,7 @@
 #include "Std/SmartPtr.h"
 #include "glm/glm.hpp"
 #include "Std/List.h"
+#include "Std/Math.h"
 
 /// @brief 分支
 ///
@@ -84,6 +85,15 @@ public:
     const List<Sp<Branch>>& GetChildBranches()
     {
         return childBranches;
+    }
+
+    /// 设置位置。会影响子分支。
+    /// \param value
+    void SetPosition(vec3 value);
+
+    vec3 GetPosition()
+    {
+        return Position;
     }
 
 private:
