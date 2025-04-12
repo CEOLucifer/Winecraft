@@ -3,11 +3,16 @@
 #include "Common/SingletonNode.h"
 
 class Player;
+class Image;
 
 class GameSystem : public SingletonNode<GameSystem>
 {
 private:
     Sp<Player> player;
+
+    Sp<Branch> aimerBra;
+
+    Sp<Image> aimer;
 
 public:
     void SetPlayer(Sp<Player> value)
@@ -19,4 +24,8 @@ public:
     {
         return *player;
     }
+
+    void Awake() override;
+
+    void Update() override;
 };

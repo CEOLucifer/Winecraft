@@ -55,12 +55,12 @@ public:
     /// \param cor
     static f32 GetY(i32vec2 cor);
 
-    /// 获取指定世界坐标下的y值。Value噪声。
+    /// Value噪声。
     /// \param A 振幅。
     /// \param lw 晶格宽度。相当于周期。
     /// \param h 整体高度抬升值。
     /// \param bwc 方块世界xz坐标
-    static f32 Noise(f32 A, u32 lw, f32 h, i32vec2 bwc);
+    static f32 Noise(f32 A, i32 lw, f32 h, i32vec2 bwc);
 
     static f32 Bezier(f32 t, f32 p0, f32 p1, f32 p2, f32 p3);
 

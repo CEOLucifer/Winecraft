@@ -7,7 +7,7 @@
 class Rigidbody : public Node
 {
 private:
-    f32 g = -20;
+    f32 g = -30;
 
     vec3 velocity = {0, 0, 0};
 

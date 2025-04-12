@@ -71,6 +71,7 @@ void App::Run()
 
 void App::StartUser()
 {
+    Object::NewObject<UIRenderPass>();
     Node::NewNode<GameSystem>("gameSystem");
 
     // 摄像机
@@ -87,7 +88,6 @@ void App::StartUser()
 //    lrcBra->AddNode<LatticeRenderCenter>();
 
 
-    Object::NewObject<UIRenderPass>();
 //    Branch::Create<FPSWatcher>();
 
 
@@ -119,6 +119,7 @@ void App::StartUser()
     labBra->Position.y = 10;
 
     Branch::NewBranch<TestNode>("TestNode");
+
 
 
 //    auto imgBra = Branch::Create("ImageBra");

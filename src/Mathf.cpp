@@ -105,44 +105,59 @@ float Mathf::Cha(glm::vec2 cor, glm::vec4 ys)
     return res;
 }
 
-float Mathf::Noise(float A, uint32_t lw, float h, glm::i32vec2 bwc)
+float Mathf::Noise(float A, i32 lw, float h, i32vec2 bwc)
 {
     float res;
 
     // 晶格新坐标
-    glm::i32vec2 q = {
-            floor(bwc.x / lw),
-            floor(bwc.y / lw)
+    i32vec2 sswc = {
+            bwc.x / lw,
+            bwc.y / lw
     };
 
     // 晶格内标准化坐标
-    glm::vec2 lnCor = {
+    vec2 nsc = {
             bwc.x % lw / (float) lw,
             bwc.y % lw / (float) lw
     };
 
+    // 负坐标修正
+    if (bwc.x < 0)
+    {
+        sswc.x -= 1;
+        nsc.x = 1 + nsc.x;
+    }
+
+    if (bwc.y < 0)
+    {
+        sswc.y -= 1;
+        nsc.y = 1 + nsc.y;
+    }
+
     // 晶格 世界坐标
-    glm::i32vec2 lCor = {
-            q.x * lw,
-            q.y * lw
+    i32vec2 sbwc = {
+            sswc.x * lw,
+            sswc.y * lw
     };
 
     // 晶格四顶点 世界坐标
-    glm::i32vec2 lfvs[4] = {
-            {lCor.x,      lCor.y + lw},
-            {lCor.x + lw, lCor.y + lw},
-            {lCor.x,      lCor.y},
-            {lCor.x + lw, lCor.y},
+    i32vec2 lfvs[4] = {
+            {sbwc.x,      sbwc.y + lw},
+            {sbwc.x + lw, sbwc.y + lw},
+            {sbwc.x,      sbwc.y},
+            {sbwc.x + lw, sbwc.y},
     };
 
+
+
     // 晶格四顶点高度
-    glm::vec4 lfv;
+    vec4 lfv;
     lfv[0] = GetY(lfvs[0]);
     lfv[1] = GetY(lfvs[1]);
     lfv[2] = GetY(lfvs[2]);
     lfv[3] = GetY(lfvs[3]);
 
-    res = Cha(lnCor, lfv);
+    res = Cha(nsc, lfv);
     res *= A;
     res += h;
     return res;
