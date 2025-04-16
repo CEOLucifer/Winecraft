@@ -15,7 +15,7 @@ glm::mat4 Transform::GetViewMat()
 glm::vec3 Transform::GetForward()
 {
     glm::vec3 forward;
-    forward = GetRotateMat() * glm::vec4(0, 0, -1, 0);
+    forward = GetRotateMat() * glm::vec4(0, 0, 1, 0);
     return forward;
 }
 
@@ -29,7 +29,7 @@ glm::vec3 Transform::GetUp()
 glm::vec3 Transform::GetRight()
 {
     glm::vec3 right;
-    right = GetRotateMat() * glm::vec4(1, 0, 0, 0);
+    right = GetRotateMat() * glm::vec4(-1, 0, 0, 0);
     return right;
 }
 

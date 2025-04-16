@@ -47,7 +47,7 @@ void CameraController::Update()
     glm::vec2 cursorDelta =
             Input::GetCursorDelta() * cursorSpeed * Time::GetDeltaTime();
     parent->Rotation.x =
-            clamp(parent->Rotation.x + cursorDelta.y, -90.0f, 90.0f);
+            clamp(parent->Rotation.x - cursorDelta.y, -90.0f, 90.0f);
     parent->Rotation.y = parent->Rotation.y - cursorDelta.x;
 
 

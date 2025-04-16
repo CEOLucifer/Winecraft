@@ -6,5 +6,7 @@
 class TestNode : public Branch
 {
 public:
+    void Awake() override;
+
     void Update() override;
 };

@@ -4,6 +4,10 @@
 #include "UI/Label.h"
 #include "Block/BlockSystem.h"
 #include "Block/LatticeRenderCenter.h"
+#include "Game/GameSystem.h"
+#include "Creature/Player.h"
+#include "Render/RenderSystem.h"
+#include "Render/Camera.h"
 
 void FPSWatcher::OnAdded()
 {
@@ -23,11 +27,20 @@ void FPSWatcher::Update()
 
         // 坐标
         Sp<LatticeRenderCenter> lrc = BlockSystem::Instance()->GetLatticeRenderCenter();
-        if(lrc)
+        if (lrc)
         {
             vec3 cor = lrc->GetParent().lock()->Position;
             str += std::format("cor: ({}, {}, {}); ", cor.x, cor.y, cor.z);
         }
+
+        // 朝向
+        auto camera = RenderSystem::Instance()->GetFirstCamera();
+        if (camera)
+        {
+            vec3 cameraForward = camera->GetParent().lock()->GetForward();
+            str += std::format("lookDir: ({}, {}, {}); ", cameraForward.x, cameraForward.y, cameraForward.z);
+        }
+
 
         lab->SetText(str);
         freshTimer -= freshInterval;

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Creature.h"
+#include "Block/Block.h"
+#include "Std/Opt.h"
+#include "Game/StaredBlockInfo.h"
 
 class Rigidbody;
 
@@ -13,8 +16,12 @@ private:
 
     Sp<Rigidbody> rigidbody;
 
+    f32 reachBlockDistance = 1000;
+
 public:
     void Awake() override;
 
     void Update() override;
+
+    StaredBlockInfo GetStaredBlock();
 };

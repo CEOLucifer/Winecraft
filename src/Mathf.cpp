@@ -174,7 +174,7 @@ void Mathf::SetSeed(int value)
     std::srand(value);
 }
 
-float Mathf::Hash_2i_1f01(glm::i32vec2 in)
+f32 Mathf::Hash_2i_1f01(glm::i32vec2 in)
 {
     // 一个简单的哈希算法，将输入组合并使用种子
     uint32_t hash = static_cast<uint32_t>(in.x) * 73856093;
@@ -185,10 +185,134 @@ float Mathf::Hash_2i_1f01(glm::i32vec2 in)
     return static_cast<float>(hash % 1000000) / 1000000.0f;
 }
 
+f32 Mathf::Hash_3i_1f01(i32vec3 in)
+{
+    // 一个简单的哈希算法，将输入组合并使用种子
+    uint32_t hash = static_cast<uint32_t>(in.x) * 73856093;
+    hash ^= static_cast<uint32_t>(in.y) * 19349663;
+    hash ^= static_cast<uint32_t>(in.z) * 35967396;
+    hash ^= static_cast<uint32_t>(seed) * 83492791;
+
+    // 使用哈希值生成一个 0 到 1 之间的浮点数
+    return static_cast<float>(hash % 1000000) / 1000000.0f;
+
+}
+
 f32 Mathf::Bezier(f32 t, f32 p0, f32 p1, f32 p2, f32 p3)
 {
     return p0 * (1 - t) * (1 - t) * (1 - t) +
            3 * p1 * t * (1 - t) * (1 - t) +
            3 * p2 * t * t * (1 - t) +
            p3 * t * t * t;
+}
+
+f32 Mathf::Line3D(f32 m, f32 n, f32 p, f32 x0, f32 y0, f32 z0, f32 x, f32 z)
+{
+    f32 a;
+    if (m == 0)
+    {
+        a = 0;
+    }
+    else
+    {
+        a = p / m;
+    }
+
+    f32 b;
+    if (n == 0)
+    {
+        b = 0;
+    }
+    else
+    {
+        b = p / n;
+    }
+
+    return a * x + b * z + (y0 - a * x0 - b * z0);
+}
+
+f32 Mathf::Cos(vec3 a, vec3 b)
+{
+    return a.length() * b.length() / glm::dot(a, b);
+}
+
+f32 Mathf::Cha3D(vec3 cor, const Array<f32, 8>& values)
+{
+    return std::lerp(Cha({cor.x, cor.z}, {values[0], values[1], values[2], values[3]}),
+                     Cha({cor.x, cor.z}, {values[4], values[5], values[6], values[7]}),
+                     Mathf::Fade(cor.y));
+}
+
+f32 Mathf::Noise3D(f32 A, i32 lw, f32 h, i32vec3 bwc)
+{
+    f32 res;
+
+    // 晶格新坐标
+    i32vec3 sswc = {
+            bwc.x / lw,
+            bwc.y / lw,
+            bwc.z / lw
+    };
+
+    // 晶格内标准化坐标
+    vec3 nsc = {
+            bwc.x % lw / (f32) lw,
+            bwc.y % lw / (f32) lw,
+            bwc.z % lw / (f32) lw
+    };
+
+    // 负坐标修正
+    if (bwc.x < 0)
+    {
+        sswc.x -= 1;
+        nsc.x = 1 + nsc.x;
+    }
+
+    if (bwc.y < 0)
+    {
+        sswc.y -= 1;
+        nsc.y = 1 + nsc.y;
+    }
+
+    if (bwc.z < 0)
+    {
+        sswc.z -= 1;
+        nsc.z = 1 + nsc.z;
+    }
+
+    // 晶格 世界坐标
+    i32vec3 sbwc = {
+            sswc.x * lw,
+            sswc.y * lw,
+            sswc.z * lw,
+    };
+
+    // 晶格八顶点 世界坐标
+    i32vec3 lfvs[8] = {
+            {sbwc.x,      sbwc.y,      sbwc.z + lw},
+            {sbwc.x + lw, sbwc.y,      sbwc.z + lw},
+            {sbwc.x,      sbwc.y,      sbwc.z},
+            {sbwc.x + lw, sbwc.y,      sbwc.z},
+            {sbwc.x,      sbwc.y + lw, sbwc.z + lw},
+            {sbwc.x + lw, sbwc.y + lw, sbwc.z + lw},
+            {sbwc.x,      sbwc.y + lw, sbwc.z},
+            {sbwc.x + lw, sbwc.y + lw, sbwc.z},
+    };
+
+    // 晶格八顶点值
+    Array<f32, 8> lfv;
+    for (i32 i = 0; i < 8; ++i)
+    {
+        lfv[i] = GetY3D(lfvs[i]);
+    }
+
+    res = Cha3D(nsc, lfv);
+    res *= A;
+    res += h;
+    return res;
+}
+
+f32 Mathf::GetY3D(i32vec3 cor)
+{
+    return Hash_3i_1f01(cor);
 }

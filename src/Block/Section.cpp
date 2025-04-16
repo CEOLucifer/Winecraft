@@ -6,6 +6,7 @@
 #include "Block/StructureGenerator.h"
 #include "Block/WorldInfo.h"
 #include "Common/CubeMesh.h"
+#include "Mathf.h"
 
 Section::Section()
 {
@@ -138,6 +139,26 @@ void Section::FillWith(Block block)
     }
 }
 
+void Section::GenerateCave()
+{
+    for (i32 x = 0; x < Size; ++x)
+    {
+        for (i32 y = 1; y < Height; ++y)
+        {
+            for (i32 z = 0; z < Size; ++z)
+            {
+                i32vec3 bwc = {swc.x * Size + x, y, swc.y * Size + z};
+                f32 v = Mathf::Noise3D(1, 16, 0, bwc);
+                if (v < 0.2)
+                {
+                    // 挖空
+                    Blocks[x][y][z] = 0;
+                }
+            }
+        }
+    }
+}
+
 void Section::GenerateTree()
 {
     for (i32 x = 0; x < Size; ++x)
@@ -230,6 +251,7 @@ void Section::GenerateBase()
 void Section::GenerateFull()
 {
     GenerateBase();
+    GenerateCave();
     GenerateTree();
     isFull = true;
 }

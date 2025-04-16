@@ -37,7 +37,6 @@ public:
     /// ！！！通过调用此函数设置区块世界坐标，才能调用生成函数
     void Set_swc(i32vec2 value);
 
-
 #pragma region 生成
 private:
     bool isFull = false;
@@ -59,6 +58,8 @@ public:
 
     /// 生成基本地形。基于Value噪声。
     void GenerateBase();
+
+    void GenerateCave();
 
     /// 生成树木
     void GenerateTree();
