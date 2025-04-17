@@ -82,7 +82,7 @@ void App::StartUser()
 
     // 玩家
     Sp<Player> player = Branch::NewBranch<Player>("player");
-    player->SetPosition({0, 100, 0});
+    player->SetPosition({0, 150, 0});
 
 //    auto lrcBra = Branch::NewBranch("lrcBra");
 //    lrcBra->AddNode<LatticeRenderCenter>();

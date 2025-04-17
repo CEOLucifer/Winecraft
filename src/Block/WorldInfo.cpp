@@ -8,7 +8,7 @@ u32 WorldInfo::GetHeight(i32vec2 bwc)
     f32 fHeight = 0;
 
     // 分形噪声：叠加不同振幅和周期的噪声。
-    fHeight += Mathf::Noise(32, 128, 10, bwc);
+    fHeight += Mathf::Noise(32, 128, 30, bwc);
     fHeight += Mathf::Noise(18, 32, 0, bwc);
     fHeight += Mathf::Noise(2, 8, -1, bwc);
 

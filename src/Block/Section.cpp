@@ -166,6 +166,15 @@ void Section::GenerateTree()
         for (i32 z = 0; z < Size; ++z)
         {
             i32vec2 bwc = {swc.x * Size + x, swc.y * Size + z};
+            i32 height = WorldInfo::GetHeight(bwc);
+            // 下方一格没有方块，continue
+            auto lowerBlock = BlockSystem::Instance()->GetBlock({bwc.x, height - 1, bwc.y});
+            if (!lowerBlock || (*lowerBlock).id == 0)
+            {
+                continue;
+            }
+
+            // 根据温度，生成植物结构
             f32 temperature = WorldInfo::GetTemperature(bwc);
 
             if (0.3 <= temperature && temperature < 0.7)
@@ -174,7 +183,7 @@ void Section::GenerateTree()
                 f32 treeRate = WorldInfo::GetTreeRate(bwc);
                 if (treeRate < 0.005)
                 {
-                    StructureGenerator::CreateTree({bwc.x, WorldInfo::GetHeight(bwc), bwc.y});
+                    StructureGenerator::CreateTree({bwc.x, height, bwc.y});
                 }
             }
             else if (temperature >= 0.7)
@@ -183,7 +192,7 @@ void Section::GenerateTree()
                 f32 rate = WorldInfo::GetCactusRate(bwc);
                 if (rate < 0.002)
                 {
-                    StructureGenerator::CreateCactus({bwc.x, WorldInfo::GetHeight(bwc), bwc.y});
+                    StructureGenerator::CreateCactus({bwc.x, height, bwc.y});
                 }
             }
         }
@@ -223,8 +232,6 @@ void Section::GenerateBase()
                     {
                         // 草原
                         Blocks[x][y][z] = 1;
-
-
                     }
                     else
                     {
