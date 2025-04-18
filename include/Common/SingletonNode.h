@@ -2,8 +2,7 @@
 
 #include "Core/Node.h"
 
-template<typename T>
-class SingletonNode : public Node
+template <typename T> class SingletonNode : public Node
 {
 public:
     void Awake() override
@@ -15,14 +14,13 @@ public:
         instance = CastTo<T>();
     }
 
+    void OnNodeDestroyed() override { instance = nullptr; }
+
 private:
     static Sp<T> instance;
 
 public:
-    static T& GetInstance()
-    {
-        return *instance;
-    }
+    static T& GetInstance() { return *instance; }
 
     static void UnloadInstance()
     {
@@ -36,5 +34,4 @@ public:
     }
 };
 
-template<typename T>
-Sp<T> SingletonNode<T>::instance = nullptr;
+template <typename T> Sp<T> SingletonNode<T>::instance = nullptr;

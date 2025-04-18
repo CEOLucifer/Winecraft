@@ -1,6 +1,9 @@
 #include "InputSystem.h"
+#include "EMouseAction.hpp"
 #include "TimeSystem.h"
 #include "Debug/Debug.h"
+#include <GLFW/glfw3.h>
+#include "Std/Basic.h"
 
 
 GLFWwindow* Input::window = nullptr;
@@ -8,9 +11,7 @@ glm::vec2 Input::deltaCursorPos = {0, 0};
 glm::vec2 Input::lastCursorPos = {0, 0};
 glm::vec2 Input::curCursorPos = {0, 0};
 
-EMouseAction Input::leftAction = EMouseAction::None;
-EMouseAction Input::middleAction = EMouseAction::None;
-EMouseAction Input::rightAction = EMouseAction::None;
+MouseButton Input::mouseButtons[3] = {};
 
 glm::vec2 Input::GetCursorDelta()
 {
@@ -19,17 +20,7 @@ glm::vec2 Input::GetCursorDelta()
 
 bool Input::GetMouse(EMouseButton button, EMouseAction action)
 {
-    EMouseAction& actionRef = leftAction;
-    if (button == EMouseButton::Middle)
-    {
-        actionRef = middleAction;
-    }
-    else if (button == EMouseButton::Right)
-    {
-        actionRef = rightAction;
-    }
-
-    return actionRef == action;
+    return mouseButtons[(i32)button].action == action;
 }
 
 void Input::init(GLFWwindow* value)
@@ -38,33 +29,15 @@ void Input::init(GLFWwindow* value)
     lastCursorPos = curCursorPos = reallyGetCursorPos();
 
     // 鼠标输入
-    glfwSetMouseButtonCallback(window, [](GLFWwindow* window, int button, int action, int mods)
-    {
-        EMouseAction& actionRef = leftAction;
-
-        if (button == GLFW_MOUSE_BUTTON_MIDDLE)
-        {
-            actionRef = middleAction;
-        }
-        else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-        {
-            actionRef = rightAction;
-        }
-
-        if (action == GLFW_PRESS)
-        {
-            actionRef = EMouseAction::Down;
-        }
-        else if (action == GLFW_RELEASE)
-        {
-            actionRef = EMouseAction::Up;
-        }
-    });
+    glfwSetMouseButtonCallback(
+        window, [](GLFWwindow* window, int button, int action, int mods)
+        { mouseButtons[button].action = (EMouseAction)action; });
 }
 
 void Input::ResetMouseActions()
 {
-    leftAction = EMouseAction::None;
-    middleAction = EMouseAction::None;
-    rightAction = EMouseAction::None;
+    for (i32 i = 0; i < 3; ++i)
+    {
+        mouseButtons[i].action = EMouseAction::None;
+    }
 }

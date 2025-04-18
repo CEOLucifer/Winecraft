@@ -76,7 +76,7 @@ void Player::Update()
     }
 
     // 方块破坏
-    if (Input::GetMouse(EMouseButton::Left, EMouseAction::Down))
+    if (Input::GetMouse(EMouseButton::Left, EMouseAction::Up))
     {
         auto info = GetStaredBlock();
         if (info.block)

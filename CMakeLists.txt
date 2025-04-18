@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 23)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 project(Winecraft)
 
 add_executable(Winecraft)
@@ -16,7 +18,7 @@ target_include_directories(Winecraft PRIVATE ./include)
 file(GLOB_RECURSE CPPS src/*.cpp)
 target_sources(Winecraft PRIVATE ${CPPS})
 
-file(GLOB_RECURSE HEADERS include/*.h)
+file(GLOB_RECURSE HEADERS include/*.h include/*.hpp)
 target_sources(Winecraft PRIVATE ${HEADERS})
 
 include(FetchContent)

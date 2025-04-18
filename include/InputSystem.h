@@ -1,9 +1,10 @@
 #pragma once
 
 #include "GLFW/glfw3.h"
+#include "Input/MouseButton.hpp"
 #include "glm/glm.hpp"
-#include "EMouseButton.h"
-#include "EMouseAction.h"
+#include "EMouseButton.hpp"
+#include "EMouseAction.hpp"
 
 class GLFWwindow;
 
@@ -19,9 +20,7 @@ private:
     static glm::vec2 curCursorPos;
     static glm::vec2 deltaCursorPos;
 
-    static EMouseAction leftAction;
-    static EMouseAction middleAction;
-    static EMouseAction rightAction;
+    static MouseButton mouseButtons[3];
 
 public:
     static bool GetKey(int key, int type)
