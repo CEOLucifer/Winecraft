@@ -5,6 +5,8 @@ set(CMAKE_CXX_COMPILER clang++)
 
 set(CMAKE_CXX_STANDARD 23)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 project(Winecraft)
 
 add_executable(Winecraft)
@@ -21,7 +23,7 @@ include(FetchContent)
 
 # glfw
 find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(Winecraft PRIVATE glfw)
+target_link_libraries(Winecraft PRIVATE glfw opengl32)
 
 # glad
 target_include_directories(Winecraft PRIVATE dep/glad/include)

@@ -74,11 +74,6 @@ void App::StartUser()
     Object::NewObject<UIRenderPass>();
     Node::NewNode<GameSystem>("gameSystem");
 
-    // 摄像机
-//    cameraBra->Position = {50, 96, 50};
-//    cameraBra->Rotation = {-45, -135, 0};
-//    auto cameraController = cameraBra->AddNode<CameraController>();
-//    cameraBra->AddNode<LatticeRenderCenter>();
 
     // 玩家
     Sp<Player> player = Branch::NewBranch<Player>("player");
@@ -86,9 +81,6 @@ void App::StartUser()
 
 //    auto lrcBra = Branch::NewBranch("lrcBra");
 //    lrcBra->AddNode<LatticeRenderCenter>();
-
-
-//    Branch::Create<FPSWatcher>();
 
 
     // 按钮
