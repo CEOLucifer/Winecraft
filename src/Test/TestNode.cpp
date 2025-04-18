@@ -6,7 +6,8 @@
 
 void TestNode::Awake()
 {
-
+    i32 x = -3.5f;
+    Debug::Log(x);
 }
 
 void TestNode::Update()

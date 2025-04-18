@@ -9,6 +9,7 @@
 #include "Block/BlockSystem.h"
 #include "Mathf.h"
 #include "Debug/Debug.h"
+#include <cmath>
 
 void Player::Awake()
 {
@@ -145,19 +146,19 @@ StaredBlockInfo Player::GetStaredBlock()
         if (minInd == 0)
         {
             bwc = {cameraForward.x >= 0 ? round(pt[0].x - 1) : round(pt[0].x),
-                   pt[0].y,
-                   pt[0].z};
+                   floor(pt[0].y),
+                   floor(pt[0].z)};
         }
         else if (minInd == 1)
         {
-            bwc = {pt[1].x,
+            bwc = {floor(pt[1].x),
                    cameraForward.y >= 0 ? round(pt[1].y - 1) : round(pt[1].y),
-                   pt[1].z};
+                   floor(pt[1].z)};
         }
         else
         {
-            bwc = {pt[2].x,
-                   pt[2].y,
+            bwc = {floor(pt[2].x),
+                   floor(pt[2].y),
                    cameraForward.z >= 0 ? round(pt[2].z - 1) : round(pt[2].z)};
         }
 

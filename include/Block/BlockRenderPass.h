@@ -1,11 +1,7 @@
 #pragma once
 
 #include "Render/RenderPass.h"
-#include "Singleton.h"
-#include "Block/Section.h"
 #include <glm/glm.hpp>
-#include <vector>
-#include "Std/Vec.h"
 
 /// 方块渲染通道
 class BlockRenderPass : public RenderPass

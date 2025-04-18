@@ -1,7 +1,6 @@
 #include "Block/BlockSystem.h"
 #include "Block/BlockRenderPass.h"
 #include "Block/LatticeRenderCenter.h"
-#include "Core/Branch.h"
 #include "Block/StructureGenerator.h"
 
 using namespace std;
