@@ -18,10 +18,6 @@ void Lattice::Init(u32 renderSize)
     for (i32 xx = 0; xx < fullSize; ++xx)
     {
         sections[xx].resize(fullSize);
-        for (i32 zz = 0; zz < fullSize; ++zz)
-        {
-            sections[xx][zz] = Section::NewSection();
-        }
     }
 }
 
@@ -33,8 +29,6 @@ void Lattice::Refresh(glm::i32vec2 swc)
     }
 
     this->swc = swc;
-
-    glm::i32vec2 old_swc = this->swc;
 
     // 填充backend
     for (i32 xx = 0; xx < GetFullSize(); ++xx)
@@ -53,7 +47,7 @@ void Lattice::Refresh(glm::i32vec2 swc)
                 // 生成新区块
                 Sp<Section> section = Section::NewObject<Section>();
                 sections[xx][zz] = section;
-                section->Set_swc({swc.x + xx, swc.y + zz});
+                section->Set_swc(sswc);
             }
         }
     }

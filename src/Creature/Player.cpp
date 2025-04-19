@@ -83,6 +83,11 @@ void Player::Update()
         if (info.block)
         {
             BlockSystem::Instance()->SetBlock(0, info.bwc);
+            Debug::Log(info.bwc);
+        }
+        else
+        {
+            Debug::Log("not block detected");
         }
     }
 

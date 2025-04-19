@@ -20,6 +20,16 @@ public:
         info = std::format("({}, {}, {})", value.x, value.y, value.z);
     }
 
+    Debugable(const glm::i32vec2& value)
+    {
+        info = std::format("({}, {})", value.x, value.y);
+    }
+
+    Debugable(const glm::i32vec3& value)
+    {
+        info = std::format("({}, {}, {})", value.x, value.y, value.z);
+    }
+
     Debugable(const String& value) { info = value; }
 
     Debugable(const char* value) { info = value; }

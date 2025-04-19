@@ -8,20 +8,19 @@
 #include "Common/CubeMesh.h"
 #include "Mathf.h"
 
-Section::Section()
-{
-}
+Section::Section() {}
 
-Section::~Section()
-{
-    ClearOpenGL();
-}
+Section::~Section() { ClearOpenGL(); }
 
 void Section::Set_swc(i32vec2 value)
 {
-    BlockSystem::Instance()->RemoveSectionCache(swc);
+    if (isCached)
+    {
+        BlockSystem::Instance()->RemoveSectionCache(swc);
+    }
     swc = value;
     BlockSystem::Instance()->CacheSection(CastTo<Section>());
+    isCached = true;
 }
 
 
@@ -51,13 +50,13 @@ void Section::InitOpenGL()
     // 注：以下必须在vertices绑定正常数据之后才能调用。实际上是在设置当前的vao。
     // 位置属性
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void*) (offsetof(Vertex, Position)));
+                          (void*)(offsetof(Vertex, Position)));
     // 法线属性
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void*) (offsetof(Vertex, Normal)));
+                          (void*)(offsetof(Vertex, Normal)));
     // 纹理属性
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void*) (offsetof(Vertex, TexCoord)));
+                          (void*)(offsetof(Vertex, TexCoord)));
     // todo : !!!纹理属性其实没必要，以后删
 
     // ebo
@@ -73,12 +72,16 @@ void Section::InitOpenGL()
     glGenBuffers(1, &aModelsVbo);
     // aModel 属性，实例化数组
     glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
-    glBufferData(GL_ARRAY_BUFFER, size * sizeof(glm::mat4), nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, size * sizeof(glm::mat4), nullptr,
+                 GL_DYNAMIC_DRAW);
     GLsizei vec4Size = sizeof(glm::vec4);
-    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) 0);
-    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (1 * vec4Size));
-    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (2 * vec4Size));
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*) (3 * vec4Size));
+    glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size, (void*)0);
+    glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size,
+                          (void*)(1 * vec4Size));
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size,
+                          (void*)(2 * vec4Size));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, 4 * vec4Size,
+                          (void*)(3 * vec4Size));
     glVertexAttribDivisor(3, 1);
     glVertexAttribDivisor(4, 1);
     glVertexAttribDivisor(5, 1);
@@ -93,7 +96,7 @@ void Section::InitOpenGL()
     glBindBuffer(GL_ARRAY_BUFFER, aTexIndsVbo);
     glBufferData(GL_ARRAY_BUFFER, size * sizeof(u32), nullptr, GL_DYNAMIC_DRAW);
     // aTexInds 属性，实例化数组
-    glVertexAttribIPointer(7, 1, GL_UNSIGNED_INT, sizeof(u32), (void*) (0));
+    glVertexAttribIPointer(7, 1, GL_UNSIGNED_INT, sizeof(u32), (void*)(0));
     glVertexAttribDivisor(7, 1);
     // !!!设置glsl整数类型要用glVertexAttribIPointer，而不是glVertexAttribPointer。
 
@@ -168,7 +171,8 @@ void Section::GenerateTree()
             i32vec2 bwc = {swc.x * Size + x, swc.y * Size + z};
             i32 height = WorldInfo::GetHeight(bwc);
             // 下方一格没有方块，continue
-            auto lowerBlock = BlockSystem::Instance()->GetBlock({bwc.x, height - 1, bwc.y});
+            auto lowerBlock =
+                BlockSystem::Instance()->GetBlock({bwc.x, height - 1, bwc.y});
             if (!lowerBlock || (*lowerBlock).id == 0)
             {
                 continue;
@@ -252,7 +256,6 @@ void Section::GenerateBase()
             }
         }
     }
-
 }
 
 void Section::GenerateFull()
@@ -275,7 +278,8 @@ void Section::FreshBufferData()
         {
             for (i32 z = 0; z < Section::Size; ++z)
             {
-//                i32 ind = x * Section::Height * Section::Size + y * Section::Size + z;
+                //                i32 ind = x * Section::Height * Section::Size
+                //                + y * Section::Size + z;
 
                 glm::mat4 model;
 
@@ -291,19 +295,23 @@ void Section::FreshBufferData()
                     // 上下左右前后都有方块，continue
                     int bwcX = swc.x * Section::Size;
                     int bwcY = swc.y * Section::Size;
-                    auto up = BlockSystem::Instance()->GetBlock({bwcX + x, y + 1, bwcY + z});
-                    auto down = BlockSystem::Instance()->GetBlock({bwcX + x, y - 1, bwcY + z});
-                    auto left = BlockSystem::Instance()->GetBlock({bwcX + x - 1, y, bwcY + z});
-                    auto right = BlockSystem::Instance()->GetBlock({bwcX + x + 1, y, bwcY + z});
-                    auto forward = BlockSystem::Instance()->GetBlock({bwcX + x, y, bwcY + z + 1});
-                    auto back = BlockSystem::Instance()->GetBlock({bwcX + x, y, bwcY + z - 1});
+                    auto up = BlockSystem::Instance()->GetBlock(
+                        {bwcX + x, y + 1, bwcY + z});
+                    auto down = BlockSystem::Instance()->GetBlock(
+                        {bwcX + x, y - 1, bwcY + z});
+                    auto left = BlockSystem::Instance()->GetBlock(
+                        {bwcX + x - 1, y, bwcY + z});
+                    auto right = BlockSystem::Instance()->GetBlock(
+                        {bwcX + x + 1, y, bwcY + z});
+                    auto forward = BlockSystem::Instance()->GetBlock(
+                        {bwcX + x, y, bwcY + z + 1});
+                    auto back = BlockSystem::Instance()->GetBlock(
+                        {bwcX + x, y, bwcY + z - 1});
 
-                    if (up && (*up).id != 0 &&
-                        down && (*down).id != 0 &&
-                        left && (*left).id != 0 &&
-                        right && (*right).id != 0 &&
-                        forward && (*forward).id != 0 &&
-                        back && (*back).id != 0)
+                    if (up && (*up).id != 0 && down && (*down).id != 0 &&
+                        left && (*left).id != 0 && right && (*right).id != 0 &&
+                        forward && (*forward).id != 0 && back &&
+                        (*back).id != 0)
                     {
                         isRender = 0;
                     }
@@ -314,20 +322,23 @@ void Section::FreshBufferData()
                     // 添加一个此方块的aModel
                     Transform t;
                     t.Position =
-                            glm::vec3(swc.x * Section::GetSize(), 0, swc.y * Section::GetSize()) // 区块的区块世界的坐标
-                            + glm::vec3(x * 1, y * 1, z * 1) // 方块相对区块坐标
-                            + glm::vec3(0.5, 0.5, 0.5);
+                        glm::vec3(
+                            swc.x * Section::GetSize(), 0,
+                            swc.y * Section::GetSize())  // 区块的区块世界的坐标
+                        + glm::vec3(x * 1, y * 1, z * 1) // 方块相对区块坐标
+                        + glm::vec3(0.5, 0.5, 0.5);
                     model = t.GetModelMat();
-//                    aModels[ind] = model;
+                    //                    aModels[ind] = model;
                     aModels.push_back(model);
 
                     // ！！！巨坑：如上:
                     //
-                    //          glm::vec3(swc.x * (int)Section::GetSize(), 0, swc.y * (int)Section::GetSize())
+                    //          glm::vec3(swc.x * (int)Section::GetSize(), 0,
+                    //          swc.y * (int)Section::GetSize())
                     //
                     // int和u32类型相乘，必须把u32强转为int，否则默认是int强转u32。如果int是负数，则会将其变成很大的u32！还是不要用u32了！
 
-//                    aTexInds[ind] = Blocks[x][y][z];
+                    //                    aTexInds[ind] = Blocks[x][y][z];
                     aTexInds.push_back(Blocks[x][y][z]);
                 }
             }
@@ -338,15 +349,16 @@ void Section::FreshBufferData()
 
     // aModels
     glBindBuffer(GL_ARRAY_BUFFER, aModelsVbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, aModels.size() * sizeof(glm::mat4), aModels.data());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, aModels.size() * sizeof(glm::mat4),
+                    aModels.data());
 
     // aTexInds
     glBindBuffer(GL_ARRAY_BUFFER, aTexIndsVbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, aTexInds.size() * sizeof(u32), aTexInds.data());
+    glBufferSubData(GL_ARRAY_BUFFER, 0, aTexInds.size() * sizeof(u32),
+                    aTexInds.data());
 
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     isFreshBufferData = true;
 }
-

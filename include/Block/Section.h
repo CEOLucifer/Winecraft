@@ -24,6 +24,8 @@ private:
     /// 区块世界坐标
     i32vec2 swc = {0, 0};
 
+    bool isCached = false;
+
 public:
     Section();
 

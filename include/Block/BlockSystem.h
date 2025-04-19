@@ -9,7 +9,7 @@
 #include "Std/Basic.h"
 #include "Lattice.h"
 #include "Std/Map.h"
-#include "Std/Hash.h"
+#include "Std/Hash.hpp"
 
 class LatticeRenderCenter;
 
@@ -46,7 +46,7 @@ public:
 
     void CacheSection(Sp<Section> section);
 
-    /// 获取区块缓存。指定的坐标的区块是已生成好的，但是OpenGL相关未初始化。
+    /// 获取区块缓存
     /// \param swc
     /// \return
     Sp<Section> GetSectionCache(glm::i32vec2 swc);
@@ -62,4 +62,6 @@ public:
     Opt<Block> GetBlock(glm::i32vec3 bwc);
 
     void SetBlock(Block block, i32vec3 bwc);
+
+    void PrintAllSwc();
 };
