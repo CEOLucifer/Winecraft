@@ -24,4 +24,6 @@ public:
     void Update() override;
 
     StaredBlockInfo GetStaredBlock();
+
+    Opt<i32vec3> GetStaredEmptyBlock();
 };
