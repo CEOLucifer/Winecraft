@@ -6,6 +6,7 @@
 class Section;
 
 class Lattice;
+class Structure;
 
 /// 处理结构生成
 class StructureGenerator
@@ -16,4 +17,6 @@ public:
     static void CreateTree(i32vec3 bwc);
 
     static void CreateCactus(i32vec3 bwc);
+
+    static void CreateStructure(Structure& structure, i32vec3 bwc);
 };

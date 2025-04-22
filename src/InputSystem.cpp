@@ -3,6 +3,7 @@
 #include "TimeSystem.h"
 #include "Debug/Debug.h"
 #include <GLFW/glfw3.h>
+#include <algorithm>
 #include "Std/Basic.h"
 
 
@@ -10,8 +11,8 @@ GLFWwindow* Input::window = nullptr;
 glm::vec2 Input::deltaCursorPos = {0, 0};
 glm::vec2 Input::lastCursorPos = {0, 0};
 glm::vec2 Input::curCursorPos = {0, 0};
-
 MouseButton Input::mouseButtons[3] = {};
+Signal<void(KeySignal)> Input::keySignal = {};
 
 glm::vec2 Input::GetCursorDelta()
 {
@@ -32,6 +33,10 @@ void Input::init(GLFWwindow* value)
     glfwSetMouseButtonCallback(
         window, [](GLFWwindow* window, int button, int action, int mods)
         { mouseButtons[button].action = (EMouseAction)action; });
+
+    glfwSetKeyCallback(window, [](GLFWwindow* window, int key, int scancode,
+                                  int action, int mods)
+                       { onKeyCallback(window, key, scancode, action, mods); });
 }
 
 void Input::ResetMouseActions()
@@ -40,4 +45,14 @@ void Input::ResetMouseActions()
     {
         mouseButtons[i].action = EMouseAction::None;
     }
+}
+
+void Input::onKeyCallback(GLFWwindow* window, int key, int scancode, int action,
+                          int mods)
+{
+    if (action == GLFW_REPEAT)
+    {
+        return;
+    }
+    keySignal({key, action});
 }

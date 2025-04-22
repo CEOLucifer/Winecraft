@@ -1,7 +1,12 @@
 #pragma once
 
 #include "GLFW/glfw3.h"
+#include "Input/Key.hpp"
+#include "Input/KeySignal.hpp"
 #include "Input/MouseButton.hpp"
+#include "Std/Math.h"
+#include "Std/Signal.hpp"
+#include "Std/Vec.h"
 #include "glm/glm.hpp"
 #include "EMouseButton.hpp"
 #include "EMouseAction.hpp"
@@ -16,11 +21,13 @@ class Input
 
 private:
     static GLFWwindow* window;
-    static glm::vec2 lastCursorPos;
-    static glm::vec2 curCursorPos;
-    static glm::vec2 deltaCursorPos;
+    static vec2 lastCursorPos;
+    static vec2 curCursorPos;
+    static vec2 deltaCursorPos;
 
     static MouseButton mouseButtons[3];
+
+    static Signal<void(KeySignal)> keySignal;
 
 public:
     static bool GetKey(int key, int type)
@@ -28,14 +35,19 @@ public:
         return glfwGetKey(window, key) == type;
     }
 
-    static glm::vec2 GetCursorPos()
-    { return curCursorPos; }
+    static glm::vec2 GetCursorPos() { return curCursorPos; }
 
     static glm::vec2 GetCursorDelta();
 
     static bool GetMouse(EMouseButton button, EMouseAction action);
 
     static void ResetMouseActions();
+
+    static Connection AddKeyListener(std::function<void(KeySignal)> listener)
+    {
+        return keySignal.connect(listener);
+    }
+
 
 private:
     static void init(GLFWwindow* value);
@@ -59,4 +71,7 @@ private:
 
         return {x, h - y};
     }
+
+    static void onKeyCallback(GLFWwindow* window, int key, int scancode,
+                              int action, int mods);
 };

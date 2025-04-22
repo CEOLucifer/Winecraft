@@ -9,7 +9,9 @@
 #include "Block/BlockSystem.h"
 #include "Mathf.h"
 #include "Debug/Debug.h"
+#include <GLFW/glfw3.h>
 #include <cmath>
+#include "Input/KeySignal.hpp"
 
 void Player::Awake()
 {
@@ -22,6 +24,19 @@ void Player::Awake()
     cameraBra->AddNode<LatticeRenderCenter>();
 
     GameSystem::GetInstance().SetPlayer(CastTo<Player>());
+
+    // 监听按键
+    Input::AddKeyListener(
+        [](KeySignal signal)
+        {
+            if (signal.GetKey() == GLFW_KEY_M)
+            {
+                if (signal.GetAction() == GLFW_PRESS)
+                {
+                    Debug::Log("enter structure mode");
+                }
+            }
+        });
 }
 
 void Player::Update()

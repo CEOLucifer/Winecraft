@@ -1,5 +1,8 @@
 #include "Test/TestNode.h"
 #include "Block/BlockSystem.h"
+#include "Block/Section.h"
+#include "Block/Structure.hpp"
+#include "FileHelper.h"
 #include "Game/GameSystem.h"
 #include "Creature/Player.h"
 #include "Debug/Debug.h"
@@ -13,21 +16,6 @@
 
 void TestNode::Awake()
 {
-    i32 x = -3;
-    Debug::Log(x);
-
-
-    Map<i32vec2, i32> m;
-    m.insert({{0, 0}, 1});
-    if (m.contains({0, 0}))
-    {
-        Debug::Log("yes");
-        Debug::Log(m[{0, 0}]);
-    }
-    else
-    {
-        Debug::Log("no");
-    }
 }
 
 void TestNode::Update()
@@ -36,10 +24,10 @@ void TestNode::Update()
     {
         static bool yes = false;
 
-        if(!yes)
+        if (!yes)
         {
             yes = true;
-    
+
             BlockSystem::Instance()->PrintAllSwc();
         }
     }

@@ -10,4 +10,6 @@ public:
     /// @param filename
     /// @return 文本内容
     static String ReadFile(const String& path);
+
+    static void WriteFile(const String& path, const String& content);
 };

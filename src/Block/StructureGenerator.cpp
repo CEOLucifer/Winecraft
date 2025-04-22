@@ -1,6 +1,7 @@
 #include "Block/StructureGenerator.h"
 #include "Block/Lattice.h"
 #include "Block/BlockSystem.h"
+#include "Block/Structure.hpp"
 #include "Mathf.h"
 
 void StructureGenerator::CreateTree(i32vec3 bwc)
@@ -25,7 +26,7 @@ void StructureGenerator::CreateTree(i32vec3 bwc)
     for (i32 y = 0; y <= p3.y; ++y)
     {
         // 半径
-        i32 r = Mathf::Bezier((f32) y / p3.y, p0.z, p1.z, p2.z, p3.z);
+        i32 r = Mathf::Bezier((f32)y / p3.y, p0.z, p1.z, p2.z, p3.z);
         for (i32 x = -r; x <= r; ++x)
         {
             for (i32 z = -r; z <= r; ++z)
@@ -49,5 +50,19 @@ void StructureGenerator::CreateCactus(i32vec3 bwc)
     for (i32 y = 0; y < height; ++y)
     {
         BlockSystem::Instance()->SetBlock(8, i32vec3{0, y, 0} + bwc);
+    }
+}
+
+void StructureGenerator::CreateStructure(Structure& structure, i32vec3 bwc)
+{
+    for (u32 x = 0; x < structure.GetX(); ++x)
+    {
+        for (u32 y = 0; y < structure.GetY(); ++y)
+        {
+            for (u32 z = 0; z < structure.GetZ(); ++z)
+            {
+                BlockSystem::Instance()->SetBlock(structure[x, y, z], bwc);
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@
 #include "Std/Array.h"
 #include <glm/glm.hpp>
 #include "Std/SmartPtr.h"
+#include "Std/String.h"
 #include "Std/Vec.h"
 #include "Core/Object.h"
 #include "Std/Math.h"
@@ -144,6 +145,10 @@ public:
 
 
 #pragma region 序列化
+public:
+    String Serialize();
+
+    void Deserialize(String jsonStr);
 #pragma endregion
 
 

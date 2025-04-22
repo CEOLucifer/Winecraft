@@ -1,8 +1,9 @@
 {
   "dependencies": [
+    "assimp",
     "freetype",
     "glfw3",
     "glm",
-    "assimp"
+    "boost-signals2"
   ]
 }

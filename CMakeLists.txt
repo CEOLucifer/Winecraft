@@ -55,3 +55,7 @@ target_link_libraries(Winecraft PRIVATE ArduinoJson)
 find_package(Freetype REQUIRED)
 target_include_directories(Winecraft PRIVATE ${FREETYPE_INCLUDE_DIRS})
 target_link_libraries(Winecraft PRIVATE ${FREETYPE_LIBRARIES})
+
+# boost_signals2
+find_package(boost_signals2 REQUIRED CONFIG)
+target_link_libraries(Winecraft PRIVATE Boost::signals2)

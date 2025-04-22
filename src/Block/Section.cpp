@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+#include <cstddef>
 #include "Block/Section.h"
 #include "Core/Transform.h"
 #include "Block/BlockSystem.h"
@@ -7,6 +8,8 @@
 #include "Block/WorldInfo.h"
 #include "Common/CubeMesh.h"
 #include "Mathf.h"
+#include "ArduinoJson.hpp"
+#include "Std/Basic.h"
 
 Section::Section() {}
 
@@ -361,4 +364,41 @@ void Section::FreshBufferData()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     isFreshBufferData = true;
+}
+
+String Section::Serialize()
+{
+    using namespace ArduinoJson;
+    JsonDocument doc;
+    for (i32 x = 0; x < Size; ++x)
+    {
+        for (i32 y = 0; y < Height; ++y)
+        {
+            for (i32 z = 0; z < Size; ++z)
+            {
+                doc["blocks"][x][y][z] = (u32)Blocks[x][y][z];
+            }
+        }
+    }
+    String res;
+    serializeJson(doc, res);
+    return res;
+}
+
+void Section::Deserialize(String jsonStr)
+{
+    using namespace ArduinoJson;
+    JsonDocument doc;
+    deserializeJson(doc, jsonStr);
+
+    for (i32 x = 0; x < Size; ++x)
+    {
+        for (i32 y = 0; y < Height; ++y)
+        {
+            for (i32 z = 0; z < Size; ++z)
+            {
+                Blocks[x][y][z] = (u32)doc["blocks"][x][y][z];
+            }
+        }
+    }
 }
