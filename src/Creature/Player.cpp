@@ -1,5 +1,7 @@
 #include "Creature/Player.h"
 #include "Common/Rigidbody.h"
+#include "Game/PlaceStructureMode.hpp"
+#include "Game/StructureMode.hpp"
 #include "Render/Camera.h"
 #include "Common/CameraController.h"
 #include "InputSystem.h"
@@ -11,6 +13,7 @@
 #include "Debug/Debug.h"
 #include <GLFW/glfw3.h>
 #include <cmath>
+#include <memory>
 #include "Input/KeySignal.hpp"
 
 void Player::Awake()
@@ -27,14 +30,24 @@ void Player::Awake()
 
     // 监听按键
     Input::AddKeyListener(
-        [](KeySignal signal)
+        [this](KeySignal signal)
         {
-            if (signal.GetKey() == GLFW_KEY_M)
+            if (signal.GetKey() == GLFW_KEY_M &&
+                signal.GetAction() == GLFW_PRESS)
             {
-                if (signal.GetAction() == GLFW_PRESS)
-                {
-                    Debug::Log("enter structure mode");
-                }
+                EnterMode(std::make_shared<StructureMode>());
+            }
+
+            if (signal.GetKey() == GLFW_KEY_N &&
+                signal.GetAction() == GLFW_PRESS)
+            {
+                EnterMode(std::make_shared<PlaceStructureMode>());
+            }
+
+            if (signal.GetKey() == GLFW_KEY_L &&
+                signal.GetAction() == GLFW_PRESS)
+            {
+                EnterMode(nullptr);
             }
         });
 }
@@ -91,30 +104,38 @@ void Player::Update()
         rigidbody->SetVelocity(velocity);
     }
 
-    // 方块破坏
-    if (Input::GetMouse(EMouseButton::Left, EMouseAction::Down))
+    if (mode)
     {
-        auto info = GetStaredBlock();
-        if (info.block)
+        mode->Update(*this);
+    }
+    else
+    {
+        // 方块破坏
+        if (Input::GetMouse(EMouseButton::Left, EMouseAction::Down))
         {
-            BlockSystem::Instance()->SetBlock(0, info.bwc);
-            Debug::Log(info.bwc);
+            auto info = GetStaredBlock();
+            if (info.block)
+            {
+                BlockSystem::Instance()->SetBlock(0, info.bwc);
+                Debug::Log(info.bwc);
+            }
+            else
+            {
+                Debug::Log("not block detected");
+            }
         }
-        else
+
+        // 方块放置
+        if (Input::GetMouse(EMouseButton::Right, EMouseAction::Down))
         {
-            Debug::Log("not block detected");
+            auto cor = GetStaredEmptyBlock();
+            if (cor)
+            {
+                BlockSystem::Instance()->SetBlock(4, *cor);
+            }
         }
     }
 
-    // 方块放置
-    if (Input::GetMouse(EMouseButton::Right, EMouseAction::Down))
-    {
-        auto cor = GetStaredEmptyBlock();
-        if (cor)
-        {
-            BlockSystem::Instance()->SetBlock(4, *cor);
-        }
-    }
 
 
     // 测试
@@ -289,4 +310,17 @@ Opt<i32vec3> Player::GetStaredEmptyBlock()
     }
 
     return res;
+}
+
+void Player::EnterMode(Sp<Mode> _mode)
+{
+    if (mode)
+    {
+        mode->Exit(*this);
+    }
+    mode = _mode;
+    if (mode)
+    {
+        mode->Enter();
+    }
 }

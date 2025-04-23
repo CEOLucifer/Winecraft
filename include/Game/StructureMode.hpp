@@ -1,22 +1,38 @@
 #pragma once
 
 #include "Block/Structure.hpp"
+#include "Mode.hpp"
 #include "Std/Math.h"
 #include "Std/String.h"
 
+class Player;
+
 /// @brief 结构模式
-class StructureMode
+class StructureMode : public Mode
 {
 private:
-    i32vec3 cor0;
-    i32vec3 cor1;
+    i32vec3 selectedCor0;
+    i32vec3 selectedCor1;
+
+    Structure structure;
+    String savePath;
+
+    int stage = 0;
 
 public:
-    void Enter();
+    void Enter() override;
+
+    void SetCor0(i32vec3 value);
+
+    void SetCor1(i32vec3 value);
 
     void CreateStructure();
 
+    void SetSavePath(const String& value) { savePath = value; }
+
     void SaveStructure();
 
-    void Exit();
+    void Exit(Player& player) override;
+
+    void Update(Player& player) override;
 };

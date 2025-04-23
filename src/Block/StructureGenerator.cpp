@@ -61,7 +61,7 @@ void StructureGenerator::CreateStructure(Structure& structure, i32vec3 bwc)
         {
             for (u32 z = 0; z < structure.GetZ(); ++z)
             {
-                BlockSystem::Instance()->SetBlock(structure[x, y, z], bwc);
+                BlockSystem::Instance()->SetBlock(structure[x, y, z], bwc + i32vec3{x, y, z});
             }
         }
     }

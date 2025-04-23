@@ -76,16 +76,19 @@ public:
 private:
     u32 vao = 0;
 
+    // model vbo
     u32 aModelsVbo = 0;
 
     /// 存储方块的model
     Vec<glm::mat4> aModels = {};
 
+    // 纹理id vbo
     u32 aTexIndsVbo = 0;
 
     /// 存储方块的texInd
     Vec<u32> aTexInds = {};
 
+    // 额外数据 vbo
     u32 aDataVbo = 0;
 
     Vec<vec4> aDatas = {};
