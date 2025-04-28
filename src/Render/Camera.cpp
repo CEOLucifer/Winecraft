@@ -47,6 +47,6 @@ void Camera::Awake()
 glm::mat4 Camera::GetProjectionMat()
 {
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(fov), GetAspect(), near, far);
+    projection = glm::perspective(glm::radians(fov), GetAspect(), nearPlane, farPlane);
     return projection;
 }

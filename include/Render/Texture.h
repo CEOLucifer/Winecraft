@@ -4,7 +4,6 @@
 #include "Resource/Resource.h"
 #include "Std/Basic.h"
 #include "Std/SmartPtr.h"
-#include "Std/String.h"
 
 /// @brief 纹理
 ///

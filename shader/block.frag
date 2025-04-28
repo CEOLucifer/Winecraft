@@ -24,13 +24,4 @@ void main()
     {
         FragColor *= vec4(0.47, 0.67, 0.18, 1);
     }
-
-    //    if(bTexInd == )
-    //    {
-    //
-    //    }
-    //    else{
-    //    FragColor = texture(uTexCubes[bTexInd - 1u], bTexCoords);
-    //
-    //    }
 }

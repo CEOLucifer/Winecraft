@@ -7,6 +7,7 @@
 
 class Rigidbody;
 class Mode;
+class FrameRenderPass;
 
 class Player : public Creature
 {
@@ -17,9 +18,11 @@ private:
 
     Sp<Rigidbody> rigidbody;
 
-    f32 reachBlockDistance = 1000;
+    f32 reachBlockDistance = 10;
 
     Sp<Mode> mode = nullptr;
+
+    Sp<FrameRenderPass> frameRenderPass;
 
 public:
     void Awake() override;
@@ -33,4 +36,6 @@ public:
     void ClearStructureMode() { mode = nullptr; }
 
     void EnterMode(Sp<Mode> _mode);
+
+    Sp<Branch> GetCameraBra() { return cameraBra; }
 };

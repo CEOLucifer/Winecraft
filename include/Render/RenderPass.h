@@ -18,8 +18,6 @@ class ShaderProgram;
 class RenderPass : public Object
 {
 public:
-
-
     // 模板测试相关
     bool EnableStencilTest = true;
     StencilOp StencilOp;
@@ -40,8 +38,12 @@ public:
 
     u32 PolygonMode = GL_FILL;
 
+    f32 LineWidth = 4;
+
 private:
     i32 renderOrder = 0;
+
+    bool isEnabled = true;
 
 public:
     void Render(Sp<Camera> camera);
@@ -50,10 +52,10 @@ public:
 
     void SetRenderOrder(i32 value);
 
-    i32 GetRenderOrder()
-    { return renderOrder; }
+    i32 GetRenderOrder() { return renderOrder; }
+
+    void SetIsEnabled(bool value) { isEnabled = value; }
 
 protected:
-    virtual void RenderCustom(Sp<Camera> camera)
-    {}
+    virtual void RenderCustom(Sp<Camera> camera) {}
 };

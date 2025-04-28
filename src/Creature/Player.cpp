@@ -1,8 +1,8 @@
 #include "Creature/Player.h"
+#include "Common/FrameRenderPass.hpp"
 #include "Common/Rigidbody.h"
 #include "Game/PlaceStructureMode.hpp"
 #include "Game/StructureMode.hpp"
-#include "Render/Camera.h"
 #include "Common/CameraController.h"
 #include "InputSystem.h"
 #include "TimeSystem.h"
@@ -15,6 +15,7 @@
 #include <cmath>
 #include <memory>
 #include "Input/KeySignal.hpp"
+#include "Render/Camera.h"
 
 void Player::Awake()
 {
@@ -23,6 +24,7 @@ void Player::Awake()
     auto camera = cameraBra->AddNode<Camera>();
     auto cameraController = cameraBra->AddNode<CameraController>();
     cameraController->SetIsEnableMove(false);
+    // 摄像机在玩家头部
     cameraBra->SetPosition({0, 1.8, 0});
     cameraBra->AddNode<LatticeRenderCenter>();
 
@@ -50,6 +52,8 @@ void Player::Awake()
                 EnterMode(nullptr);
             }
         });
+
+    frameRenderPass = Object::NewObject<FrameRenderPass>();
 }
 
 void Player::Update()
@@ -114,14 +118,14 @@ void Player::Update()
         if (Input::GetMouse(EMouseButton::Left, EMouseAction::Down))
         {
             auto info = GetStaredBlock();
-            if (info.block)
+            if (info.block && info.block->id != 0)
             {
                 BlockSystem::Instance()->SetBlock(0, info.bwc);
                 Debug::Log(info.bwc);
             }
             else
             {
-                Debug::Log("not block detected");
+                Debug::Log("no block detected");
             }
         }
 
@@ -136,6 +140,18 @@ void Player::Update()
         }
     }
 
+    // 方块线框指示
+    auto staredBlockInfo = GetStaredBlock();
+    if (staredBlockInfo.block && staredBlockInfo.block->id != 0)
+    {
+        frameRenderPass->SetIsEnabled(true);
+        frameRenderPass->SetCor((vec3)staredBlockInfo.bwc +
+                                vec3{0.5, 0.5, 0.5});
+    }
+    else
+    {
+        frameRenderPass->SetIsEnabled(false);
+    }
 
 
     // 测试
@@ -188,7 +204,7 @@ StaredBlockInfo Player::GetStaredBlock()
             minInd = 2;
 
         // 射程之内没有方块
-        if (dis[minInd] > reachBlockDistance)
+        if ((f32)dis[minInd] > reachBlockDistance)
         {
             break;
         }

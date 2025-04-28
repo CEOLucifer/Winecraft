@@ -10,15 +10,18 @@ void RenderPass::SetRenderOrder(i32 value)
 
 void RenderPass::Render(Sp<Camera> camera)
 {
+    if (!isEnabled)
+    {
+        return;
+    }
+
     // 模板测试
     if (EnableStencilTest)
     {
         glEnable(GL_STENCIL_TEST);
-        glStencilOp(StencilOp.stencilFail,
-                    StencilOp.depthFail,
+        glStencilOp(StencilOp.stencilFail, StencilOp.depthFail,
                     StencilOp.depthPass);
-        glStencilFunc(StencilFunc.func, StencilFunc.ref,
-                      StencilFunc.mask);
+        glStencilFunc(StencilFunc.func, StencilFunc.ref, StencilFunc.mask);
         glStencilMask(StencilMask); // 将写入的模板缓冲值
     }
     else
@@ -66,6 +69,8 @@ void RenderPass::Render(Sp<Camera> camera)
 
     // 多边形模式
     glPolygonMode(GL_FRONT_AND_BACK, PolygonMode);
+
+    glLineWidth(LineWidth);
 
     RenderCustom(camera);
 }

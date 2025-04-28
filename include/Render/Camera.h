@@ -1,7 +1,7 @@
 #pragma once
 
 #include "glm/glm.hpp"
-#include "../Core/Node.h"
+#include "Core/Node.h"
 #include "Std/SmartPtr.h"
 
 class FrameBuffer;
@@ -12,8 +12,8 @@ class Camera : public Node
 private:
     float width = 800;
     float height = 600;
-    float near = 0.1f;
-    float far = 1000.0f;
+    float nearPlane = 0.1f;
+    float farPlane = 1000.0f;
     float fov = 45.0f;
 
     /// @brief 渲染的目标帧缓冲
@@ -32,10 +32,10 @@ public:
     { return width / height; }
 
     float GetNear()
-    { return near; }
+    { return nearPlane; }
 
     float GetFar()
-    { return far; }
+    { return farPlane; }
 
     float GetFov()
     { return fov; }
