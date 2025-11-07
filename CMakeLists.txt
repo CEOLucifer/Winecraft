@@ -25,7 +25,15 @@ include(FetchContent)
 
 # glfw
 find_package(glfw3 CONFIG REQUIRED)
-target_link_libraries(Winecraft PRIVATE glfw opengl32)
+target_link_libraries(Winecraft PRIVATE glfw)
+
+# opengl
+if(WIN32)
+    target_link_libraries(Winecraft PRIVATE opengl32)
+elseif(UNIX)
+    find_package(OpenGL REQUIRED)
+    target_link_libraries(Winecraft PRIVATE OpenGL::GL)
+endif()
 
 # glad
 target_include_directories(Winecraft PRIVATE dep/glad/include)

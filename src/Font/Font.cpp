@@ -1,4 +1,5 @@
 #include "Font/Font.h"
+#include "Std/Basic.h"
 #include "ThirdParty/ft.h"
 
 Font::~Font()
@@ -66,7 +67,7 @@ void Font::OnResourceCreation(const JsonDocument& doc)
                 textureID,
                 glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                 glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                face->glyph->advance.x
+                (i32)face->glyph->advance.x
         };
         characterMap.insert({c, character});
     }
